@@ -1,0 +1,29 @@
+# script executable
+bertini-serial
+
+# library (including executable)
+.libs
+libbertini-serial.la
+
+# object files
+*.o
+*.lo
+
+# .deps files
+*.Plo
+*.Po
+
+# autoconf generated files
+Makefile
+config.log
+config.status
+libtool
+
+# auto-generated parser
+src/pParse_bison.c
+src/pParse_bison.h
+src/pParse_flex.c
+src/ppParse_bison.c
+src/ppParse_bison.h
+src/ppParse_flex.c
+src/splitParse_flex.c
