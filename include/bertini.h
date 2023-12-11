@@ -176,7 +176,7 @@ typedef struct
 /*** The straight-line program structure.  This is the way that polynomials are stored internally. ***/
 typedef struct {
   int *prog;     /*  The program instructions. (a big integer array)  */
-  int  size;     /*  size of the instruction program.   */   
+  long size;     /*  size of the instruction program.   */
   int  memSize;  /* Amount of memory it needs in workspace (for temp and final results).*/   
   num_t *nums;   /* The array of real numbers. */
   int precision; /* The precision at which evaluation should occur */

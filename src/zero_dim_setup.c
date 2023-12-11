@@ -72,11 +72,11 @@ int setupArr(prog_t *P, int **startSub, int **endSub, int **startFunc, int **end
 \***************************************************************/
 {
   FILE *arrIN = NULL;
-  int i, j, num_var_gps, workspaceSize, numvars, varAddr, numpathvars, pathvarAddr, numpars;
+  int j, num_var_gps, workspaceSize, numvars, varAddr, numpathvars, pathvarAddr, numpars;
   int parAddr, parderAddr, numfuncs, funcAddr, jacVAddr, jacPAddr;
   int numconsts, constAddr, numNums, numAddr, numsubfuncs, subfuncAddr;
   int subfuncDerivWRTVarsStart, subfuncDerivWRTParamsStart, rand_index, IAddr;
-  long numInst;
+  long i, numInst;
   char ch;
 
   // open arr.out
