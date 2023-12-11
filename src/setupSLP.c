@@ -1671,7 +1671,7 @@ void computeNumDenom(char **numer, char **denom, char *s)
   return;
 }
 
-int printOps2(FILE *OUT, expOps *funcOps, int numOps)
+long printOps2(FILE *OUT, expOps *funcOps, int numOps)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -1679,7 +1679,8 @@ int printOps2(FILE *OUT, expOps *funcOps, int numOps)
 * NOTES: prints the operations to OUT                           *
 \***************************************************************/
 {
-  int i, count = 0;
+  int i;
+  long count = 0;
   char op;
 
   for (i = 0; i < numOps; i++)
@@ -1713,7 +1714,8 @@ void setupArrOut(FILE *OUT, expArrayOps *constOps, expArrayOps *paramOps, expArr
 * NOTES: setup arr.out                                          *
 \***************************************************************/
 {
-  int i, j, end, endUpdate, endParams, endFn, endPDerivs, endJvEval, endJpEval;
+  int i, j;
+  long end, endUpdate, endParams, endFn, endPDerivs, endJvEval, endJpEval;
   int numSubfuncs = memoryLoc->numSubfuncs;
   int numFuncs = memoryLoc->numFuncs;
 
@@ -1746,26 +1748,26 @@ void setupArrOut(FILE *OUT, expArrayOps *constOps, expArrayOps *paramOps, expArr
   fprintf(OUT, "NCON %d %d;\n", memoryLoc->numConsts, memoryLoc->constStart);
   fprintf(OUT, "NNUM %d %d;\n", memoryLoc->numNums, memoryLoc->numStart);
   fprintf(OUT, "SUBFCN %d %d %d %d;\n", memoryLoc->numSubfuncs, memoryLoc->subfuncStart, memoryLoc->subfuncDerivVStart, memoryLoc->subfuncDerivPStart);
-  fprintf(OUT, "NUMINST %d;\n", end);
+  fprintf(OUT, "NUMINST %ld;\n", end);
   fprintf(OUT, "CMPLX %d;\n", memoryLoc->constStart); // first constant is always 'I'
   fprintf(OUT, "VARGPS %d;\n", numVarGps);
   for (i = 0; i < numVarGps; i++)
     fprintf(OUT, " %d", varGpSizes[i]);
   fprintf(OUT, ";\n");
   fprintf(OUT, "RANDINDEX %d;\n", randIndex);
-  fprintf(OUT, "INSTCOUNT %d %d %d %d %d;\n", endUpdate, endParams, endFn, endPDerivs, endJvEval);
+  fprintf(OUT, "INSTCOUNT %ld %ld %ld %ld %ld;\n", endUpdate, endParams, endFn, endPDerivs, endJvEval);
   // print the start and end for the subfunctions
   for (i = 0; i < numSubfuncs; i++)
-    fprintf(OUT, " %d %d", endParams + startSubfuncs[i], endParams + endSubfuncs[i]);
+    fprintf(OUT, " %ld %ld", endParams + startSubfuncs[i], endParams + endSubfuncs[i]);
   // print the start and end for the functions
   for (i = 0; i < numFuncs; i++)
-    fprintf(OUT, " %d %d", endParams + startFuncs[i], endParams + endFuncs[i]);
+    fprintf(OUT, " %ld %ld", endParams + startFuncs[i], endParams + endFuncs[i]);
   // print the start and end of the derivs for subfunctions
   for (i = 0; i < numSubfuncs; i++)
-    fprintf(OUT, " %d %d", endPDerivs + startJvSub[i], endPDerivs + endJvSub[i]);
+    fprintf(OUT, " %ld %ld", endPDerivs + startJvSub[i], endPDerivs + endJvSub[i]);
   // print the start and end of the derivs for functions
   for (i = 0; i < numFuncs; i++)
-    fprintf(OUT, " %d %d", endPDerivs + startJv[i], endPDerivs + endJv[i]);
+    fprintf(OUT, " %ld %ld", endPDerivs + startJv[i], endPDerivs + endJv[i]);
   fprintf(OUT, ";\n");
   // print the 'matrix' of the subfunctions 'below' each function
   for (i = 0; i < numFuncs; i++)

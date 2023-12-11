@@ -187,11 +187,11 @@ typedef struct {
   int index_of_first_number_for_proj_trans;  /* The address of the first number used in the projective transformation polynomials. */
                                                                                     
   /* STOP LOCATIONS: */
-  int  numInstAtEndUpdate; /* instruction number at end of update. i.e. i = 0; while (i < numInstAtEndUpdate) .. */
-  int  numInstAtEndParams; /* instruction number at end of params. i.e. i = numInstAtEndUpdate; while (i < numInstAtEndParams) .. */
-  int  numInstAtEndFnEval; /* instruction number at end of function eval. i.e. i = numInstAtEndParams; while (i < numInstAtEndFnEval) .. */
-  int  numInstAtEndPDeriv; /* instruction number at end of param diff. i.e. i = numInstAtEndFnEval; while (i < numInstAtEndPDeriv) .. */
-  int  numInstAtEndJvEval; /* instruction number at end of Jv eval. i.e. i = numInstAtEndPDeriv; while (i < numInstAtEndJvEval) .. */
+  long  numInstAtEndUpdate; /* instruction number at end of update. i.e. i = 0; while (i < numInstAtEndUpdate) .. */
+  long  numInstAtEndParams; /* instruction number at end of params. i.e. i = numInstAtEndUpdate; while (i < numInstAtEndParams) .. */
+  long  numInstAtEndFnEval; /* instruction number at end of function eval. i.e. i = numInstAtEndParams; while (i < numInstAtEndFnEval) .. */
+  long  numInstAtEndPDeriv; /* instruction number at end of param diff. i.e. i = numInstAtEndFnEval; while (i < numInstAtEndPDeriv) .. */
+  long  numInstAtEndJvEval; /* instruction number at end of Jv eval. i.e. i = numInstAtEndPDeriv; while (i < numInstAtEndJvEval) .. */
                            /* for Jp eval: i = numInstAtEndJvEval; while (i < size) .. */ 
 
   /* INPUT AMOUNTS: */

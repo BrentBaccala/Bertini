@@ -75,7 +75,8 @@ int setupArr(prog_t *P, int **startSub, int **endSub, int **startFunc, int **end
   int i, j, num_var_gps, workspaceSize, numvars, varAddr, numpathvars, pathvarAddr, numpars;
   int parAddr, parderAddr, numfuncs, funcAddr, jacVAddr, jacPAddr;
   int numconsts, constAddr, numNums, numAddr, numsubfuncs, subfuncAddr;
-  int subfuncDerivWRTVarsStart, subfuncDerivWRTParamsStart, rand_index, numInst, IAddr;
+  int subfuncDerivWRTVarsStart, subfuncDerivWRTParamsStart, rand_index, IAddr;
+  long numInst;
   char ch;
 
   // open arr.out
@@ -102,7 +103,7 @@ int setupArr(prog_t *P, int **startSub, int **endSub, int **startFunc, int **end
   fscanf(arrIN, "NCON %d %d;\n", &numconsts, &constAddr);
   fscanf(arrIN, "NNUM %d %d;\n", &numNums, &numAddr);
   fscanf(arrIN, "SUBFCN %d %d %d %d;\n", &numsubfuncs, &subfuncAddr, &subfuncDerivWRTVarsStart, &subfuncDerivWRTParamsStart);
-  fscanf(arrIN, "NUMINST %d;\n", &numInst);
+  fscanf(arrIN, "NUMINST %ld;\n", &numInst);
   fscanf(arrIN, "CMPLX %d;\n", &IAddr);
   fscanf(arrIN, "VARGPS %d;\n", &num_var_gps);
   // setup number of variable groups in P
@@ -114,7 +115,7 @@ int setupArr(prog_t *P, int **startSub, int **endSub, int **startFunc, int **end
   fscanf(arrIN, "RANDINDEX %d;\n", &rand_index);
 
   // read in INSTCOUNT - endUpdate, endParams, endFnEval, endPDeriv, endJvEval
-  fscanf(arrIN, "INSTCOUNT %d %d %d %d %d;\n", &P->numInstAtEndUpdate, &P->numInstAtEndParams, &P->numInstAtEndFnEval, &P->numInstAtEndPDeriv, &P->numInstAtEndJvEval);
+  fscanf(arrIN, "INSTCOUNT %ld %ld %ld %ld %ld;\n", &P->numInstAtEndUpdate, &P->numInstAtEndParams, &P->numInstAtEndFnEval, &P->numInstAtEndPDeriv, &P->numInstAtEndJvEval);
   // next line contains start/end of subfunctions/functions and their derivs
   *startSub = (int *)bmalloc(numsubfuncs * sizeof(int));
   *endSub = (int *)bmalloc(numsubfuncs * sizeof(int));
