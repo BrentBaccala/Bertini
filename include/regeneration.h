@@ -53,14 +53,14 @@ typedef struct
 
   int noChanges;       // whether we can use the SLP to get a square system to use instCounts
   int numSubFuncs;     // number of subfunctions
-  int *startSub;       // where the subfunctions start
-  int *endSub;         // where the subfunctions end
-  int *startFunc;      // where the functions start
-  int *endFunc;        // where the functions end
-  int *startJvsub;     // where the derivs of subfunctions start
-  int *endJvsub;       // where the derivs of subfunctions end
-  int *startJv;        // where the derivs of functions start
-  int *endJv;          // where the derivs of functions end
+  long *startSub;      // where the subfunctions start
+  long *endSub;        // where the subfunctions end
+  long *startFunc;     // where the functions start
+  long *endFunc;       // where the functions end
+  long *startJvsub;    // where the derivs of subfunctions start
+  long *endJvsub;      // where the derivs of subfunctions end
+  long *startJv;       // where the derivs of functions start
+  long *endJv;         // where the derivs of functions end
   int **subFuncsBelow; // matrix of which subfunctions are below each function
 
   // coefficients for the patches - all are of size num_var_gps x num_variables

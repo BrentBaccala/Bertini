@@ -6,9 +6,9 @@
 #define ZERO_HOM_COORD_D 1e-12
 #define ZERO_HOM_COORD_MP 1e-12
 
-void setupRegenRandom_zero_dim(regen_t *regen, tracker_config_t *T, char *degreeName, preproc_data *PPD, square_system_eval_data_d *SSED_d, patch_eval_data_d *patch_d, square_system_eval_data_mp *SSED_mp, patch_eval_data_mp *patch_mp, int *startSub, int *endSub, int *startFunc, int *endFunc, int *startJvsub, int *endJvsub, int *startJv, int *endJv, int **subFuncsBelow);
+void setupRegenRandom_zero_dim(regen_t *regen, tracker_config_t *T, char *degreeName, preproc_data *PPD, square_system_eval_data_d *SSED_d, patch_eval_data_d *patch_d, square_system_eval_data_mp *SSED_mp, patch_eval_data_mp *patch_mp, long *startSub, long *endSub, long *startFunc, long *endFunc, long *startJvsub, long *endJvsub, long *startJv, long *endJv, int **subFuncsBelow);
 
-void setup_regen_from_zero_dim_seq(int max, regen_t *regen, char *startName, int startLevel, double intrinsicCutoffMultiplier, char *depthName, char *degreeName, tracker_config_t *T, basic_eval_data_d *BED_d, basic_eval_data_mp *BED_mp, int *startSub, int *endSub, int *startFunc, int *endFunc, int *startJvsub, int *endJvsub, int *startJv, int *endJv, int **subFuncsBelow)
+void setup_regen_from_zero_dim_seq(int max, regen_t *regen, char *startName, int startLevel, double intrinsicCutoffMultiplier, char *depthName, char *degreeName, tracker_config_t *T, basic_eval_data_d *BED_d, basic_eval_data_mp *BED_mp, long *startSub, long *endSub, long *startFunc, long *endFunc, long *startJvsub, long *endJvsub, long *startJv, long *endJv, int **subFuncsBelow)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -541,7 +541,7 @@ void regen_setup_coeff(int MPType, int AMP_max_prec, regen_t *regen, int num_var
   return;
 }
 
-void setupRegenRandom_zero_dim(regen_t *regen, tracker_config_t *T, char *degreeName, preproc_data *PPD, square_system_eval_data_d *SSED_d, patch_eval_data_d *patch_d, square_system_eval_data_mp *SSED_mp, patch_eval_data_mp *patch_mp, int *startSub, int *endSub, int *startFunc, int *endFunc, int *startJvsub, int *endJvsub, int *startJv, int *endJv, int **subFuncsBelow)
+void setupRegenRandom_zero_dim(regen_t *regen, tracker_config_t *T, char *degreeName, preproc_data *PPD, square_system_eval_data_d *SSED_d, patch_eval_data_d *patch_d, square_system_eval_data_mp *SSED_mp, patch_eval_data_mp *patch_mp, long *startSub, long *endSub, long *startFunc, long *endFunc, long *startJvsub, long *endJvsub, long *startJv, long *endJv, int **subFuncsBelow)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -595,14 +595,14 @@ void setupRegenRandom_zero_dim(regen_t *regen, tracker_config_t *T, char *degree
     else
       regen->numSubFuncs = SSED_mp->Prog->numSubfuncs;
 
-    regen->startSub = (int *)bmalloc(regen->numSubFuncs * sizeof(int));
-    regen->endSub = (int *)bmalloc(regen->numSubFuncs * sizeof(int));
-    regen->startFunc = (int *)bmalloc(regen->num_funcs * sizeof(int));
-    regen->endFunc = (int *)bmalloc(regen->num_funcs * sizeof(int));
-    regen->startJvsub = (int *)bmalloc(regen->numSubFuncs * sizeof(int));
-    regen->endJvsub = (int *)bmalloc(regen->numSubFuncs * sizeof(int));
-    regen->startJv = (int *)bmalloc(regen->num_funcs * sizeof(int));
-    regen->endJv = (int *)bmalloc(regen->num_funcs * sizeof(int));
+    regen->startSub = (long *)bmalloc(regen->numSubFuncs * sizeof(long));
+    regen->endSub = (long *)bmalloc(regen->numSubFuncs * sizeof(long));
+    regen->startFunc = (long *)bmalloc(regen->num_funcs * sizeof(long));
+    regen->endFunc = (long *)bmalloc(regen->num_funcs * sizeof(long));
+    regen->startJvsub = (long *)bmalloc(regen->numSubFuncs * sizeof(long));
+    regen->endJvsub = (long *)bmalloc(regen->numSubFuncs * sizeof(long));
+    regen->startJv = (long *)bmalloc(regen->num_funcs * sizeof(long));
+    regen->endJv = (long *)bmalloc(regen->num_funcs * sizeof(long));
     for (i = 0; i < regen->numSubFuncs; i++)
     {
       regen->startSub[i] = startSub[i];

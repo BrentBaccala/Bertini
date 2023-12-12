@@ -143,7 +143,7 @@ int change_prec_prog(void const *ED, int new_prec)
   return 0;
 }
 
-void evalInsts_d(_comp_d *mem_d, int *prog, int startOp, int endOp, int oid)
+void evalInsts_d(_comp_d *mem_d, int *prog, long startOp, long endOp, int oid)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -151,7 +151,8 @@ void evalInsts_d(_comp_d *mem_d, int *prog, int startOp, int endOp, int oid)
 * NOTES: do the instructions from startOp to endOp              *
 \***************************************************************/
 {
-  int i = startOp, j, k, l;
+  long i = startOp;
+  int j, k, l;
   double tempD, tempD2;
 
   while (i < endOp)
@@ -332,7 +333,7 @@ int evalProg_d(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, mat_d 
   return 0;
 }
 
-int evalProg_eff_d(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, mat_d Jp, point_d vars, comp_d pathVars, prog_t *Prog, int startFuncNum, int endFuncNum, int *startSub, int *endSub, int *startFunc, int *endFunc, int *startJvsub, int *endJvsub, int *startJv, int *endJv, int **subFuncsBelow)
+int evalProg_eff_d(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, mat_d Jp, point_d vars, comp_d pathVars, prog_t *Prog, int startFuncNum, int endFuncNum, long *startSub, long *endSub, long *startFunc, long *endFunc, long *startJvsub, long *endJvsub, long *startJv, long *endJv, int **subFuncsBelow)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -340,7 +341,8 @@ int evalProg_eff_d(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, ma
 * NOTES:                                                        *
 \***************************************************************/
 {
-  int i, j, begin, end, skipUpdate = 1, oid = thread_num();
+  long i;
+  int j, begin, end, skipUpdate = 1, oid = thread_num();
   int *subFuncsToEval = (int *)bmalloc(Prog->numSubfuncs * sizeof(int));
 
   // check to see if the memory has been initialized before
@@ -508,7 +510,8 @@ int evalProg_d_std(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, ma
 * NOTES:                                                        *
 \***************************************************************/
 {
-  int i, j, begin, end, skipUpdate = 1, oid = thread_num();
+  long i;
+  int j, begin, end, skipUpdate = 1, oid = thread_num();
 
   // check to see if the memory has been initialized before
   if (mem_needs_init_d[oid])
@@ -618,7 +621,7 @@ int evalProg_d_std(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, ma
   return 0;
 }
 
-void evalInsts_mp(_comp_mp *mem_mp, int *prog, int startOp, int endOp, int oid)
+void evalInsts_mp(_comp_mp *mem_mp, int *prog, long startOp, long endOp, int oid)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -626,7 +629,8 @@ void evalInsts_mp(_comp_mp *mem_mp, int *prog, int startOp, int endOp, int oid)
 * NOTES: do the instructions from startOp to endOp              *
 \***************************************************************/
 {
-  int i = startOp, j;
+  long i = startOp;
+  int j;
   while (i < endOp)
   {
     j = prog[i];
@@ -825,7 +829,7 @@ int evalProg_mp(point_mp funcVals, point_mp parVals, vec_mp parDer, mat_mp Jv, m
   return 0;
 }
 
-int evalProg_eff_mp(point_mp funcVals, point_mp parVals, vec_mp parDer, mat_mp Jv, mat_mp Jp, point_mp vars, comp_mp pathVars, prog_t *Prog, int startFuncNum, int endFuncNum, int *startSub, int *endSub, int *startFunc, int *endFunc, int *startJvsub, int *endJvsub, int *startJv, int *endJv, int **subFuncsBelow)
+int evalProg_eff_mp(point_mp funcVals, point_mp parVals, vec_mp parDer, mat_mp Jv, mat_mp Jp, point_mp vars, comp_mp pathVars, prog_t *Prog, int startFuncNum, int endFuncNum, long *startSub, long *endSub, long *startFunc, long *endFunc, long *startJvsub, long *endJvsub, long *startJv, long *endJv, int **subFuncsBelow)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -833,7 +837,8 @@ int evalProg_eff_mp(point_mp funcVals, point_mp parVals, vec_mp parDer, mat_mp J
 * NOTES:                                                        *
 \***************************************************************/
 {
-  int i, j, begin, end, skipUpdate = 1, oid = thread_num(), curr_prec = Prog->precision;
+  long i;
+  int j, begin, end, skipUpdate = 1, oid = thread_num(), curr_prec = Prog->precision;
   int *subFuncsToEval = (int *)bmalloc(Prog->numSubfuncs * sizeof(int));
 
   // check to see if the memory has been initialized before

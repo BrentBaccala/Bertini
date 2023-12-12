@@ -116,7 +116,8 @@ void sharpen_process_zero_dim_main(int MPType, unsigned int currentSeed)
   }
   else if (userHom == 0 || userHom == -59)
   { // setup for standard tracking
-    int *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL, **subFuncsBelow = NULL;
+    long *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL;
+    int **subFuncsBelow = NULL;
     if (T.MPType == 0 || T.MPType == 2)
     {
       num_variables = zero_dim_basic_setup_d(&OUT, "output", &midOUT, "midpath_data", &T, &ED_d, &dummyProg, &startSub, &endSub, &startFunc, &endFunc, &startJvsub, &endJvsub, &startJv, &endJv, &subFuncsBelow, &ptr_to_eval_d, &ptr_to_eval_mp, "preproc_data", "deg.out", 0, NULL, NULL);

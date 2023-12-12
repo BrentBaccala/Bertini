@@ -177,7 +177,8 @@ int zero_dim_main_d(int MPType, double parse_time, unsigned int currentSeed, cha
   bclock_t time1, time2;
   int i, num_variables = 0, userHom = 0, paramHom = 0, pathMod = 0, convergence_failures = 0, sharpening_failures = 0, sharpening_singular = 0, num_crossings = 0, num_sols = 0;
   int useRegen = 0, regenStartLevel = 0, maxCodim = 0, specificCodim = 0, reducedOnly = 0, constructWitnessSet = 0, supersetOnly = 0, usedEq = 0;
-  int *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL, **subFuncsBelow = NULL;
+  long *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL;
+  int **subFuncsBelow = NULL;
   int (*ptr_to_eval_d)(point_d, point_d, vec_d, mat_d, mat_d, point_d, comp_d, void const *) = NULL;
   int (*ptr_to_eval_mp)(point_mp, point_mp, vec_mp, mat_mp, mat_mp, point_mp, comp_mp, void const *) = NULL;
   basic_eval_data_d ED;
@@ -720,7 +721,8 @@ int zero_dim_main_mp(double parse_time, unsigned int currentSeed, char *startNam
   tracker_config_t T;
   int i, num_variables = 0, userHom = 0, paramHom = 0, pathMod = 0, convergence_failures = 0, sharpening_failures = 0, sharpening_singular = 0, num_crossings = 0, num_sols = 0;
   int useRegen = 0, regenStartLevel = 0, maxCodim = 0, specificCodim = 0, reducedOnly = 0, constructWitnessSet = 0, supersetOnly = 0, usedEq = 0;
-  int *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL, **subFuncsBelow = NULL;
+  long *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL;
+  int **subFuncsBelow = NULL;
   prog_t dummyProg;
   bclock_t time1, time2;
   int (*ptr_to_eval_func)(point_mp, point_mp, vec_mp, mat_mp, mat_mp, point_mp, comp_mp, void const *);

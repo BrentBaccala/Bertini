@@ -290,7 +290,8 @@ void deflator(prog_t *new_prog, prog_t *old_prog, mpq_t ***K, int K_rows, int K_
 *  started on 7/25/07 by Dan, in London, ON                              *
 \************************************************************************/
 { 
-  int i, j, k, m; 
+  long i;
+  int j, k, m; 
   int *addr_conv_table = (int *)bmalloc(old_prog->memSize * sizeof(int)); //Conversion table for workspace array addresses (index is old addr, entry is new addr).
   int old_const_size = 0, old_subfunc_size = 0, old_func_size = 0, old_funcjac_size = 0, old_subfuncjac_size = 0;
   inst_list *old_const_insts = NULL, *old_subfunc_insts = NULL, *old_func_insts = NULL, *old_funcjac_insts = NULL, *old_subfuncjac_insts = NULL;
@@ -918,7 +919,7 @@ void deflator(prog_t *new_prog, prog_t *old_prog, mpq_t ***K, int K_rows, int K_
   {
     ch = fgetc(arrIN);
   } while (ch != 'I');
-  fscanf(arrIN, "NST %d", &new_prog->size);
+  fscanf(arrIN, "NST %ld", &new_prog->size);
 
   // grab all of the instructions.
   rewind(arrIN);
@@ -1486,7 +1487,7 @@ void add_vec_patch_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t **patch, int pa
   {
     ch = fgetc(FOUT);
   } while (ch != 'I');
-  fscanf(FOUT, "NST %d", &new_prog->size);
+  fscanf(FOUT, "NST %ld", &new_prog->size);
 
   // grab all of the instructions.
   rewind(FOUT);
@@ -2383,7 +2384,7 @@ void randomize_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t ***A, int A_rows, i
   {
     ch = fgetc(FOUT);
   } while (ch != 'I');
-  fscanf(FOUT, "NST %d", &new_prog->size);
+  fscanf(FOUT, "NST %ld", &new_prog->size);
 
   // grab all of the instructions.
   rewind(FOUT);

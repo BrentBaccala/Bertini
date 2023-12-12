@@ -3,7 +3,7 @@
 #include "bertini.h"
 #include "cascade.h"
 
-int setupArr(prog_t *P, int **startSub, int **endSub, int **startFunc, int **endFunc, int **startJvsub, int **endJvsub, int **startJv, int **endJv, int ***subFuncsBelow);
+int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long **endFunc, long **startJvsub, long **endJvsub, long **startJv, long **endJv, int ***subFuncsBelow);
 
 int setupProg(prog_t *P, int precision, int MPType)
 /***************************************************************\
@@ -13,7 +13,9 @@ int setupProg(prog_t *P, int precision, int MPType)
 * NOTES:                                                        *
 \***************************************************************/
 { // just call setupProg_count
-  int i, numVars, *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL, **subFuncsBelow = NULL;
+  int i, numVars;
+  long *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL;
+  int **subFuncsBelow = NULL;
 
   // setup prog
   numVars = setupProg_count(P, precision, MPType, &startSub, &endSub, &startFunc, &endFunc, &startJvsub, &endJvsub, &startJv, &endJv, &subFuncsBelow);
@@ -37,7 +39,7 @@ int setupProg(prog_t *P, int precision, int MPType)
   return numVars;
 }
 
-int setupProg_count(prog_t *P, int precision, int MPType, int **startSub, int **endSub, int **startFunc, int **endFunc, int **startJvsub, int **endJvsub, int **startJv, int **endJv, int ***subFuncsBelow)
+int setupProg_count(prog_t *P, int precision, int MPType, long **startSub, long **endSub, long **startFunc, long **endFunc, long **startJvsub, long **endJvsub, long **startJv, long **endJv, int ***subFuncsBelow)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -63,7 +65,7 @@ int setupProg_count(prog_t *P, int precision, int MPType, int **startSub, int **
   return numvars;
 }  
 
-int setupArr(prog_t *P, int **startSub, int **endSub, int **startFunc, int **endFunc, int **startJvsub, int **endJvsub, int **startJv, int **endJv, int ***subFuncsBelow)
+int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long **endFunc, long **startJvsub, long **endJvsub, long **startJv, long **endJv, int ***subFuncsBelow)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -117,22 +119,22 @@ int setupArr(prog_t *P, int **startSub, int **endSub, int **startFunc, int **end
   // read in INSTCOUNT - endUpdate, endParams, endFnEval, endPDeriv, endJvEval
   fscanf(arrIN, "INSTCOUNT %ld %ld %ld %ld %ld;\n", &P->numInstAtEndUpdate, &P->numInstAtEndParams, &P->numInstAtEndFnEval, &P->numInstAtEndPDeriv, &P->numInstAtEndJvEval);
   // next line contains start/end of subfunctions/functions and their derivs
-  *startSub = (int *)bmalloc(numsubfuncs * sizeof(int));
-  *endSub = (int *)bmalloc(numsubfuncs * sizeof(int));
-  *startFunc = (int *)bmalloc(numfuncs * sizeof(int));
-  *endFunc = (int *)bmalloc(numfuncs * sizeof(int));
-  *startJvsub = (int *)bmalloc(numsubfuncs * sizeof(int));
-  *endJvsub = (int *)bmalloc(numsubfuncs * sizeof(int));
-  *startJv = (int *)bmalloc(numfuncs * sizeof(int));
-  *endJv = (int *)bmalloc(numfuncs * sizeof(int));
+  *startSub = (long *)bmalloc(numsubfuncs * sizeof(long));
+  *endSub = (long *)bmalloc(numsubfuncs * sizeof(long));
+  *startFunc = (long *)bmalloc(numfuncs * sizeof(long));
+  *endFunc = (long *)bmalloc(numfuncs * sizeof(long));
+  *startJvsub = (long *)bmalloc(numsubfuncs * sizeof(long));
+  *endJvsub = (long *)bmalloc(numsubfuncs * sizeof(long));
+  *startJv = (long *)bmalloc(numfuncs * sizeof(long));
+  *endJv = (long *)bmalloc(numfuncs * sizeof(long));
   for (i = 0; i < numsubfuncs; i++)
-    fscanf(arrIN, "%d %d", &(*startSub)[i], &(*endSub)[i]);
+    fscanf(arrIN, "%ld %ld", &(*startSub)[i], &(*endSub)[i]);
   for (i = 0; i < numfuncs; i++)
-    fscanf(arrIN, "%d %d", &(*startFunc)[i], &(*endFunc)[i]);
+    fscanf(arrIN, "%ld %ld", &(*startFunc)[i], &(*endFunc)[i]);
   for (i = 0; i < numsubfuncs; i++)
-    fscanf(arrIN, "%d %d", &(*startJvsub)[i], &(*endJvsub)[i]);
+    fscanf(arrIN, "%ld %ld", &(*startJvsub)[i], &(*endJvsub)[i]);
   for (i = 0; i < numfuncs; i++)
-    fscanf(arrIN, "%d %d", &(*startJv)[i], &(*endJv)[i]);
+    fscanf(arrIN, "%ld %ld", &(*startJv)[i], &(*endJv)[i]);
   scanRestOfLine(arrIN);
 
   // next is the 'matrix' of which subfunctions are below each function
@@ -354,7 +356,7 @@ int paramHom_setup_d(FILE **OUT, char *outName, FILE **midOUT, char *midName, tr
   return numOrigVars;
 }
 
-int zero_dim_basic_setup_d(FILE **OUT, char *outName, FILE **midOUT, char *midName, tracker_config_t *T, basic_eval_data_d *ED, prog_t *dummyProg, int **startSub, int **endSub, int **startFunc, int **endFunc, int **startJvsub, int **endJvsub, int **startJv, int **endJv, int ***subFuncsBelow, int (**eval_d)(point_d, point_d, vec_d, mat_d, mat_d, point_d, comp_d, void const *), int (**eval_mp)(point_mp, point_mp, vec_mp, mat_mp, mat_mp, point_mp, comp_mp, void const *), char *preprocFile, char *degreeFile, int findStartPts, char *pointsIN, char *pointsOUT)
+int zero_dim_basic_setup_d(FILE **OUT, char *outName, FILE **midOUT, char *midName, tracker_config_t *T, basic_eval_data_d *ED, prog_t *dummyProg, long **startSub, long **endSub, long **startFunc, long **endFunc, long **startJvsub, long **endJvsub, long **startJv, long **endJv, int ***subFuncsBelow, int (**eval_d)(point_d, point_d, vec_d, mat_d, mat_d, point_d, comp_d, void const *), int (**eval_mp)(point_mp, point_mp, vec_mp, mat_mp, mat_mp, point_mp, comp_mp, void const *), char *preprocFile, char *degreeFile, int findStartPts, char *pointsIN, char *pointsOUT)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *
@@ -538,7 +540,7 @@ int paramHom_setup_mp(FILE **OUT, char *outName, FILE **midOUT, char *midName, t
   return numOrigVars;
 }
 
-int zero_dim_basic_setup_mp(FILE **OUT, char *outName, FILE **midOUT, char *midName, tracker_config_t *T, basic_eval_data_mp *ED, prog_t *dummyProg, int **startSub, int **endSub, int **startFunc, int **endFunc, int **startJvsub, int **endJvsub, int **startJv, int **endJv, int ***subFuncsBelow, int (**eval)(point_mp, point_mp, vec_mp, mat_mp, mat_mp, point_mp, comp_mp, void const *), char *preprocFile, char *degreeFile, int findStartPts, char *pointsIN, char *pointsOUT)
+int zero_dim_basic_setup_mp(FILE **OUT, char *outName, FILE **midOUT, char *midName, tracker_config_t *T, basic_eval_data_mp *ED, prog_t *dummyProg, long **startSub, long **endSub, long **startFunc, long **endFunc, long **startJvsub, long **endJvsub, long **startJv, long **endJv, int ***subFuncsBelow, int (**eval)(point_mp, point_mp, vec_mp, mat_mp, mat_mp, point_mp, comp_mp, void const *), char *preprocFile, char *degreeFile, int findStartPts, char *pointsIN, char *pointsOUT)
 /***************************************************************\
 * USAGE:                                                        *
 * ARGUMENTS:                                                    *

@@ -23,7 +23,8 @@ int newton_eval_main(int computeCN, int MPType, unsigned int currentSeed, char *
   int i, j, rV, num_variables = 0, num_var_gps = 0, userHom = 0, pathMod = 0, paramHom = 0, useParameters = 0;
   int useRegen = 0, regenStartLevel = 0, maxCodim = 0, specificCodim = 0, reducedOnly = 0, constructWitnessSet = 0, supersetOnly = 0, timeIn = 0;
   int **degrees = NULL;
-  int *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL, **subFuncsBelow = NULL;
+  long *startSub = NULL, *endSub = NULL, *startFunc = NULL, *endFunc = NULL, *startJvsub = NULL, *endJvsub = NULL, *startJv = NULL, *endJv = NULL;
+  int **subFuncsBelow = NULL;
   trackingStats trackCount;
   char start_time[] = "start_time";
   double midpoint_tol, intrinsicCutoffMultiplier, norm_J, norm_J_inv, CN;

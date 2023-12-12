@@ -564,7 +564,7 @@ void setup_mat_in_rat(mpq_t ****A, FILE *FP, int *rows, int *cols);
 
 /* Prototypes from zero_dim_main.c: */
 int  setupProg(prog_t *P, int precision, int MPType); /* Reads straight-line program instructions from arr.out and numbers from num.out into P. */
-int setupProg_count(prog_t *P, int precision, int MPType, int **startSub, int **endSub, int **startFunc, int **endFunc, int **startJvsub, int **endJvsub, int **startJv, int **endJv, int ***subFuncsBelow);
+int setupProg_count(prog_t *P, int precision, int MPType, long **startSub, long **endSub, long **startFunc, long **endFunc, long **startJvsub, long **endJvsub, long **startJv, long **endJv, int ***subFuncsBelow);
 void setupNums(num_t **nums, int numNums, int precision, int MPType);
 void clearProg(prog_t *P, int MPType, int clearEvalProg);  // clears P
 void clearNums(num_t **nums, int numNums); // clear nums
@@ -1106,14 +1106,14 @@ void initEvalProg(int MPType);
 void freeEvalProg(int MPType);
 int evalProg_d_void(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, mat_d Jp, point_d vars, comp_d pathVars, void const *ED);
 int evalProg_d(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, mat_d Jp, point_d vars, comp_d pathVars, prog_t *Prog);
-int evalProg_eff_d(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, mat_d Jp, point_d vars, comp_d pathVars, prog_t *Prog, int startFuncNum, int endFuncNum, int *startSub, int *endSub, int *startFunc, int *endFunc, int *startJvsub, int *endJvsub, int *startJv, int *endJv, int **subFuncsBelow);
+int evalProg_eff_d(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, mat_d Jp, point_d vars, comp_d pathVars, prog_t *Prog, int startFuncNum, int endFuncNum, long *startSub, long *endSub, long *startFunc, long *endFunc, long *startJvsub, long *endJvsub, long *startJv, long *endJv, int **subFuncsBelow);
 int evalProg_d_std(point_d funcVals, point_d parVals, vec_d parDer, mat_d Jv, mat_d Jp, point_d vars, comp_d pathVars, prog_t *Prog);
-void evalInsts_d(_comp_d *mem_d, int *prog, int startOp, int endOp, int oid);
+void evalInsts_d(_comp_d *mem_d, int *prog, long startOp, long endOp, int oid);
 int evalProg_mp_void(point_mp funcVals, point_mp parVals, vec_mp parDer, mat_mp Jv, mat_mp Jp, point_mp vars, comp_mp pathVars, void const *ED);
 int evalProg_mp(point_mp funcVals, point_mp parVals, vec_mp parDer, mat_mp Jv, mat_mp Jp, point_mp vars, comp_mp pathVars, prog_t *Prog);
-int evalProg_eff_mp(point_mp funcVals, point_mp parVals, vec_mp parDer, mat_mp Jv, mat_mp Jp, point_mp vars, comp_mp pathVars, prog_t *Prog, int startFuncNum, int endFuncNum, int *startSub, int *endSub, int *startFunc, int *endFunc, int *startJvsub, int *endJvsub, int *startJv, int *endJv, int **subFuncsBelow);
+int evalProg_eff_mp(point_mp funcVals, point_mp parVals, vec_mp parDer, mat_mp Jv, mat_mp Jp, point_mp vars, comp_mp pathVars, prog_t *Prog, int startFuncNum, int endFuncNum, long *startSub, long *endSub, long *startFunc, long *endFunc, long *startJvsub, long *endJvsub, long *startJv, long *endJv, int **subFuncsBelow);
 int evalProg_mp_std(point_mp funcVals, point_mp parVals, vec_mp parDer, mat_mp Jv, mat_mp Jp, point_mp vars, comp_mp pathVars, prog_t *Prog);
-void evalInsts_mp(_comp_mp *mem_mp, int *prog, int startOp, int endOp, int oid);
+void evalInsts_mp(_comp_mp *mem_mp, int *prog, long startOp, long endOp, int oid);
 int change_prec_prog(void const *ED, int new_prec);
 
 /* Prototypes from prog_manip.c: */
