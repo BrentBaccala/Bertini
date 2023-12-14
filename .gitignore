@@ -1,6 +1,9 @@
 # script executable
 bertini-serial
 
+# the build copies .c files to -parallel.c files for reasons I don't understand
+*-parallel.c
+
 # library (including executable)
 .libs
 libbertini-serial.la
