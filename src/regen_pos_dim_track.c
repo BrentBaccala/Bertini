@@ -127,7 +127,7 @@ void regen_pos_dim_seq_track(int startCodimIndex, int maxCodim, trackingStats *t
     }
 
     // read in the number of paths from START
-    fscanf(START, "%d", &num_crossings);
+    assert(fscanf(START, "%d", &num_crossings) == 1);
     // make sure that we have agreement
     if (num_paths != num_crossings)
     {
@@ -433,10 +433,10 @@ void regen_pos_dim_TrackLevel_trackBack(int pathMod, regen_pos_dim_t *RPD, track
       init_point_data_d(&startPts_d[i], num_input_vars);
       startPts_d[i].point->size = num_input_vars;
       set_one_d(startPts_d[i].time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
       {
-        fscanf(START, "%lf%lf", &startPts_d[i].point->coord[j].r, &startPts_d[i].point->coord[j].i);
+        assert(fscanf(START, "%lf%lf", &startPts_d[i].point->coord[j].r, &startPts_d[i].point->coord[j].i) == 2);
         scanRestOfLine(START);
       }
       startPoint_norm_d[i] = infNormVec_d(startPts_d[i].point);
@@ -452,7 +452,7 @@ void regen_pos_dim_TrackLevel_trackBack(int pathMod, regen_pos_dim_t *RPD, track
       init_point_data_mp(&startPts_mp[i], num_input_vars);
       startPts_mp[i].point->size = num_input_vars;
       set_one_mp(startPts_mp[i].time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
       {
         mpf_inp_str(startPts_mp[i].point->coord[j].r, START, 10);
@@ -637,7 +637,7 @@ void regen_pos_dim_TrackLevel(int pathMod, regen_pos_dim_t *RPD, tracker_config_
     { // setup startPts_d
       for (j = 0; j < num_input_vars; j++)
       { // scan in the coord
-        fscanf(START, "%lf%lf", &startPts_d.point->coord[j].r, &startPts_d.point->coord[j].i);
+        assert(fscanf(START, "%lf%lf", &startPts_d.point->coord[j].r, &startPts_d.point->coord[j].i) == 2);
         scanRestOfLine(START);
       }
       set_one_d(startPts_d.time);
@@ -767,35 +767,35 @@ void regen_pos_dim_SortLevel(int pathMod, regen_pos_dim_t *RPD, tracker_config_t
         printf("Sorting %d of %d\n", i, num_paths);
 
       // pathNum & precision
-      fscanf(ENDPTS, "%d\n%d\n", &pathNum, &prec);
+      assert(fscanf(ENDPTS, "%d\n%d\n", &pathNum, &prec) == 2);
 
       // coordinates
       change_size_point_d(endPt.endPt, num_input_vars);
       endPt.endPt->size = num_input_vars;
       for (j = 0; j < num_input_vars; j++)
       {
-        fscanf(ENDPTS, "%lf%lf", &endPt.endPt->coord[j].r, &endPt.endPt->coord[j].i);
+        assert(fscanf(ENDPTS, "%lf%lf", &endPt.endPt->coord[j].r, &endPt.endPt->coord[j].i) == 2);
         scanRestOfLine(ENDPTS);
       }
       // time
-      fscanf(ENDPTS, "%lf%lf", &endPt.finalT->r, &endPt.finalT->i);
+      assert(fscanf(ENDPTS, "%lf%lf", &endPt.finalT->r, &endPt.finalT->i) == 2);
       scanRestOfLine(ENDPTS);
 
       // last approx
       change_size_point_d(endPt.last_approx, num_input_vars);
       endPt.last_approx->size = num_input_vars;
-      fscanf(ENDPTS, "%d\n", &j);
+      assert(fscanf(ENDPTS, "%d\n", &j) == 1);
       for (j = 0; j < num_input_vars; j++)
       {
-        fscanf(ENDPTS, "%lf%lf", &endPt.last_approx->coord[j].r, &endPt.last_approx->coord[j].i);
+        assert(fscanf(ENDPTS, "%lf%lf", &endPt.last_approx->coord[j].r, &endPt.last_approx->coord[j].i) == 2);
         scanRestOfLine(ENDPTS);
       }
 
       // other info
-      fscanf(ENDPTS, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n", &tempD, &endPt.cond_num, &tempD, &tempD, &tempD, &tempD, &j);
+      assert(fscanf(ENDPTS, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n", &tempD, &endPt.cond_num, &tempD, &tempD, &tempD, &tempD, &j) == 7);
 
       // corank, retVal, smallest non-zero & largest zero SV
-      fscanf(ENDPTS, "%d\n%d\n%lf\n%lf\n", &endPt.corank, &endPt.retVal, &endPt.smallest_nonzero_SV, &endPt.largest_zero_SV);
+      assert(fscanf(ENDPTS, "%d\n%d\n%lf\n%lf\n", &endPt.corank, &endPt.retVal, &endPt.smallest_nonzero_SV, &endPt.largest_zero_SV) == 4);
 
       // determine if each path is (a) rank deficient (b) at infinity and (c) solution to the original functions
       finite = soln = 0;
@@ -877,7 +877,7 @@ void regen_pos_dim_SortLevel(int pathMod, regen_pos_dim_t *RPD, tracker_config_t
         printf("Sorting %d of %d\n", i, num_paths);
 
       // pathNum & precision
-      fscanf(ENDPTS, "%d\n%d\n", &pathNum, &prec);
+      assert(fscanf(ENDPTS, "%d\n%d\n", &pathNum, &prec) == 2);
 
       // coordinates
       change_size_point_mp(endPt.endPt, num_input_vars);
@@ -896,7 +896,7 @@ void regen_pos_dim_SortLevel(int pathMod, regen_pos_dim_t *RPD, tracker_config_t
       // last_approx
       change_size_point_mp(endPt.last_approx, num_input_vars);
       endPt.last_approx->size = num_input_vars;
-      fscanf(ENDPTS, "%d\n", &j);
+      assert(fscanf(ENDPTS, "%d\n", &j) == 1);
       for (j = 0; j < num_input_vars; j++)
       {
         mpf_inp_str(endPt.last_approx->coord[j].r, ENDPTS, 10);
@@ -905,10 +905,10 @@ void regen_pos_dim_SortLevel(int pathMod, regen_pos_dim_t *RPD, tracker_config_t
       }
 
       // other info
-      fscanf(ENDPTS, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n", &tempD, &endPt.cond_num, &tempD, &tempD, &tempD, &tempD, &j);
+      assert(fscanf(ENDPTS, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n", &tempD, &endPt.cond_num, &tempD, &tempD, &tempD, &tempD, &j) == 7);
 
       // corank, retVal, smallest non-zero & largest zero SV
-      fscanf(ENDPTS, "%d\n%d\n%lf\n%lf\n", &endPt.corank, &endPt.retVal, &endPt.smallest_nonzero_SV, &endPt.largest_zero_SV);
+      assert(fscanf(ENDPTS, "%d\n%d\n%lf\n%lf\n", &endPt.corank, &endPt.retVal, &endPt.smallest_nonzero_SV, &endPt.largest_zero_SV) == 4);
 
       // determine if each path is (a) rank deficient (b) at infinity and (c) solution to the original functions
       finite = soln = 0;
@@ -1000,7 +1000,7 @@ void regen_pos_dim_SortLevel(int pathMod, regen_pos_dim_t *RPD, tracker_config_t
         printf("Sorting %d of %d\n", i, num_paths);
 
       // pathNum & precision
-      fscanf(ENDPTS, "%d\n%d\n", &pathNum, &prec);
+      assert(fscanf(ENDPTS, "%d\n%d\n", &pathNum, &prec) == 2);
 
       // save the precision for endPt
       endPt.curr_prec = prec;
@@ -1012,11 +1012,11 @@ void regen_pos_dim_SortLevel(int pathMod, regen_pos_dim_t *RPD, tracker_config_t
         endPt.endPt_d->size = num_input_vars;
         for (j = 0; j < num_input_vars; j++)
         {
-          fscanf(ENDPTS, "%lf%lf", &endPt.endPt_d->coord[j].r, &endPt.endPt_d->coord[j].i);
+          assert(fscanf(ENDPTS, "%lf%lf", &endPt.endPt_d->coord[j].r, &endPt.endPt_d->coord[j].i) == 2);
           scanRestOfLine(ENDPTS);
         }
         // time
-        fscanf(ENDPTS, "%lf%lf", &endPt.finalT_d->r, &endPt.finalT_d->i);
+        assert(fscanf(ENDPTS, "%lf%lf", &endPt.finalT_d->r, &endPt.finalT_d->i) == 2);
       }
       else
       { // set precision & size correctly
@@ -1038,14 +1038,14 @@ void regen_pos_dim_SortLevel(int pathMod, regen_pos_dim_t *RPD, tracker_config_t
       }
 
       // last_approx
-      fscanf(ENDPTS, "%d\n", &endPt.last_approx_prec);
+      assert(fscanf(ENDPTS, "%d\n", &endPt.last_approx_prec) == 1);
       if (endPt.last_approx_prec < 64)
       { // use _d
         change_size_point_d(endPt.last_approx_d, num_input_vars);
         endPt.last_approx_d->size = num_input_vars;
         for (j = 0; j < num_input_vars; j++)
         {
-          fscanf(ENDPTS, "%lf%lf", &endPt.last_approx_d->coord[j].r, &endPt.last_approx_d->coord[j].i);
+          assert(fscanf(ENDPTS, "%lf%lf", &endPt.last_approx_d->coord[j].r, &endPt.last_approx_d->coord[j].i) == 2);
           scanRestOfLine(ENDPTS);
         }
       }
@@ -1066,10 +1066,10 @@ void regen_pos_dim_SortLevel(int pathMod, regen_pos_dim_t *RPD, tracker_config_t
       }
 
       // other info
-      fscanf(ENDPTS, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n", &tempD, &endPt.cond_num, &tempD, &tempD, &tempD, &tempD, &j);
+      assert(fscanf(ENDPTS, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n", &tempD, &endPt.cond_num, &tempD, &tempD, &tempD, &tempD, &j) == 7);
 
       // corank, retVal, smallest non-zero & largest zero SV
-      fscanf(ENDPTS, "%d\n%d\n%lf\n%lf\n", &endPt.corank, &endPt.retVal, &endPt.smallest_nonzero_SV, &endPt.largest_zero_SV);
+      assert(fscanf(ENDPTS, "%d\n%d\n%lf\n%lf\n", &endPt.corank, &endPt.retVal, &endPt.smallest_nonzero_SV, &endPt.largest_zero_SV) == 4);
 
       // determine if each path is (a) rank deficient (b) at infinity and (c) solution to the original functions
       finite = soln = 0;
@@ -1301,10 +1301,10 @@ int regen_pos_dim_PrepareNextCodim(int pathMod, regen_pos_dim_t *RPD, tracker_co
 
       for (i = 0; i < path_count; i++)
       { // read in the ith endpoint
-        fscanf(START, "%d\n%d\n", &j, &prec[i]);
+        assert(fscanf(START, "%d\n%d\n", &j, &prec[i]) == 2);
         for (j = 0; j < num_input_vars; j++)
         {
-          fscanf(START, "%lf%lf", &tempPoint->coord[j].r, &tempPoint->coord[j].i);
+          assert(fscanf(START, "%lf%lf", &tempPoint->coord[j].r, &tempPoint->coord[j].i) == 2);
           scanRestOfLine(START);
         }
 
@@ -1322,10 +1322,10 @@ int regen_pos_dim_PrepareNextCodim(int pathMod, regen_pos_dim_t *RPD, tracker_co
         init_point_d(movePts[i], num_input_vars);
         movePts[i]->size = num_input_vars;
 
-        fscanf(START, "%d\n%d\n", &j, &prec[i]);
+        assert(fscanf(START, "%d\n%d\n", &j, &prec[i]) == 2);
         for (j = 0; j < num_input_vars; j++)
         {
-          fscanf(START, "%lf%lf", &movePts[i]->coord[j].r, &movePts[i]->coord[j].i);
+          assert(fscanf(START, "%lf%lf", &movePts[i]->coord[j].r, &movePts[i]->coord[j].i) == 2);
           scanRestOfLine(START);
         }
       }
@@ -1352,7 +1352,7 @@ int regen_pos_dim_PrepareNextCodim(int pathMod, regen_pos_dim_t *RPD, tracker_co
 
       for (i = 0; i < path_count; i++)
       { // read in the ith endpoint
-        fscanf(START, "%d\n%d\n", &j, &prec[i]);
+        assert(fscanf(START, "%d\n%d\n", &j, &prec[i]) == 2);
         for (j = 0; j < num_input_vars; j++)
         {
           mpf_inp_str(tempPoint->coord[j].r, START, 10);
@@ -1374,7 +1374,7 @@ int regen_pos_dim_PrepareNextCodim(int pathMod, regen_pos_dim_t *RPD, tracker_co
         init_point_mp(movePts[i], num_input_vars);
         movePts[i]->size = num_input_vars;
 
-        fscanf(START, "%d\n%d\n", &j, &prec[i]);
+        assert(fscanf(START, "%d\n%d\n", &j, &prec[i]) == 2);
         for (j = 0; j < num_input_vars; j++)
         {
           mpf_inp_str(movePts[i]->coord[j].r, START, 10);
@@ -1420,13 +1420,13 @@ int regen_pos_dim_PrepareNextCodim(int pathMod, regen_pos_dim_t *RPD, tracker_co
 
       for (i = 0; i < path_count; i++)
       { // read in the ith endpoint
-        fscanf(START, "%d\n%d\n", &j, &prec[i]);
+        assert(fscanf(START, "%d\n%d\n", &j, &prec[i]) == 2);
 
         if (prec[i] < 64)
         { // read in using double precision
           for (j = 0; j < num_input_vars; j++)
           {
-            fscanf(START, "%lf%lf", &tempPoint_d->coord[j].r, &tempPoint_d->coord[j].i);
+            assert(fscanf(START, "%lf%lf", &tempPoint_d->coord[j].r, &tempPoint_d->coord[j].i) == 2);
             scanRestOfLine(START);
           }
           // convert to extrinsic coordinates
@@ -1461,7 +1461,7 @@ int regen_pos_dim_PrepareNextCodim(int pathMod, regen_pos_dim_t *RPD, tracker_co
     { // read in extrinsic coordinates
       for (i = 0; i < path_count; i++)
       { // read in the ith endpoint
-        fscanf(START, "%d\n%d\n", &j, &prec[i]);
+        assert(fscanf(START, "%d\n%d\n", &j, &prec[i]) == 2);
 
         if (prec[i] < 64)
         { // seutp _d
@@ -1469,7 +1469,7 @@ int regen_pos_dim_PrepareNextCodim(int pathMod, regen_pos_dim_t *RPD, tracker_co
           movePts_d[i]->size = num_input_vars;
           for (j = 0; j < num_input_vars; j++)
           {
-            fscanf(START, "%lf%lf", &movePts_d[i]->coord[j].r, &movePts_d[i]->coord[j].i);
+            assert(fscanf(START, "%lf%lf", &movePts_d[i]->coord[j].r, &movePts_d[i]->coord[j].i) == 2);
             scanRestOfLine(START);
           }
         }
@@ -1854,7 +1854,7 @@ void regen_pos_dim_RemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_
   int *isGood = NULL;
 
   // read in the number of paths - to do error checking
-  fscanf(INPUT, "%d\n\n", &i);
+  assert(fscanf(INPUT, "%d\n\n", &i) == 1);
   if (i != num_curr_paths)
   {
     printf("ERROR: The number of paths are not equal!\n");
@@ -1897,26 +1897,26 @@ void regen_pos_dim_RemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_
 
     for (i = 0; i < num_curr_paths; i++)
     { // read in the path number
-      fscanf(INPUT, "%d\n", &j);
+      assert(fscanf(INPUT, "%d\n", &j) == 1);
       // determine if this one is good
       if (isGood[j])
       { // print to NEXTSTARTPTS
         for (j = 0; j < num_vars; j++)
         { // read in coordinate j
-          fscanf(INPUT, "%lf %lf\n", &tempComp_d->r, &tempComp_d->i);
+          assert(fscanf(INPUT, "%lf %lf\n", &tempComp_d->r, &tempComp_d->i) == 2);
           // print coordinate j
           fprintf(NEXTSTARTPTS, "%.15e %.15e;\n", tempComp_d->r, tempComp_d->i);
         }
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
         fprintf(NEXTSTARTPTS, "\n");
       }
       else
       { // move past this one
         for (j = 0; j < num_vars; j++)
         { // read in coordinate j
-          fscanf(INPUT, "%lf %lf\n", &tempComp_d->r, &tempComp_d->i);
+          assert(fscanf(INPUT, "%lf %lf\n", &tempComp_d->r, &tempComp_d->i) == 2);
         }
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
     }
   }
@@ -1927,7 +1927,7 @@ void regen_pos_dim_RemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_
 
     for (i = 0; i < num_curr_paths; i++)
     { // read in the path number
-      fscanf(INPUT, "%d\n", &j);
+      assert(fscanf(INPUT, "%d\n", &j) == 1);
       // determine if this one is good
       if (isGood[j])
       { // print to NEXTSTARTPTS
@@ -1939,7 +1939,7 @@ void regen_pos_dim_RemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_
           print_mp(NEXTSTARTPTS, 0, tempComp_mp);
           fprintf(NEXTSTARTPTS, ";\n");
         }
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
         fprintf(NEXTSTARTPTS, "\n");
       }
       else
@@ -1949,7 +1949,7 @@ void regen_pos_dim_RemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_
           mpf_inp_str(tempComp_mp->r, INPUT, 10);
           mpf_inp_str(tempComp_mp->i, INPUT, 10);
         }
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
     }
 
@@ -2582,23 +2582,23 @@ void setup_endpoint_data_d(endpoint_data_d *endPt, FILE *fp)
   int i, size;
 
   // read in prec & size
-  fscanf(fp, "%d\n%d\n", &i, &size);
+  assert(fscanf(fp, "%d\n%d\n", &i, &size) == 2);
   // setup endPt & last_approx
   change_size_vec_d(endPt->endPt, size);
   change_size_vec_d(endPt->last_approx, size);
   endPt->endPt->size = endPt->last_approx->size = size;
   // read in endPt
   for (i = 0; i < size; i++)
-    fscanf(fp, "%lf%lf\n", &endPt->endPt->coord[i].r, &endPt->endPt->coord[i].i);
+    assert(fscanf(fp, "%lf%lf\n", &endPt->endPt->coord[i].r, &endPt->endPt->coord[i].i) == 2);
   // read in prec
-  fscanf(fp, "%d\n", &i);
+  assert(fscanf(fp, "%d\n", &i) == 1);
   // read in last_approx
   for (i = 0; i < size; i++)
-    fscanf(fp, "%lf%lf\n", &endPt->last_approx->coord[i].r, &endPt->last_approx->coord[i].i);
+    assert(fscanf(fp, "%lf%lf\n", &endPt->last_approx->coord[i].r, &endPt->last_approx->coord[i].i) == 2);
   // read in finalT
-  fscanf(fp, "%lf%lf\n", &endPt->finalT->r, &endPt->finalT->i);
+  assert(fscanf(fp, "%lf%lf\n", &endPt->finalT->r, &endPt->finalT->i) == 2);
   // read in other data
-  fscanf(fp, "%lf\n%d\n%lf\n%lf\n%d\n", &endPt->cond_num, &endPt->corank, &endPt->smallest_nonzero_SV, &endPt->largest_zero_SV, &endPt->retVal);
+  assert(fscanf(fp, "%lf\n%d\n%lf\n%lf\n%d\n", &endPt->cond_num, &endPt->corank, &endPt->smallest_nonzero_SV, &endPt->largest_zero_SV, &endPt->retVal) == 5);
 
   return;
 }
@@ -2656,7 +2656,7 @@ void setup_endpoint_data_mp(endpoint_data_mp *endPt, FILE *fp)
   int i, size;
 
   // read in prec & size
-  fscanf(fp, "%d\n%d\n", &i, &size);
+  assert(fscanf(fp, "%d\n%d\n", &i, &size) == 2);
   // setup endPt & last_approx
   change_size_vec_mp(endPt->endPt, size);
   change_size_vec_mp(endPt->last_approx, size);
@@ -2669,7 +2669,7 @@ void setup_endpoint_data_mp(endpoint_data_mp *endPt, FILE *fp)
     scanRestOfLine(fp);
   }
   // read in prec
-  fscanf(fp, "%d\n", &i);
+  assert(fscanf(fp, "%d\n", &i) == 1);
   // read in last_approx
   for (i = 0; i < size; i++)
   {
@@ -2682,7 +2682,7 @@ void setup_endpoint_data_mp(endpoint_data_mp *endPt, FILE *fp)
   mpf_inp_str(endPt->finalT->i, fp, 10);
   scanRestOfLine(fp);
   // read in other data
-  fscanf(fp, "%lf\n%d\n%lf\n%lf\n%d\n", &endPt->cond_num, &endPt->corank, &endPt->smallest_nonzero_SV, &endPt->largest_zero_SV, &endPt->retVal);
+  assert(fscanf(fp, "%lf\n%d\n%lf\n%lf\n%d\n", &endPt->cond_num, &endPt->corank, &endPt->smallest_nonzero_SV, &endPt->largest_zero_SV, &endPt->retVal) == 5);
 
   return;
 }
@@ -2762,7 +2762,7 @@ void setup_endpoint_data_amp(endpoint_data_amp *endPt, FILE *fp)
   int i, size;
 
   // read in prec & size
-  fscanf(fp, "%d\n%d\n", &endPt->curr_prec, &size);
+  assert(fscanf(fp, "%d\n%d\n", &endPt->curr_prec, &size) == 2);
   // setup endPt
   if (endPt->curr_prec < 64)
   { // setup endPt_d
@@ -2770,7 +2770,7 @@ void setup_endpoint_data_amp(endpoint_data_amp *endPt, FILE *fp)
     endPt->endPt_d->size = size;
     // read in endPt
     for (i = 0; i < size; i++)
-      fscanf(fp, "%lf%lf\n", &endPt->endPt_d->coord[i].r, &endPt->endPt_d->coord[i].i);
+      assert(fscanf(fp, "%lf%lf\n", &endPt->endPt_d->coord[i].r, &endPt->endPt_d->coord[i].i) == 2);
   }
   else
   { // setup endPt_mp
@@ -2786,7 +2786,7 @@ void setup_endpoint_data_amp(endpoint_data_amp *endPt, FILE *fp)
     }
   }
   // read in prec
-  fscanf(fp, "%d\n", &endPt->last_approx_prec);
+  assert(fscanf(fp, "%d\n", &endPt->last_approx_prec) == 1);
   // setup last_approx
   if (endPt->last_approx_prec < 64)
   { // setup last_approx_d
@@ -2794,7 +2794,7 @@ void setup_endpoint_data_amp(endpoint_data_amp *endPt, FILE *fp)
     endPt->last_approx_d->size = size;
     // read in last_approx
     for (i = 0; i < size; i++)
-      fscanf(fp, "%lf%lf\n", &endPt->last_approx_d->coord[i].r, &endPt->last_approx_d->coord[i].i);
+      assert(fscanf(fp, "%lf%lf\n", &endPt->last_approx_d->coord[i].r, &endPt->last_approx_d->coord[i].i) == 2);
   }
   else
   { // setup last_approx_mp
@@ -2813,7 +2813,7 @@ void setup_endpoint_data_amp(endpoint_data_amp *endPt, FILE *fp)
   // read in finalT
   if (endPt->curr_prec < 64)
   { // setup finalT_d
-    fscanf(fp, "%lf%lf\n", &endPt->finalT_d->r, &endPt->finalT_d->i);
+    assert(fscanf(fp, "%lf%lf\n", &endPt->finalT_d->r, &endPt->finalT_d->i) == 2);
   }
   else
   { // setup finalT_mp
@@ -2823,7 +2823,7 @@ void setup_endpoint_data_amp(endpoint_data_amp *endPt, FILE *fp)
     scanRestOfLine(fp);
   }
   // read in other data
-  fscanf(fp, "%lf\n%d\n%lf\n%lf\n%d\n", &endPt->cond_num, &endPt->corank, &endPt->smallest_nonzero_SV, &endPt->largest_zero_SV, &endPt->retVal);
+  assert(fscanf(fp, "%lf\n%d\n%lf\n%lf\n%d\n", &endPt->cond_num, &endPt->corank, &endPt->smallest_nonzero_SV, &endPt->largest_zero_SV, &endPt->retVal) == 5);
 
   return;
 }
@@ -2911,10 +2911,10 @@ int regen_pos_dim_setupNextStart(regen_pos_dim_t *RPD, int codim_index, tracker_
       change_size_point_d(movePt_d, num_input_vars);
       movePt_d->size = num_input_vars;
 
-      fscanf(START, "%d\n%d\n", &j, &prec);
+      assert(fscanf(START, "%d\n%d\n", &j, &prec) == 2);
       for (j = 0; j < num_input_vars; j++)
       {
-        fscanf(START, "%lf%lf", &movePt_d->coord[j].r, &movePt_d->coord[j].i);
+        assert(fscanf(START, "%lf%lf", &movePt_d->coord[j].r, &movePt_d->coord[j].i) == 2);
         scanRestOfLine(START);
       }
       if (RPD->codim[codim_index].useIntrinsicSlice)
@@ -2970,7 +2970,7 @@ int regen_pos_dim_setupNextStart(regen_pos_dim_t *RPD, int codim_index, tracker_
       change_size_point_mp(movePt_mp, num_input_vars);
       movePt_mp->size = num_input_vars;
 
-      fscanf(START, "%d\n%d\n", &j, &prec);
+      assert(fscanf(START, "%d\n%d\n", &j, &prec) == 2);
       for (j = 0; j < num_input_vars; j++)
       {
         mpf_inp_str(movePt_mp->coord[j].r, START, 10);
@@ -3031,7 +3031,7 @@ int regen_pos_dim_setupNextStart(regen_pos_dim_t *RPD, int codim_index, tracker_
 
     for (i = 0; i < path_count; i++)
     { // read in the point & put into extrinsic coordinates
-      fscanf(START, "%d\n%d\n", &j, &prec);
+      assert(fscanf(START, "%d\n%d\n", &j, &prec) == 2);
       if (prec < 64)
       { // use _d   
         change_size_point_d(movePt_d, num_input_vars);
@@ -3039,7 +3039,7 @@ int regen_pos_dim_setupNextStart(regen_pos_dim_t *RPD, int codim_index, tracker_
 
         for (j = 0; j < num_input_vars; j++)
         {
-          fscanf(START, "%lf%lf", &movePt_d->coord[j].r, &movePt_d->coord[j].i);
+          assert(fscanf(START, "%lf%lf", &movePt_d->coord[j].r, &movePt_d->coord[j].i) == 2);
           scanRestOfLine(START);
         }
         if (RPD->codim[codim_index].useIntrinsicSlice)

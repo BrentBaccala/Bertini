@@ -73,11 +73,11 @@ void setupMHstructs(preproc_data *PPD, int **func_gp_count, int ***mhomDeg, FILE
     deg[i] = (int *)bmalloc(total_var_gps * sizeof(int));
     for (j = 0; j < total_var_gps; j++)
     {
-      fscanf(degIN, "%d\n", &deg[i][j]);
+      assert(fscanf(degIN, "%d\n", &deg[i][j]) == 1);
       if (deg[i][j] > 0)
         fn[i]++;
     }
-    fscanf(degIN, "\n");
+    assert(fscanf(degIN, "\n") == 0);
   }
 
   fn = NULL;

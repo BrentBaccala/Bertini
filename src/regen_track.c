@@ -70,7 +70,7 @@ void regen_track_seq(int startLevel, regen_t *regen, tracker_config_t *T, int pa
     }
 
     // read in the number of paths from START
-    fscanf(START, "%d", &num_crossings);
+    assert(fscanf(START, "%d", &num_crossings) == 1);
 
     // make sure that we have agreement
     if (num_paths != num_crossings)
@@ -289,15 +289,15 @@ void regenTrackLevel(int pathMod, regen_t *regen, tracker_config_t *T, FILE *STA
         init_point_data_d(&startPts_d[i], num_input_vars);
         startPts_d[i].point->size = num_input_vars;
         set_one_d(startPts_d[i].time);
-        fscanf(START, "\n");
+        assert(fscanf(START, "\n") == 0);
         for (j = 0; j < num_input_vars; j++)
-          fscanf(START, "%lf %lf;\n", &startPts_d[i].point->coord[j].r, &startPts_d[i].point->coord[j].i);
+          assert(fscanf(START, "%lf %lf;\n", &startPts_d[i].point->coord[j].r, &startPts_d[i].point->coord[j].i) == 2);
 
         // setup curr_linear & curr_linear_degree
         curr_linear[i] = (int *)bmalloc(linearSize * sizeof(int));
         curr_linear_degree[i] = (int *)bmalloc(linearSize * sizeof(int));
         for (j = 0; j < linearSize; j++)
-          fscanf(START, "%d %d\n", &curr_linear[i][j], &curr_linear_degree[i][j]); 
+          assert(fscanf(START, "%d %d\n", &curr_linear[i][j], &curr_linear_degree[i][j]) == 2);
       }
     }
     else
@@ -309,19 +309,19 @@ void regenTrackLevel(int pathMod, regen_t *regen, tracker_config_t *T, FILE *STA
         init_point_data_mp(&startPts_mp[i], num_input_vars);
         startPts_mp[i].point->size = num_input_vars;
         set_one_mp(startPts_mp[i].time);
-        fscanf(START, "\n");
+        assert(fscanf(START, "\n") == 0);
         for (j = 0; j < num_input_vars; j++)
         {
           mpf_inp_str(startPts_mp[i].point->coord[j].r, START, 10);
           mpf_inp_str(startPts_mp[i].point->coord[j].i, START, 10);
-          fscanf(START, ";\n");
+          assert(fscanf(START, ";\n") == 0);
         }
 
         // setup curr_linear & curr_linear_degree
         curr_linear[i] = (int *)bmalloc(linearSize * sizeof(int));
         curr_linear_degree[i] = (int *)bmalloc(linearSize * sizeof(int));
         for (j = 0; j < linearSize; j++)
-          fscanf(START, "%d %d\n", &curr_linear[i][j], &curr_linear_degree[i][j]);
+          assert(fscanf(START, "%d %d\n", &curr_linear[i][j], &curr_linear_degree[i][j]) == 2);
       }
     }
   }
@@ -346,30 +346,30 @@ void regenTrackLevel(int pathMod, regen_t *regen, tracker_config_t *T, FILE *STA
         change_size_point_d(startPts_d[startPointIndex].point, num_input_vars);
         startPts_d[startPointIndex].point->size = num_input_vars;
         set_one_d(startPts_d[startPointIndex].time);
-        fscanf(START, "\n");
+        assert(fscanf(START, "\n") == 0);
         for (j = 0; j < num_input_vars; j++)
-          fscanf(START, "%lf %lf;\n", &startPts_d[startPointIndex].point->coord[j].r, &startPts_d[startPointIndex].point->coord[j].i);
+          assert(fscanf(START, "%lf %lf;\n", &startPts_d[startPointIndex].point->coord[j].r, &startPts_d[startPointIndex].point->coord[j].i) == 2);
 
         // setup curr_linear & curr_linear_degree
         for (j = 0; j < linearSize; j++)
-          fscanf(START, "%d %d\n", &curr_linear[startPointIndex][j], &curr_linear_degree[startPointIndex][j]);
+          assert(fscanf(START, "%d %d\n", &curr_linear[startPointIndex][j], &curr_linear_degree[startPointIndex][j]) == 2);
       }
       else
       { // setup startPts_mp
         change_size_point_mp(startPts_mp[startPointIndex].point, num_input_vars);
         startPts_mp[startPointIndex].point->size = num_input_vars;
         set_one_mp(startPts_mp[startPointIndex].time);
-        fscanf(START, "\n");
+        assert(fscanf(START, "\n") == 0);
         for (j = 0; j < num_input_vars; j++)
         {
           mpf_inp_str(startPts_mp[startPointIndex].point->coord[j].r, START, 10);
           mpf_inp_str(startPts_mp[startPointIndex].point->coord[j].i, START, 10);
-          fscanf(START, ";\n");
+          assert(fscanf(START, ";\n") == 0);
         }
 
         // setup curr_linear & curr_linear_degree
         for (j = 0; j < linearSize; j++)
-          fscanf(START, "%d %d\n", &curr_linear[startPointIndex][j], &curr_linear_degree[startPointIndex][j]);
+          assert(fscanf(START, "%d %d\n", &curr_linear[startPointIndex][j], &curr_linear_degree[startPointIndex][j]) == 2);
       }
     }
     else
@@ -736,10 +736,10 @@ void regenTrackLevel_trackBack(int pathMod, regen_t *regen, tracker_config_t *T,
       init_point_data_d(&startPts_d[i], num_input_vars);
       startPts_d[i].point->size = num_input_vars;
       set_one_d(startPts_d[i].time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
       {
-        fscanf(START, "%lf %lf;\n", &startPts_d[i].point->coord[j].r, &startPts_d[i].point->coord[j].i);
+        assert(fscanf(START, "%lf %lf;\n", &startPts_d[i].point->coord[j].r, &startPts_d[i].point->coord[j].i) == 2);
       }
       startPoint_norm_d[i] = infNormVec_d(startPts_d[i].point);
 
@@ -747,7 +747,7 @@ void regenTrackLevel_trackBack(int pathMod, regen_t *regen, tracker_config_t *T,
       curr_linear[i] = (int *)bmalloc(linearSize * sizeof(int));
       curr_linear_degree[i] = (int *)bmalloc(linearSize * sizeof(int));
       for (j = 0; j < linearSize; j++)
-        fscanf(START, "%d %d\n", &curr_linear[i][j], &curr_linear_degree[i][j]);
+        assert(fscanf(START, "%d %d\n", &curr_linear[i][j], &curr_linear_degree[i][j]) == 2);
     }
   }
   else
@@ -760,12 +760,12 @@ void regenTrackLevel_trackBack(int pathMod, regen_t *regen, tracker_config_t *T,
       init_point_data_mp(&startPts_mp[i], num_input_vars);
       startPts_mp[i].point->size = num_input_vars;
       set_one_mp(startPts_mp[i].time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
       {
         mpf_inp_str(startPts_mp[i].point->coord[j].r, START, 10);
         mpf_inp_str(startPts_mp[i].point->coord[j].i, START, 10);
-        fscanf(START, ";\n");
+        assert(fscanf(START, ";\n") == 0);
       }
 
       mpf_init(startPoint_norm_mp[i]);
@@ -775,7 +775,7 @@ void regenTrackLevel_trackBack(int pathMod, regen_t *regen, tracker_config_t *T,
       curr_linear[i] = (int *)bmalloc(linearSize * sizeof(int));
       curr_linear_degree[i] = (int *)bmalloc(linearSize * sizeof(int));
       for (j = 0; j < linearSize; j++)
-        fscanf(START, "%d %d\n", &curr_linear[i][j], &curr_linear_degree[i][j]);
+        assert(fscanf(START, "%d %d\n", &curr_linear[i][j], &curr_linear_degree[i][j]) == 2);
     }
   }
 
@@ -1595,11 +1595,11 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
     set_one_d(origPt.time);
 
     // read in original point
-    fscanf(START, "%d\n%d\n", &i, &prec);
+    assert(fscanf(START, "%d\n%d\n", &i, &prec) == 2);
     for (i = 0; i < num_input_vars; i++)
-      fscanf(START, "%lf %lf\n", &origPt.point->coord[i].r, &origPt.point->coord[i].i);
+      assert(fscanf(START, "%lf %lf\n", &origPt.point->coord[i].r, &origPt.point->coord[i].i) == 2);
     for (i = 0; i < linearSize; i++)
-      fscanf(START, "%d %d\n", &curr_linear, &curr_linear_degree);
+      assert(fscanf(START, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
 
     if (input_IntrinsicSlice)
     { // convert to extrinsic coordinates
@@ -1662,17 +1662,17 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
         // copy the rest
         for (i = 1; i < new_count; i++)
         { // read in path number
-          fscanf(TEMPSTARTPTS, "%d\n", &j);
+          assert(fscanf(TEMPSTARTPTS, "%d\n", &j) == 1);
           // copy the coordinates
           for (j = 0; j < num_output_vars; j++)
           { // read in jth coordinate
-            fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp->r, &tempComp->i);
+            assert(fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp->r, &tempComp->i) == 2);
             // print coordinate j
             fprintf(NEXTSTARTPTS, "%.15e %.15e;\n", tempComp->r, tempComp->i);
           }
           for (j = 0; j < new_linearSize; j++)
           { // read in linear & degree for function j
-            fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+            assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
             // print linear & degree for function j
             fprintf(NEXTSTARTPTS, "%d %d\n", curr_linear, curr_linear_degree);
           } 
@@ -1691,20 +1691,20 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
       rewind(TEMPSTARTPTS);
       for (i = 0; i < new_count; i++)
       { // read in the path number
-        fscanf(TEMPSTARTPTS, "%d\n", &j);
+        assert(fscanf(TEMPSTARTPTS, "%d\n", &j) == 1);
 
         if (rV[j - initial_pathNum] == 0)
         { // copy this path to NEXTSTARTPTS
           for (j = 0; j < num_output_vars; j++)
           { // read in jth coordinate
-            fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp->r, &tempComp->i);
+            assert(fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp->r, &tempComp->i) == 2);
             // print coordinate j
             print_d(NEXTSTARTPTS, 0, tempComp);
             fprintf(NEXTSTARTPTS, ";\n");
           }
           for (j = 0; j < new_linearSize; j++)
           { // read in linear & degree for function j
-            fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+            assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
             // print linear & degree for function j
             fprintf(NEXTSTARTPTS, "%d %d\n", curr_linear, curr_linear_degree);
           }
@@ -1715,11 +1715,11 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
         { // move past this one
           for (j = 0; j < num_output_vars; j++)
           { // read in jth coordinate
-            fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp->r, &tempComp->i);
+            assert(fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp->r, &tempComp->i) == 2);
           }
           for (j = 0; j < new_linearSize; j++)
           { // read in linear & degree for function j
-            fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+            assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
           }
         }
       }
@@ -1738,14 +1738,14 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
     set_one_mp(origPt.time);
 
     // read in original point
-    fscanf(START, "%d\n%d\n", &i, &prec);
+    assert(fscanf(START, "%d\n%d\n", &i, &prec) == 2);
     for (i = 0; i < num_input_vars; i++)
     {
       mpf_inp_str(origPt.point->coord[i].r, START, 10);
       mpf_inp_str(origPt.point->coord[i].i, START, 10);
     }
     for (i = 0; i < linearSize; i++)
-      fscanf(START, "%d %d\n", &curr_linear, &curr_linear_degree);
+      assert(fscanf(START, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
 
     if (input_IntrinsicSlice)
     { // convert to extrinsic coordinates
@@ -1808,7 +1808,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
         // copy the rest
         for (i = 1; i < new_count; i++)
         { // read in path number
-          fscanf(TEMPSTARTPTS, "%d\n", &j);
+          assert(fscanf(TEMPSTARTPTS, "%d\n", &j) == 1);
           // copy the coordinates
           for (j = 0; j < num_output_vars; j++)
           { // read in jth coordinate
@@ -1820,7 +1820,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
           }
           for (j = 0; j < new_linearSize; j++)
           { // read in linear & degree for function j
-            fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+            assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
             // print linear & degree for function j
             fprintf(NEXTSTARTPTS, "%d %d\n", curr_linear, curr_linear_degree);
           }
@@ -1839,7 +1839,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
       rewind(TEMPSTARTPTS);
       for (i = 0; i < new_count; i++)
       { // read in the path number
-        fscanf(TEMPSTARTPTS, "%d\n", &j);
+        assert(fscanf(TEMPSTARTPTS, "%d\n", &j) == 1);
 
         if (rV[j - initial_pathNum] == 0)
         { // copy this path to NEXTSTARTPTS
@@ -1853,7 +1853,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
           }
           for (j = 0; j < new_linearSize; j++)
           { // read in linear & degree for function j
-            fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+            assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
             // print linear & degree for function j
             fprintf(NEXTSTARTPTS, "%d %d\n", curr_linear, curr_linear_degree);
           }
@@ -1869,7 +1869,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
           }
           for (j = 0; j < new_linearSize; j++)
           { // read in linear & degree for function j
-            fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+            assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
           }
         }
       }
@@ -1891,12 +1891,12 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
     origPt_d.point->size = origPt_mp.point->size = num_input_vars;
 
     // read in precision
-    fscanf(START, "%d\n%d\n", &i, &prec);
+    assert(fscanf(START, "%d\n%d\n", &i, &prec) == 2);
     // read in point
     if (prec < 64)
     { // read in using double precision
       for (i = 0; i < num_input_vars; i++)
-        fscanf(START, "%lf %lf\n", &origPt_d.point->coord[i].r, &origPt_d.point->coord[i].i);
+        assert(fscanf(START, "%lf %lf\n", &origPt_d.point->coord[i].r, &origPt_d.point->coord[i].i) == 2);
     }
     else
     { // read in using multi precision
@@ -1915,7 +1915,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
 
     // move past slices
     for (i = 0; i < linearSize; i++)
-      fscanf(START, "%d %d\n", &curr_linear, &curr_linear_degree);
+      assert(fscanf(START, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
 
     if (input_IntrinsicSlice)
     { // convert to extrinsic coordinates
@@ -1998,17 +1998,17 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
         { // copy using double precision
           for (i = 1; i < new_count; i++)
           { // read in path number
-            fscanf(TEMPSTARTPTS, "%d\n", &j);
+            assert(fscanf(TEMPSTARTPTS, "%d\n", &j) == 1);
             // copy the coordinates
             for (j = 0; j < num_output_vars; j++)
             { // read in jth coordinate
-              fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i);
+              assert(fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i) == 2);
               // print coordinate j
               fprintf(NEXTSTARTPTS, "%.15e %.15e;\n", tempComp_d->r, tempComp_d->i);
             }
             for (j = 0; j < new_linearSize; j++)
             { // read in linear & degree for function j
-              fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+              assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
               // print linear & degree for function j
               fprintf(NEXTSTARTPTS, "%d %d\n", curr_linear, curr_linear_degree);
             }
@@ -2020,7 +2020,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
         { // copy using mulitprecision
           for (i = 1; i < new_count; i++)
           { // read in path number
-            fscanf(TEMPSTARTPTS, "%d\n", &j);
+            assert(fscanf(TEMPSTARTPTS, "%d\n", &j) == 1);
             // copy the coordinates
             for (j = 0; j < num_output_vars; j++)
             { // read in jth coordinate
@@ -2032,7 +2032,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
             }
             for (j = 0; j < new_linearSize; j++)
             { // read in linear & degree for function j
-              fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+              assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
               // print linear & degree for function j
               fprintf(NEXTSTARTPTS, "%d %d\n", curr_linear, curr_linear_degree);
             }
@@ -2054,20 +2054,20 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
       { // move using double precision
         for (i = 0; i < new_count; i++)
         { // read in the path number
-          fscanf(TEMPSTARTPTS, "%d\n", &j);
+          assert(fscanf(TEMPSTARTPTS, "%d\n", &j) == 1);
 
           if (rV[j - initial_pathNum] == 0)
           { // copy this path to NEXTSTARTPTS
             for (j = 0; j < num_output_vars; j++)
             { // read in jth coordinate
-              fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i);
+              assert(fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i) == 2);
               // print coordinate j
               print_d(NEXTSTARTPTS, 0, tempComp_d);
               fprintf(NEXTSTARTPTS, ";\n");
             }
             for (j = 0; j < new_linearSize; j++)
             { // read in linear & degree for function j
-              fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+              assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
               // print linear & degree for function j
               fprintf(NEXTSTARTPTS, "%d %d\n", curr_linear, curr_linear_degree);
             }
@@ -2078,11 +2078,11 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
           { // move past this one
             for (j = 0; j < num_output_vars; j++)
             { // read in jth coordinate
-              fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i);
+              assert(fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i) == 2);
             }
             for (j = 0; j < new_linearSize; j++)
             { // read in linear & degree for function j
-              fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+              assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
             }
           }
         }
@@ -2091,7 +2091,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
       { // move using multiprecision
         for (i = 0; i < new_count; i++)
         { // read in the path number
-          fscanf(TEMPSTARTPTS, "%d\n", &j);
+          assert(fscanf(TEMPSTARTPTS, "%d\n", &j) == 1);
 
           if (rV[j - initial_pathNum] == 0)
           { // copy this path to NEXTSTARTPTS
@@ -2105,7 +2105,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
             }
             for (j = 0; j < new_linearSize; j++)
             { // read in linear & degree for function j
-              fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+              assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
               // print linear & degree for function j
               fprintf(NEXTSTARTPTS, "%d %d\n", curr_linear, curr_linear_degree);
             }
@@ -2121,7 +2121,7 @@ int regenMoveOrigPt(int *pathNum, int totalPaths, int pathMod, regen_t *regen, t
             }
             for (j = 0; j < new_linearSize; j++)
             { // read in linear & degree for function j
-              fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+              assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
             }
           }
         }
@@ -2433,7 +2433,7 @@ void regenRemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_paths, in
   int *isGood = NULL;
 
   // read in the number of paths - to do error checking
-  fscanf(INPUT, "%d\n\n", &i);
+  assert(fscanf(INPUT, "%d\n\n", &i) == 1);
   if (i != num_curr_paths)
   {
     printf("ERROR: The number of paths are not equal!\n");
@@ -2476,36 +2476,36 @@ void regenRemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_paths, in
 
     for (i = 0; i < num_curr_paths; i++)
     { // read in the path number
-      fscanf(INPUT, "%d\n", &j);
+      assert(fscanf(INPUT, "%d\n", &j) == 1);
       // determine if this one is good
       if (isGood[j])
       { // print to NEXTSTARTPTS
         for (j = 0; j < num_vars; j++)
         { // read in coordinate j
-          fscanf(INPUT, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i);
+          assert(fscanf(INPUT, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i) == 2);
           // print coordinate j
           fprintf(NEXTSTARTPTS, "%.15e %.15e;\n", tempComp_d->r, tempComp_d->i);
         }
         for (j = 0; j < num_funcs; j++)
         { // read in linear & degree for function j
-          fscanf(INPUT, "%d %d\n", &linear, &degree);
+          assert(fscanf(INPUT, "%d %d\n", &linear, &degree) == 2);
           // print linear & degree for function j
           fprintf(NEXTSTARTPTS, "%d %d\n", linear, degree);
         }
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
         fprintf(NEXTSTARTPTS, "\n");
       }
       else
       { // move past this one
         for (j = 0; j < num_vars; j++)
         { // read in coordinate j
-          fscanf(INPUT, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i);
+          assert(fscanf(INPUT, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i) == 2);
         }
         for (j = 0; j < num_funcs; j++)
         { // read in linear & degree for function j
-          fscanf(INPUT, "%d %d\n", &linear, &degree);
+          assert(fscanf(INPUT, "%d %d\n", &linear, &degree) == 2);
         }
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
     }
   }
@@ -2516,7 +2516,7 @@ void regenRemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_paths, in
 
     for (i = 0; i < num_curr_paths; i++)
     { // read in the path number
-      fscanf(INPUT, "%d\n", &j);
+      assert(fscanf(INPUT, "%d\n", &j) == 1);
       // determine if this one is good
       if (isGood[j])
       { // print to NEXTSTARTPTS
@@ -2530,11 +2530,11 @@ void regenRemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_paths, in
         }
         for (j = 0; j < num_funcs; j++)
         { // read in linear & degree for function j
-          fscanf(INPUT, "%d %d\n", &linear, &degree);
+          assert(fscanf(INPUT, "%d %d\n", &linear, &degree) == 2);
           // print linear & degree for function j
           fprintf(NEXTSTARTPTS, "%d %d\n", linear, degree);
         }
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
         fprintf(NEXTSTARTPTS, "\n");
       }
       else
@@ -2546,9 +2546,9 @@ void regenRemoveBadPaths(FILE *NEXTSTARTPTS, FILE *INPUT, int *num_new_paths, in
         }
         for (j = 0; j < num_funcs; j++)
         { // read in linear & degree for function j
-          fscanf(INPUT, "%d %d\n", &linear, &degree);
+          assert(fscanf(INPUT, "%d %d\n", &linear, &degree) == 2);
         }
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
     }
 
@@ -2641,7 +2641,7 @@ void regenSetupFinalSoln(regen_t *regen, tracker_config_t *T, FILE *NONSINGIN, F
   for (i = 0; i < num_points; i++)
   { // read in the path number
     pathNum = -1;
-    fscanf(RAWIN, "%d\n", &pathNum);
+    assert(fscanf(RAWIN, "%d\n", &pathNum) == 1);
     // verify that pathNum is valid
     if (pathNum < 0 || pathNum >= num_points)
     {
@@ -2650,20 +2650,20 @@ void regenSetupFinalSoln(regen_t *regen, tracker_config_t *T, FILE *NONSINGIN, F
     }
 
     // see if the precision is larger than max_prec
-    fscanf(RAWIN, "%d\n", &j);
+    assert(fscanf(RAWIN, "%d\n", &j) == 1);
     if (j > max_prec)
       max_prec = j;
 
     // move past the coordinates
     for (j = 0; j < num_input_vars; j++)
-      fscanf(RAWIN, "%lf%lf\n", &tempComp->r, &tempComp->i);
+      assert(fscanf(RAWIN, "%lf%lf\n", &tempComp->r, &tempComp->i) == 2);
 
     // read in the data
-    fscanf(RAWIN, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n%d\n%d\n", &funcRes[pathNum], &condNum[pathNum], &newtonRes[pathNum], &tVal[pathNum], &error[pathNum], &firstInc[pathNum], &cycleNum[pathNum], &tempInt, &j);
+    assert(fscanf(RAWIN, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n%d\n%d\n", &funcRes[pathNum], &condNum[pathNum], &newtonRes[pathNum], &tVal[pathNum], &error[pathNum], &firstInc[pathNum], &cycleNum[pathNum], &tempInt, &j) == 9);
 
     // move past the linear & degree info
     for (j = 0; j < num_funcs; j++)
-      fscanf(RAWIN, "%d%d\n", &tempInt, &tempInt);
+      assert(fscanf(RAWIN, "%d%d\n", &tempInt, &tempInt) == 2);
   }
 
   // print number of variables and dimension to FINALSOLN
@@ -2679,7 +2679,7 @@ void regenSetupFinalSoln(regen_t *regen, tracker_config_t *T, FILE *NONSINGIN, F
   for (i = 0; i < num_good_points; i++)
   { // read in the path number & the precision
     pathNum = -1; 
-    fscanf(NONSINGIN, "%d\n%d\n", &pathNum, &tempInt);
+    assert(fscanf(NONSINGIN, "%d\n%d\n", &pathNum, &tempInt) == 2);
     // verify that pathNum is valid
     if (pathNum < 0 || pathNum >= num_points)
     { 
@@ -2696,7 +2696,7 @@ void regenSetupFinalSoln(regen_t *regen, tracker_config_t *T, FILE *NONSINGIN, F
       increase_size_point_d(tempPoint_d, num_input_vars);
       tempPoint_d->size = num_input_vars;
       for (j = 0; j < num_input_vars; j++)
-        fscanf(NONSINGIN, "%lf%lf\n", &tempPoint_d->coord[j].r, &tempPoint_d->coord[j].i);
+        assert(fscanf(NONSINGIN, "%lf%lf\n", &tempPoint_d->coord[j].r, &tempPoint_d->coord[j].i) == 2);
 
       // convert to original coordinates
       regen->curr_level_num = top_level;
@@ -2716,7 +2716,7 @@ void regenSetupFinalSoln(regen_t *regen, tracker_config_t *T, FILE *NONSINGIN, F
       {
         mpf_inp_str(tempPoint_mp->coord[j].r, NONSINGIN, 10);
         mpf_inp_str(tempPoint_mp->coord[j].i, NONSINGIN, 10);
-        fscanf(NONSINGIN, "\n"); 
+        assert(fscanf(NONSINGIN, "\n") == 0);
       }
 
       // convert to original coordinates
@@ -2738,7 +2738,7 @@ void regenSetupFinalSoln(regen_t *regen, tracker_config_t *T, FILE *NONSINGIN, F
 
     // move past the linear & degree info
     for (j = 0; j < num_funcs; j++)
-      fscanf(NONSINGIN, "%d %d\n", &tempInt, &tempInt);
+      assert(fscanf(NONSINGIN, "%d %d\n", &tempInt, &tempInt) == 2);
   }
 
   // finish the output to FINALSOLN

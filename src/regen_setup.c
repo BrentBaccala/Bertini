@@ -731,8 +731,8 @@ void setupRegenRandom_zero_dim(regen_t *regen, tracker_config_t *T, char *degree
     else
     { // read in the m-hom degrees from degIN
       for (j = 0; j < num_var_gps; j++)
-        fscanf(degIN, "%d\n", &regen->degrees[i][j]);
-      fscanf(degIN, "\n"); // extra "new line" character
+        assert(fscanf(degIN, "%d\n", &regen->degrees[i][j]) == 1);
+      assert(fscanf(degIN, "\n") == 0); // extra "new line" character
     }
   }
   // close degIN
@@ -795,7 +795,7 @@ void setupRegenLevels(regen_t *regen, tracker_config_t *T, char *depthName, int 
   else
   { // read in the depths
     regen->num_levels = 1;
-    fscanf(DEPTH, "%d\n", &regen->num_levels); // read in the number of levels that will be needed
+    assert(fscanf(DEPTH, "%d\n", &regen->num_levels) == 1); // read in the number of levels that will be needed
 
     // error checking
     if (regen->num_levels <= 0)
@@ -810,7 +810,7 @@ void setupRegenLevels(regen_t *regen, tracker_config_t *T, char *depthName, int 
     for (i = 0; i < regen->num_levels; i++)
     {
       depths[i] = 1;
-      fscanf(DEPTH, "%d\n", &depths[i]);
+      assert(fscanf(DEPTH, "%d\n", &depths[i]) == 1);
       if (depths[i] <= 0)
       {
         printf("ERROR: Each depth must be > 0 (%d)!\n", depths[i]);
@@ -2980,9 +2980,9 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
 
 
   // read in the MPType, num_levels, num_funcs, num_variables, num_var_gps
-  fscanf(INPUT, "%d %d %d %d %d\n", &inputMPType, &num_levels, &num_funcs, &num_variables, &num_var_gps);
+  assert(fscanf(INPUT, "%d %d %d %d %d\n", &inputMPType, &num_levels, &num_funcs, &num_variables, &num_var_gps) == 5);
   // read in the current level
-  fscanf(INPUT, "%d\n", &inputCurrLevel);
+  assert(fscanf(INPUT, "%d\n", &inputCurrLevel) == 1);
 
   // error checking
   if (num_funcs != regen->num_funcs)
@@ -3028,35 +3028,35 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
   for (i = 0; i < num_levels; i++)
     if (i < curr_level)
     { // read info about how this level was
-      fscanf(INPUT, "%d %d %d %d %d %d %d %d\n", &regen->level[i].level, &regen->level[i].depth, &regen->level[i].num_paths, &regen->level[i].num_sing, &regen->level[i].num_nonsing, &regen->level[i].num_inf, &regen->level[i].num_higher_dim, &regen->level[i].num_bad);
+      assert(fscanf(INPUT, "%d %d %d %d %d %d %d %d\n", &regen->level[i].level, &regen->level[i].depth, &regen->level[i].num_paths, &regen->level[i].num_sing, &regen->level[i].num_nonsing, &regen->level[i].num_inf, &regen->level[i].num_higher_dim, &regen->level[i].num_bad) == 8);
     }
     else if (i == curr_level)
     { // read info about the current level
-      fscanf(INPUT, "%d %d %d %d\n", &regen->level[i].level, &regen->level[i].depth, &regen->level[i].num_paths, &regen->level[i].useIntrinsicSlice);
+      assert(fscanf(INPUT, "%d %d %d %d\n", &regen->level[i].level, &regen->level[i].depth, &regen->level[i].num_paths, &regen->level[i].useIntrinsicSlice) == 4);
     }
     else
     { // read info about future levels
-      fscanf(INPUT, "%d %d %d\n", &regen->level[i].level, &regen->level[i].depth, &regen->level[i].useIntrinsicSlice);
+      assert(fscanf(INPUT, "%d %d %d\n", &regen->level[i].level, &regen->level[i].depth, &regen->level[i].useIntrinsicSlice) == 3);
     }
-  fscanf(INPUT, "\n");
+  assert(fscanf(INPUT, "\n") == 0);
 
   // read in the patch
   if (inputMPType == 0)
   { // use _d
-    fscanf(INPUT, "%d %d\n", &rows, &cols);
+    assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
     change_size_mat_d(patch_d, rows, cols);
     patch_d->rows = rows;
     patch_d->cols = cols;
     for (i = 0; i < rows; i++)
       for (j = 0; j < cols; j++)
       {
-        fscanf(INPUT, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i);
+        assert(fscanf(INPUT, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i) == 2);
       }
-    fscanf(INPUT, "\n");
+    assert(fscanf(INPUT, "\n") == 0);
   }
   else if (inputMPType == 1)
   { // use _mp
-    fscanf(INPUT, "%d %d\n", &rows, &cols);
+    assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
     change_size_mat_mp(patch_mp, rows, cols);
     patch_mp->rows = rows;
     patch_mp->cols = cols;
@@ -3065,13 +3065,13 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
       {
         mpf_inp_str(patch_mp->entry[i][j].r, INPUT, 10);
         mpf_inp_str(patch_mp->entry[i][j].i, INPUT, 10);
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
-    fscanf(INPUT, "\n");
+    assert(fscanf(INPUT, "\n") == 0);
   }    
   else
   { // use _rat
-    fscanf(INPUT, "%d %d\n", &rows, &cols);
+    assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
     change_size_mat_d(patch_d, rows, cols);
     change_size_mat_mp(patch_mp, rows, cols);
     init_mat_rat(patch_rat, rows, cols);
@@ -3084,9 +3084,9 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
         mpq_canonicalize(patch_rat[i][j][0]);
         mpq_inp_str(patch_rat[i][j][1], INPUT, 10);
         mpq_canonicalize(patch_rat[i][j][1]);
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
-    fscanf(INPUT, "\n");
+    assert(fscanf(INPUT, "\n") == 0);
   }
 
   // setup patch
@@ -3188,20 +3188,20 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
   // read in the main coefficients
   if (inputMPType == 0)
   { // use _d
-    fscanf(INPUT, "%d %d\n", &rows, &cols);
+    assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
     change_size_mat_d(patch_d, rows, cols);
     patch_d->rows = rows;
     patch_d->cols = cols;
     for (i = 0; i < rows; i++)
       for (j = 0; j < cols; j++)
       {
-        fscanf(INPUT, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i);
+        assert(fscanf(INPUT, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i) == 2);
       }
-    fscanf(INPUT, "\n");
+    assert(fscanf(INPUT, "\n") == 0);
   }
   else if (inputMPType == 1)
   { // use _mp
-    fscanf(INPUT, "%d %d\n", &rows, &cols);
+    assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
     change_size_mat_mp(patch_mp, rows, cols);
     patch_mp->rows = rows;
     patch_mp->cols = cols;
@@ -3210,13 +3210,13 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
       {
         mpf_inp_str(patch_mp->entry[i][j].r, INPUT, 10);
         mpf_inp_str(patch_mp->entry[i][j].i, INPUT, 10);
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
-    fscanf(INPUT, "\n");
+    assert(fscanf(INPUT, "\n") == 0);
   }
   else
   { // use _rat
-    fscanf(INPUT, "%d %d\n", &rows, &cols);
+    assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
     change_size_mat_d(patch_d, rows, cols);
     change_size_mat_mp(patch_mp, rows, cols);
     init_mat_rat(patch_rat, rows, cols);
@@ -3229,9 +3229,9 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
         mpq_canonicalize(patch_rat[i][j][0]);
         mpq_inp_str(patch_rat[i][j][1], INPUT, 10);
         mpq_canonicalize(patch_rat[i][j][1]);
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
-    fscanf(INPUT, "\n");
+    assert(fscanf(INPUT, "\n") == 0);
   }
 
   // setup main coefficients
@@ -3345,7 +3345,7 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
           coeff_d[i][j][k] = (comp_d *)bmalloc(regen->num_variables * sizeof(comp_d));
           for (l = 0; l < regen->num_variables; l++)
           { 
-            fscanf(INPUT, "%lf %lf\n", &coeff_d[i][j][k][l]->r, &coeff_d[i][j][k][l]->i);
+            assert(fscanf(INPUT, "%lf %lf\n", &coeff_d[i][j][k][l]->r, &coeff_d[i][j][k][l]->i) == 2);
           }
         }
       }
@@ -3368,7 +3368,7 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
             init_mp(coeff_mp[i][j][k][l]);
             mpf_inp_str(coeff_mp[i][j][k][l]->r, INPUT, 10);
             mpf_inp_str(coeff_mp[i][j][k][l]->i, INPUT, 10);
-            fscanf(INPUT, "\n");
+            assert(fscanf(INPUT, "\n") == 0);
           }
         }
       }
@@ -3397,7 +3397,7 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
             mpq_inp_str(coeff_rat[i][j][k][l][1], INPUT, 10);
             mpq_canonicalize(coeff_rat[i][j][k][l][1]);
 
-            fscanf(INPUT, "\n");
+            assert(fscanf(INPUT, "\n") == 0);
           }
         }
       }
@@ -3621,31 +3621,31 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
   // read in p
   if (inputMPType == 0)
   { // use _d
-    fscanf(INPUT, "%d\n", &rows);
+    assert(fscanf(INPUT, "%d\n", &rows) == 1);
     change_size_vec_d(p_d, rows);
     p_d->size = rows;
     for (i = 0; i < rows; i++)
     {
-      fscanf(INPUT, "%lf %lf\n", &p_d->coord[i].r, &p_d->coord[i].i);
+      assert(fscanf(INPUT, "%lf %lf\n", &p_d->coord[i].r, &p_d->coord[i].i) == 2);
     }
-    fscanf(INPUT, "\n");
+    assert(fscanf(INPUT, "\n") == 0);
   }
   else if (inputMPType == 1)
   { // use _mp
-    fscanf(INPUT, "%d\n", &rows);
+    assert(fscanf(INPUT, "%d\n", &rows) == 1);
     change_size_vec_mp(p_mp, rows);
     p_mp->size = rows;
     for (i = 0; i < rows; i++)
     {
       mpf_inp_str(p_mp->coord[i].r, INPUT, 10);
       mpf_inp_str(p_mp->coord[i].i, INPUT, 10);
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     }
-    fscanf(INPUT, "\n");
+    assert(fscanf(INPUT, "\n") == 0);
   }
   else
   { // use _rat
-    fscanf(INPUT, "%d\n", &rows);
+    assert(fscanf(INPUT, "%d\n", &rows) == 1);
     change_size_vec_d(p_d, rows);
     change_size_vec_mp(p_mp, rows);
     init_vec_rat(p_rat, rows);
@@ -3656,9 +3656,9 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
       mpq_canonicalize(p_rat[i][0]);
       mpq_inp_str(p_rat[i][1], INPUT, 10);
       mpq_canonicalize(p_rat[i][1]);
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     }
-    fscanf(INPUT, "\n");
+    assert(fscanf(INPUT, "\n") == 0);
   }
 
   // setup p
@@ -3754,18 +3754,18 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
   { // read in B
     if (inputMPType == 0)
     { // use _d
-      fscanf(INPUT, "%d %d\n", &rows, &cols);
+      assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
       change_size_mat_d(patch_d, rows, cols);
       patch_d->rows = rows;
       patch_d->cols = cols;
       for (i = 0; i < rows; i++)
         for (j = 0; j < cols; j++)
-          fscanf(INPUT, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i);
-      fscanf(INPUT, "\n");
+          assert(fscanf(INPUT, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i) == 2);
+      assert(fscanf(INPUT, "\n") == 0);
     } 
     else if (inputMPType == 1)
     { // use _mp
-      fscanf(INPUT, "%d %d\n", &rows, &cols);
+      assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
       change_size_mat_mp(patch_mp, rows, cols);
       patch_mp->rows = rows;
       patch_mp->cols = cols;
@@ -3774,13 +3774,13 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
         {
           mpf_inp_str(patch_mp->entry[i][j].r, INPUT, 10);
           mpf_inp_str(patch_mp->entry[i][j].i, INPUT, 10);
-          fscanf(INPUT, "\n");
+          assert(fscanf(INPUT, "\n") == 0);
         }
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     } 
     else
     { // use _rat
-      fscanf(INPUT, "%d %d\n", &rows, &cols);
+      assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
       change_size_mat_d(patch_d, rows, cols);
       change_size_mat_mp(patch_mp, rows, cols);
       init_mat_rat(patch_rat, rows, cols);
@@ -3793,9 +3793,9 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
           mpq_canonicalize(patch_rat[i][j][0]);
           mpq_inp_str(patch_rat[i][j][1], INPUT, 10);
           mpq_canonicalize(patch_rat[i][j][1]);
-          fscanf(INPUT, "\n");
+          assert(fscanf(INPUT, "\n") == 0);
         }
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     } 
 
     // setup B
@@ -3908,31 +3908,31 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
     // read in p
     if (inputMPType == 0)
     { // use _d
-      fscanf(INPUT, "%d\n", &rows);
+      assert(fscanf(INPUT, "%d\n", &rows) == 1);
       change_size_vec_d(p_d, rows);
       p_d->size = rows;
       for (i = 0; i < rows; i++)
       {
-        fscanf(INPUT, "%lf %lf\n", &p_d->coord[i].r, &p_d->coord[i].i);
+        assert(fscanf(INPUT, "%lf %lf\n", &p_d->coord[i].r, &p_d->coord[i].i) == 2);
       }
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     }
     else if (inputMPType == 1)
     { // use _mp
-      fscanf(INPUT, "%d\n", &rows);
+      assert(fscanf(INPUT, "%d\n", &rows) == 1);
       change_size_vec_mp(p_mp, rows);
       p_mp->size = rows;
       for (i = 0; i < rows; i++)
       {
         mpf_inp_str(p_mp->coord[i].r, INPUT, 10);
         mpf_inp_str(p_mp->coord[i].i, INPUT, 10);
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     }
     else
     { // use _rat
-      fscanf(INPUT, "%d\n", &rows);
+      assert(fscanf(INPUT, "%d\n", &rows) == 1);
       change_size_vec_d(p_d, rows);
       change_size_vec_mp(p_mp, rows);
       init_vec_rat(p_rat, rows);
@@ -3943,9 +3943,9 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
         mpq_canonicalize(p_rat[i][0]);
         mpq_inp_str(p_rat[i][1], INPUT, 10);
         mpq_canonicalize(p_rat[i][1]);
-        fscanf(INPUT, "\n");
+        assert(fscanf(INPUT, "\n") == 0);
       }
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     }
 
     // setup p
@@ -4059,20 +4059,20 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
   { // setup the squaring matrix A
     if (inputMPType == 0)
     { // use _d
-      fscanf(INPUT, "%d %d\n", &rows, &cols);
+      assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
       change_size_mat_d(patch_d, rows, cols);
       patch_d->rows = rows;
       patch_d->cols = cols;
       for (i = 0; i < rows; i++)
         for (j = 0; j < cols; j++)
         {
-          fscanf(INPUT, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i);
+          assert(fscanf(INPUT, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i) == 2);
         }
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     }
     else if (inputMPType == 1)
     { // use _mp
-      fscanf(INPUT, "%d %d\n", &rows, &cols);
+      assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
       change_size_mat_mp(patch_mp, rows, cols);
       patch_mp->rows = rows;
       patch_mp->cols = cols;
@@ -4081,13 +4081,13 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
         {
           mpf_inp_str(patch_mp->entry[i][j].r, INPUT, 10);
           mpf_inp_str(patch_mp->entry[i][j].i, INPUT, 10);
-          fscanf(INPUT, "\n");
+          assert(fscanf(INPUT, "\n") == 0);
         }
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     }
     else
     { // use _rat
-      fscanf(INPUT, "%d %d\n", &rows, &cols);
+      assert(fscanf(INPUT, "%d %d\n", &rows, &cols) == 2);
       change_size_mat_d(patch_d, rows, cols);
       change_size_mat_mp(patch_mp, rows, cols);
       init_mat_rat(patch_rat, rows, cols);
@@ -4100,9 +4100,9 @@ void setupRegenRestart(regen_t *regen, tracker_config_t *T, char *startName, int
           mpq_canonicalize(patch_rat[i][j][0]);
           mpq_inp_str(patch_rat[i][j][1], INPUT, 10);
           mpq_canonicalize(patch_rat[i][j][1]);
-          fscanf(INPUT, "\n");
+          assert(fscanf(INPUT, "\n") == 0);
         }
-      fscanf(INPUT, "\n");
+      assert(fscanf(INPUT, "\n") == 0);
     }
 
     // setup A

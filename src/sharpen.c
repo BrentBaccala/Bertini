@@ -181,7 +181,7 @@ void sharpen_process_zero_dim_main(int MPType, unsigned int currentSeed)
 
   // now that everything is setup, we need to read in the data from rawIN
   count = size = -1;
-  fscanf(rawIN, "%d\n%d\n", &count, &size); // read in the number of variables and dimension
+  assert(fscanf(rawIN, "%d\n%d\n", &count, &size) == 2); // read in the number of variables and dimension
 
   // error checking
   if (count != num_variables)
@@ -872,7 +872,7 @@ void sharpen_endpoints_file(int pathMod, int userHom, int useRegen, char *fileNa
 
     // scan in an integer
     i = -1; // used to see the end of the file
-    fscanf(IN, "%d", &i);
+    assert(fscanf(IN, "%d", &i) == 1);
     if (i < 0)
     { // invalid integer scanned in so we get out of the loop
       cont = 0;
@@ -1133,7 +1133,7 @@ int sharpen_endpoint_using_endgame(post_process_t *endPoint, int pathNum, tracke
         // setup startPoint
         startPoint->size = numVars;
         for (i = 0; i < numVars; i++)
-          fscanf(midIN, "%lf%lf", &startPoint->coord[i].r, &startPoint->coord[i].i);
+          assert(fscanf(midIN, "%lf%lf", &startPoint->coord[i].r, &startPoint->coord[i].i) == 2);
 
         // run the endgame
         if (T->endgameNumber == 1)
@@ -1369,7 +1369,7 @@ int sharpen_endpoint_using_endgame(post_process_t *endPoint, int pathNum, tracke
         { // setup using _d
           startPoint_d->size = numVars;
           for (i = 0; i < numVars; i++)
-            fscanf(midIN, "%lf%lf", &startPoint_d->coord[i].r, &startPoint_d->coord[i].i);
+            assert(fscanf(midIN, "%lf%lf", &startPoint_d->coord[i].r, &startPoint_d->coord[i].i) == 2);
         }
         else
         { // setup using _mp

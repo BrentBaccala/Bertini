@@ -66,7 +66,7 @@ void setupParameterHomotopy(FILE *OUT, FILE* IN, int paramHom, int readInOld, in
     }
 
     // move past the number of parameters
-    fscanf(PARAM, "%d\n\n", &i);
+    assert(fscanf(PARAM, "%d\n\n", &i) == 1);
     if (i != numParams)
     { // error
       printf("ERROR: The number of parameters in 'start_parameters' is incorrect!\n");
@@ -78,7 +78,7 @@ void setupParameterHomotopy(FILE *OUT, FILE* IN, int paramHom, int readInOld, in
     { // determine if this line defines parameters
       if (ppArray->types[PARAMETERTYPE].lineNumber[count] == lineNumber)
       { // scan in 'parameter ' & replace with 'constant ' in OUT
-        fscanf(IN, "parameter ");
+        assert(fscanf(IN, "parameter ") == 0);
         fprintf(OUT, "constant ");
         while ((ch = fgetc(IN)) != '\n')
           fprintf(OUT, "%c", ch); 
@@ -144,13 +144,13 @@ void setupParameterHomotopy(FILE *OUT, FILE* IN, int paramHom, int readInOld, in
     }
 
     // read in the number of parameters in each file and verify the counts
-    fscanf(PARAM, "%d", &i);
+    assert(fscanf(PARAM, "%d", &i) == 1);
     if (i != numParams)
     {
       printf("ERROR: The number of parameters in 'start_parameters' is not correct!\n");
       bexit(ERROR_INVALID_SIZE);
     }
-    fscanf(PARAM2, "%d", &i);
+    assert(fscanf(PARAM2, "%d", &i) == 1);
     if (i != numParams)
     {
       printf("ERROR: The number of parameters in 'final_parameters' is not correct!\n");

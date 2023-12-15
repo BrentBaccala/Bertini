@@ -31,7 +31,7 @@ void setupTD_startPoints_d(char pointsIN[], char pointsOUT[], int size, int *deg
   }
   
   // read in the number of points
-  fscanf(IN, "%d\n\n", &num_points);
+  assert(fscanf(IN, "%d\n\n", &num_points) == 1);
   // write the number of points
   fprintf(OUT, "%d\n\n", num_points);
   
@@ -39,8 +39,8 @@ void setupTD_startPoints_d(char pointsIN[], char pointsOUT[], int size, int *deg
   { // read in the ith point
     set_double_d(&tempPoint->coord[0], 1.0, 0.0);
     for (j = 1; j < tempPoint->size; j++)
-      fscanf(IN, "%lf %lf;\n", &tempPoint->coord[j].r, &tempPoint->coord[j].i);
-    fscanf(IN, "\n");
+      assert(fscanf(IN, "%lf %lf;\n", &tempPoint->coord[j].r, &tempPoint->coord[j].i) == 2);
+    assert(fscanf(IN, "\n") == 0);
 
     // calculate the value of the patch at this point
     mul_mat_vec_d(patchVals, PED->patchCoeff, tempPoint);
@@ -78,7 +78,7 @@ void setupPreProcData(char preprocFile[], preproc_data *PPD)
   }
 
   // read in the first line of data
-  fscanf(ppIN, "%d %d %d\n", &PPD->num_funcs, &PPD->num_hom_var_gp, &PPD->num_var_gp);
+  assert(fscanf(ppIN, "%d %d %d\n", &PPD->num_funcs, &PPD->num_hom_var_gp, &PPD->num_var_gp) == 3);
 
   total_gp = PPD->num_hom_var_gp + PPD->num_var_gp;
 
@@ -87,7 +87,7 @@ void setupPreProcData(char preprocFile[], preproc_data *PPD)
 
   // read in the type & sizes of the variable groups
   for (i = 0; i < total_gp; i++)
-    fscanf(ppIN, "%d %d\n", &PPD->type[i], &PPD->size[i]);
+    assert(fscanf(ppIN, "%d %d\n", &PPD->type[i], &PPD->size[i]) == 2);
 
   fclose(ppIN);
 
@@ -128,7 +128,7 @@ void setupSquareSystem_d(prog_t *Prog, int finalSize, preproc_data *PPD, char de
     // setup the original degrees
     SSED->orig_degrees = (int *)bmalloc(SSED->size_f * sizeof(int));
     for (i = 0; i < SSED->size_f; i++)
-      fscanf(degIN, "%d\n\n", &SSED->orig_degrees[i]); 
+      assert(fscanf(degIN, "%d\n\n", &SSED->orig_degrees[i]) == 1);
 
     // find B & B_perp
     if (total_vars == SSED->size_r + 1)
@@ -243,10 +243,10 @@ void setupSquareSystem_d(prog_t *Prog, int finalSize, preproc_data *PPD, char de
       SSED->orig_degrees[i] = 0;
       for (j = 0; j < PPD->num_hom_var_gp + PPD->num_var_gp; j++)
       {
-        fscanf(degIN, "%d\n", &max);
+        assert(fscanf(degIN, "%d\n", &max) == 1);
         SSED->orig_degrees[i] += max;
       }
-      fscanf(degIN, "\n");
+      assert(fscanf(degIN, "\n") == 0);
       SSED->new_degrees[i] = SSED->orig_degrees[i];
     }
 
@@ -295,10 +295,10 @@ void setupCoeffInSS_d(char degreeFile[], int *P, preproc_data *PPD, start_system
   {
     for (j = 0; j < (PPD->num_hom_var_gp + PPD->num_var_gp); j++)
     {
-      fscanf(degIN, "%d\n", &mhomDeg[i][j]);
+      assert(fscanf(degIN, "%d\n", &mhomDeg[i][j]) == 1);
       total_deg += mhomDeg[i][j];
     }
-    fscanf(degIN, "\n"); // extra 
+    assert(fscanf(degIN, "\n") == 0); // extra
   }
 
   // convert to a list of the variable groups that are needed for the linears - use the Permuation P to get the list correct!
@@ -1005,10 +1005,10 @@ void setupCoeffInSS_mp(char degreeFile[], int *P, preproc_data *PPD, start_syste
   {
     for (j = 0; j < (PPD->num_hom_var_gp + PPD->num_var_gp); j++)
     {
-      fscanf(degIN, "%d\n", &mhomDeg[i][j]);
+      assert(fscanf(degIN, "%d\n", &mhomDeg[i][j]) == 1);
       total_deg += mhomDeg[i][j];
     }
-    fscanf(degIN, "\n"); // extra
+    assert(fscanf(degIN, "\n") == 0); // extra
   }
 
   // convert to a list of the variable groups that are needed for the linears - use the Permuation P to get the list correct!
@@ -1157,7 +1157,7 @@ void setupSquareSystem_mp(prog_t *Prog, int finalSize, preproc_data *PPD, char d
     // setup the original degrees
     SSED->orig_degrees = (int *)bmalloc(SSED->size_f * sizeof(int));
     for (i = 0; i < SSED->size_f; i++)
-      fscanf(degIN, "%d\n\n", &SSED->orig_degrees[i]);
+      assert(fscanf(degIN, "%d\n\n", &SSED->orig_degrees[i]) == 1);
 
     // find B & B_perp
     if (total_vars == SSED->size_r + 1)
@@ -1310,10 +1310,10 @@ void setupSquareSystem_mp(prog_t *Prog, int finalSize, preproc_data *PPD, char d
       SSED->orig_degrees[i] = 0;
       for (j = 0; j < PPD->num_hom_var_gp + PPD->num_var_gp; j++)
       {
-        fscanf(degIN, "%d\n", &max);
+        assert(fscanf(degIN, "%d\n", &max) == 1);
         SSED->orig_degrees[i] += max;
       }
-      fscanf(degIN, "\n");
+      assert(fscanf(degIN, "\n") == 0);
       SSED->new_degrees[i] = SSED->orig_degrees[i];
     }
 
@@ -1459,7 +1459,7 @@ void setupTD_startPoints_mp(char pointsIN[], char pointsOUT[], int size, int *de
   }
 
   // read in the number of points
-  fscanf(IN, "%d\n\n", &num_points);
+  assert(fscanf(IN, "%d\n\n", &num_points) == 1);
   // write the number of points
   fprintf(OUT, "%d\n\n", num_points);
 
@@ -1471,9 +1471,9 @@ void setupTD_startPoints_mp(char pointsIN[], char pointsOUT[], int size, int *de
     { // read in the next point
       mpf_inp_str(tempVec->coord[j].r, IN, 10);
       mpf_inp_str(tempVec->coord[j].i, IN, 10);
-      fscanf(IN, ";\n");
+      assert(fscanf(IN, ";\n") == 0);
     }
-    fscanf(IN, "\n");
+    assert(fscanf(IN, "\n") == 0);
 
     // calculate the value of the patch at this point
     mul_mat_vec_mp(patchVals, PED->patchCoeff, tempVec);

@@ -637,9 +637,9 @@ void midpoint_checker(int num_paths, int num_vars, double tol, int *num_crossing
     {
       init_point_d(midpoint_data[i].point, num_vars);
       midpoint_data[i].point->size = num_vars;
-      fscanf(midIN, "%d\n", &midpoint_data[i].path_num);
+      assert(fscanf(midIN, "%d\n", &midpoint_data[i].path_num) == 1);
       for (j = 0; j < num_vars; j++)
-        fscanf(midIN, "%lf%lf\n", &midpoint_data[i].point->coord[j].r, &midpoint_data[i].point->coord[j].i);
+        assert(fscanf(midIN, "%lf%lf\n", &midpoint_data[i].point->coord[j].r, &midpoint_data[i].point->coord[j].i) == 2);
       midpoint_data[i].norm = infNormVec_d(midpoint_data[i].point);
     }
 
@@ -702,7 +702,7 @@ void midpoint_checker(int num_paths, int num_vars, double tol, int *num_crossing
       mpf_init(midpoint_data[i].norm);
       init_point_mp(midpoint_data[i].point, num_vars);
       midpoint_data[i].point->size = num_vars;
-      fscanf(midIN, "%d\n", &midpoint_data[i].path_num);
+      assert(fscanf(midIN, "%d\n", &midpoint_data[i].path_num) == 1);
       for (j = 0; j < num_vars; j++)
       {
         mpf_inp_str(midpoint_data[i].point->coord[j].r, midIN, 10);
@@ -1097,7 +1097,7 @@ void sort_points(int num_crossings, int *convergence_failures, int *sharpening_f
       bexit(ERROR_FILE_NOT_EXIST);
     }
     // move past the number of variables and the dimension
-    fscanf(IN, "%d\n%d\n", &i, &j); 
+    assert(fscanf(IN, "%d\n%d\n", &i, &j) == 2);
 
     // open 'main_data'
     OUT = fopen("main_data", "w");
@@ -2005,7 +2005,7 @@ int setupPostProcess(int *orig_prec, FILE *IN, post_process_t *endPoint, int siz
   // read in the path number
   endPoint->path_num = -1;
 
-  fscanf(IN, "%d\n", &endPoint->path_num);
+  assert(fscanf(IN, "%d\n", &endPoint->path_num) == 1);
 
   if (endPoint->path_num == -1)
   { // we are the bottom so we return an error
@@ -2013,7 +2013,7 @@ int setupPostProcess(int *orig_prec, FILE *IN, post_process_t *endPoint, int siz
   }
   else
   { // continue reading in everything else
-    fscanf(IN, "%d\n", orig_prec);
+    assert(fscanf(IN, "%d\n", orig_prec) == 1);
 
     if (MPType == 0 || (*orig_prec < 64 && MPType == 2))
     { // answer in double precision
@@ -2023,11 +2023,11 @@ int setupPostProcess(int *orig_prec, FILE *IN, post_process_t *endPoint, int siz
       endPoint->sol_mp = NULL;
 
       for (i = 0; i < size; i++)
-        fscanf(IN, "%lf %lf\n", &endPoint->sol_d[i]->r, &endPoint->sol_d[i]->i);
+        assert(fscanf(IN, "%lf %lf\n", &endPoint->sol_d[i]->r, &endPoint->sol_d[i]->i) == 2);
 
-      fscanf(IN, "%lf\n", &endPoint->function_resid_d);
-      fscanf(IN, "%lf\n", &endPoint->cond_est);
-      fscanf(IN, "%lf\n", &endPoint->newton_resid_d);
+      assert(fscanf(IN, "%lf\n", &endPoint->function_resid_d) == 1);
+      assert(fscanf(IN, "%lf\n", &endPoint->cond_est) == 1);
+      assert(fscanf(IN, "%lf\n", &endPoint->newton_resid_d) == 1);
     }
     else // MPType == 1 || (*orig_prec >= 64 && MPType == 2)
     { // answer in multi precision
@@ -2041,25 +2041,25 @@ int setupPostProcess(int *orig_prec, FILE *IN, post_process_t *endPoint, int siz
         init_mp2(endPoint->sol_mp[i], endPoint->sol_prec);
         mpf_inp_str(endPoint->sol_mp[i]->r, IN, 10);
         mpf_inp_str(endPoint->sol_mp[i]->i, IN, 10);
-        fscanf(IN, "\n");
+        assert(fscanf(IN, "\n") == 0);
       }
 
       mpf_init2(endPoint->function_resid_mp, endPoint->sol_prec);
       mpf_inp_str(endPoint->function_resid_mp, IN, 10);
-      fscanf(IN, "\n");
+      assert(fscanf(IN, "\n") == 0);
 
-      fscanf(IN, "%lf\n", &endPoint->cond_est);
+      assert(fscanf(IN, "%lf\n", &endPoint->cond_est) == 1);
 
       mpf_init2(endPoint->newton_resid_mp, endPoint->sol_prec);
       mpf_inp_str(endPoint->newton_resid_mp, IN, 10);
-      fscanf(IN, "\n");
+      assert(fscanf(IN, "\n") == 0);
     }
 
-    fscanf(IN, "%lf\n", &endPoint->final_t);
-    fscanf(IN, "%lf\n", &endPoint->accuracy_estimate);
-    fscanf(IN, "%lf\n", &endPoint->first_increase);
-    fscanf(IN, "%d\n",  &endPoint->cycle_num);
-    fscanf(IN, "%d\n",  &endPoint->success);
+    assert(fscanf(IN, "%lf\n", &endPoint->final_t) == 1);
+    assert(fscanf(IN, "%lf\n", &endPoint->accuracy_estimate) == 1);
+    assert(fscanf(IN, "%lf\n", &endPoint->first_increase) == 1);
+    assert(fscanf(IN, "%d\n",  &endPoint->cycle_num) == 1);
+    assert(fscanf(IN, "%d\n",  &endPoint->success) == 1);
 
     // initialize the other parts
     endPoint->sol_num = 0;

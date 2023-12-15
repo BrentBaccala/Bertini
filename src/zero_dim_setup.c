@@ -94,30 +94,30 @@ int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long *
   {
     ch = fgetc(arrIN);
   } while (ch != 'X');
-  fscanf(arrIN, "\n");
+  assert(fscanf(arrIN, "\n") == 0);
 
   // read in the postamble
-  fscanf(arrIN, "TotalRoomNeeded %d;\n", &workspaceSize);
-  fscanf(arrIN, "NVAR %d %d;\n", &numvars, &varAddr);
-  fscanf(arrIN, "NPATHVAR %d %d;\n", &numpathvars, &pathvarAddr);
-  fscanf(arrIN, "NPAR %d %d %d;\n", &numpars, &parAddr, &parderAddr);
-  fscanf(arrIN, "NFCN %d %d %d %d;\n", &numfuncs, &funcAddr, &jacVAddr, &jacPAddr);
-  fscanf(arrIN, "NCON %d %d;\n", &numconsts, &constAddr);
-  fscanf(arrIN, "NNUM %d %d;\n", &numNums, &numAddr);
-  fscanf(arrIN, "SUBFCN %d %d %d %d;\n", &numsubfuncs, &subfuncAddr, &subfuncDerivWRTVarsStart, &subfuncDerivWRTParamsStart);
-  fscanf(arrIN, "NUMINST %ld;\n", &numInst);
-  fscanf(arrIN, "CMPLX %d;\n", &IAddr);
-  fscanf(arrIN, "VARGPS %d;\n", &num_var_gps);
+  assert(fscanf(arrIN, "TotalRoomNeeded %d;\n", &workspaceSize) == 1);
+  assert(fscanf(arrIN, "NVAR %d %d;\n", &numvars, &varAddr) == 2);
+  assert(fscanf(arrIN, "NPATHVAR %d %d;\n", &numpathvars, &pathvarAddr) == 2);
+  assert(fscanf(arrIN, "NPAR %d %d %d;\n", &numpars, &parAddr, &parderAddr) == 3);
+  assert(fscanf(arrIN, "NFCN %d %d %d %d;\n", &numfuncs, &funcAddr, &jacVAddr, &jacPAddr) == 4);
+  assert(fscanf(arrIN, "NCON %d %d;\n", &numconsts, &constAddr) == 2);
+  assert(fscanf(arrIN, "NNUM %d %d;\n", &numNums, &numAddr) == 2);
+  assert(fscanf(arrIN, "SUBFCN %d %d %d %d;\n", &numsubfuncs, &subfuncAddr, &subfuncDerivWRTVarsStart, &subfuncDerivWRTParamsStart) == 4);
+  assert(fscanf(arrIN, "NUMINST %ld;\n", &numInst) == 1);
+  assert(fscanf(arrIN, "CMPLX %d;\n", &IAddr) == 1);
+  assert(fscanf(arrIN, "VARGPS %d;\n", &num_var_gps) == 1);
   // setup number of variable groups in P
   P->num_var_gps = num_var_gps;
   P->var_gp_sizes = (int *)bcalloc(num_var_gps, sizeof(int));
   for (i = 0; i < num_var_gps; i++)
-    fscanf(arrIN, " %d", &P->var_gp_sizes[i]);
-  fscanf(arrIN, ";\n");
-  fscanf(arrIN, "RANDINDEX %d;\n", &rand_index);
+    assert(fscanf(arrIN, " %d", &P->var_gp_sizes[i]) == 1);
+  assert(fscanf(arrIN, ";\n") == 0);
+  assert(fscanf(arrIN, "RANDINDEX %d;\n", &rand_index) == 1);
 
   // read in INSTCOUNT - endUpdate, endParams, endFnEval, endPDeriv, endJvEval
-  fscanf(arrIN, "INSTCOUNT %ld %ld %ld %ld %ld;\n", &P->numInstAtEndUpdate, &P->numInstAtEndParams, &P->numInstAtEndFnEval, &P->numInstAtEndPDeriv, &P->numInstAtEndJvEval);
+  assert(fscanf(arrIN, "INSTCOUNT %ld %ld %ld %ld %ld;\n", &P->numInstAtEndUpdate, &P->numInstAtEndParams, &P->numInstAtEndFnEval, &P->numInstAtEndPDeriv, &P->numInstAtEndJvEval) == 5);
   // next line contains start/end of subfunctions/functions and their derivs
   *startSub = (long *)bmalloc(numsubfuncs * sizeof(long));
   *endSub = (long *)bmalloc(numsubfuncs * sizeof(long));
@@ -128,13 +128,13 @@ int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long *
   *startJv = (long *)bmalloc(numfuncs * sizeof(long));
   *endJv = (long *)bmalloc(numfuncs * sizeof(long));
   for (i = 0; i < numsubfuncs; i++)
-    fscanf(arrIN, "%ld %ld", &(*startSub)[i], &(*endSub)[i]);
+    assert(fscanf(arrIN, "%ld %ld", &(*startSub)[i], &(*endSub)[i]) == 2);
   for (i = 0; i < numfuncs; i++)
-    fscanf(arrIN, "%ld %ld", &(*startFunc)[i], &(*endFunc)[i]);
+    assert(fscanf(arrIN, "%ld %ld", &(*startFunc)[i], &(*endFunc)[i]) == 2);
   for (i = 0; i < numsubfuncs; i++)
-    fscanf(arrIN, "%ld %ld", &(*startJvsub)[i], &(*endJvsub)[i]);
+    assert(fscanf(arrIN, "%ld %ld", &(*startJvsub)[i], &(*endJvsub)[i]) == 2);
   for (i = 0; i < numfuncs; i++)
-    fscanf(arrIN, "%ld %ld", &(*startJv)[i], &(*endJv)[i]);
+    assert(fscanf(arrIN, "%ld %ld", &(*startJv)[i], &(*endJv)[i]) == 2);
   scanRestOfLine(arrIN);
 
   // next is the 'matrix' of which subfunctions are below each function
@@ -147,7 +147,7 @@ int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long *
     for (i = 0; i < numfuncs; i++)
     { // read in the values
       for (j = 0; j < numsubfuncs; j++)
-        fscanf(arrIN, "%d", &(*subFuncsBelow)[i][j]);
+        assert(fscanf(arrIN, "%d", &(*subFuncsBelow)[i][j]) == 1);
       scanRestOfLine(arrIN);
     }
   }
@@ -160,7 +160,7 @@ int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long *
   rewind(arrIN);
   P->prog = (int *)bcalloc(numInst, sizeof(int));
   for (i = 0; i < numInst; i++)
-    fscanf(arrIN, "%d", &P->prog[i]);
+    assert(fscanf(arrIN, "%d", &P->prog[i]) == 1);
 
   //Finally, we set up the Prog in T:
     //Basic sizes.
@@ -321,7 +321,7 @@ int paramHom_setup_d(FILE **OUT, char *outName, FILE **midOUT, char *midName, tr
     inPt->size = outPt->size = numOrigVars;
 
     // read in the number of points and print
-    fscanf(INPTS, "%d", &numPts);
+    assert(fscanf(INPTS, "%d", &numPts) == 1);
     fprintf(OUTPTS, "%d\n\n", numPts);
   
     // more the points to the patch
@@ -333,7 +333,7 @@ int paramHom_setup_d(FILE **OUT, char *outName, FILE **midOUT, char *midName, tr
       }
       for (j = numOrigVars - numVars; j < numOrigVars; j++)
       {
-        fscanf(INPTS, "%lf%lf", &inPt->coord[j].r, &inPt->coord[j].i);
+        assert(fscanf(INPTS, "%lf%lf", &inPt->coord[j].r, &inPt->coord[j].i) == 2);
         scanRestOfLine(INPTS);
       }
       // move to patch
@@ -504,7 +504,7 @@ int paramHom_setup_mp(FILE **OUT, char *outName, FILE **midOUT, char *midName, t
     inPt->size = outPt->size = numOrigVars;
  
     // read in the number of points and print
-    fscanf(INPTS, "%d", &numPts);
+    assert(fscanf(INPTS, "%d", &numPts) == 1);
     fprintf(OUTPTS, "%d\n\n", numPts);
 
     // more the points to the patch
@@ -801,7 +801,7 @@ void readInStartSystem(FILE *IN, int MPType, int old_MPType, basic_eval_data_d *
   int i, j, totalDeg, inputType;
 
   // read in the start system type
-  fscanf(IN, "%d", &inputType);
+  assert(fscanf(IN, "%d", &inputType) == 1);
 
   // verify we have agreement
   if ((MPType == 1 && (inputType != ED_mp->startSystem.startSystemType)) || ((MPType == 0 || MPType == 2) && (inputType != ED_d->startSystem.startSystemType)))
@@ -814,7 +814,7 @@ void readInStartSystem(FILE *IN, int MPType, int old_MPType, basic_eval_data_d *
   if (old_MPType == 0)
   { // read in _d
     comp_d gamma;
-    fscanf(IN, "%lf%lf", &gamma->r, &gamma->i); 
+    assert(fscanf(IN, "%lf%lf", &gamma->r, &gamma->i) == 2);
 
     // setup in ED_d
     if (MPType == 0 || MPType == 2)
@@ -856,7 +856,7 @@ void readInStartSystem(FILE *IN, int MPType, int old_MPType, basic_eval_data_d *
 
   if (inputType == 1)
   { // setup coeff
-    fscanf(IN, "%d%d", &totalDeg, &inputType);
+    assert(fscanf(IN, "%d%d", &totalDeg, &inputType) == 2);
 
     // verify input
     j = 0;
@@ -889,7 +889,7 @@ void readInStartSystem(FILE *IN, int MPType, int old_MPType, basic_eval_data_d *
       {
         coeff_d[i] = (comp_d *)bmalloc(inputType * sizeof(comp_d));
         for (j = 0; j < inputType; j++)
-          fscanf(IN, "%lf%lf", &coeff_d[i][j]->r, &coeff_d[i][j]->i);
+          assert(fscanf(IN, "%lf%lf", &coeff_d[i][j]->r, &coeff_d[i][j]->i) == 2);
       }
 
       // setup in ED_d
@@ -984,7 +984,7 @@ void readInMat(mat_d A_d, mat_mp A_mp, mpq_t ***A_rat, int outputMPType, int inp
   int i, j, rows, cols;
 
   // read in size
-  fscanf(IN, "%d%d", &rows, &cols);
+  assert(fscanf(IN, "%d%d", &rows, &cols) == 2);
 
   if (rows != expectedRows)
   {
@@ -1007,7 +1007,7 @@ void readInMat(mat_d A_d, mat_mp A_mp, mpq_t ***A_rat, int outputMPType, int inp
     for (i = 0; i < rows; i++)
       for (j = 0; j < cols; j++)
       {
-        fscanf(IN, "%lf%lf", &in->entry[i][j].r, &in->entry[i][j].i);
+        assert(fscanf(IN, "%lf%lf", &in->entry[i][j].r, &in->entry[i][j].i) == 2);
       }
 
     // setup
@@ -1105,7 +1105,7 @@ void updateZeroDimRelevantData(basic_eval_data_d *ED_d, basic_eval_data_mp *ED_m
 {
   int inputMPType, inputEqbyeq;
 
-  fscanf(FP, "%d%d", &inputMPType, &inputEqbyeq);
+  assert(fscanf(FP, "%d%d", &inputMPType, &inputEqbyeq) == 2);
 
   // verify same type of method
   if (inputEqbyeq && !eqbyeqMethod)

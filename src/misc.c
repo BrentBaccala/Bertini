@@ -3995,7 +3995,7 @@ void mypause()
   int i;
 
   printf("Pausing...");
-  scanf("%d", &i);
+  assert(scanf("%d", &i) == 1);
   printf("Proceeding.\n");
 
   return;
@@ -4474,7 +4474,7 @@ void readInPatch(FILE *IN, int MPType, int old_MPType, patch_eval_data_d *PED_d,
   int i, j, rows, cols;
 
   // read in the number of rows & cols
-  fscanf(IN, "%d %d\n", &rows, &cols);
+  assert(fscanf(IN, "%d %d\n", &rows, &cols) == 2);
 
   if (rows > 0 && cols > 0)
   {
@@ -4489,7 +4489,7 @@ void readInPatch(FILE *IN, int MPType, int old_MPType, patch_eval_data_d *PED_d,
       for (i = 0; i < rows; i++)
         for (j = 0; j < cols; j++)
         {
-          fscanf(IN, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i);
+          assert(fscanf(IN, "%lf %lf\n", &patch_d->entry[i][j].r, &patch_d->entry[i][j].i) == 2);
         }
 
       if (MPType == 0)
@@ -4544,7 +4544,7 @@ void readInPatch(FILE *IN, int MPType, int old_MPType, patch_eval_data_d *PED_d,
           mpq_inp_str(patch_rat[i][j][1], IN, 10);
           mpq_canonicalize(patch_rat[i][j][1]);
           // scan rest of line
-          fscanf(IN, "\n");
+          assert(fscanf(IN, "\n") == 0);
         }
 
       if (MPType == 0)
@@ -6292,7 +6292,7 @@ void setupRawComp(FILE *IN, comp_d C_d, comp_mp C_mp, mpq_t *C_rat, int C_Type, 
     comp_d in_d;
     digits = 16;
 
-    fscanf(IN, "%lf %lf\n", &in_d->r, &in_d->i);
+    assert(fscanf(IN, "%lf %lf\n", &in_d->r, &in_d->i) == 2);
 
     // setup C
     if (C_Type == 0)
@@ -6326,7 +6326,7 @@ void setupRawComp(FILE *IN, comp_d C_d, comp_mp C_mp, mpq_t *C_rat, int C_Type, 
     mpf_inp_str(in_mp->r, IN, base);
     mpf_inp_str(in_mp->i, IN, base);
     // scan rest of line
-    fscanf(IN, "\n");
+    assert(fscanf(IN, "\n") == 0);
 
     // setup C
     if (C_Type == 0)
@@ -6373,7 +6373,7 @@ void setupRawComp(FILE *IN, comp_d C_d, comp_mp C_mp, mpq_t *C_rat, int C_Type, 
     mpq_inp_str(in_rat[0], IN, base);
     mpq_inp_str(in_rat[1], IN, base);
     // scan rest of line
-    fscanf(IN, "\n");
+    assert(fscanf(IN, "\n") == 0);
 
     // setup C
     if (C_Type == 0)
@@ -6430,7 +6430,7 @@ void setupRawVec(FILE *IN, vec_d V_d, vec_mp V_mp, mpq_t ***V_rat, int V_Type, i
   int i, size;
 
   // read in the size
-  fscanf(IN, "%d\n", &size);
+  assert(fscanf(IN, "%d\n", &size) == 1);
 
   // setup V
   if (V_Type == 0)
@@ -6480,7 +6480,7 @@ void setupRawMat(FILE *IN, mat_d M_d, mat_mp M_mp, mpq_t ****M_rat, int M_Type, 
   int i, j, rows, cols;
 
   // read in the sizes
-  fscanf(IN, "%d %d\n", &rows, &cols);
+  assert(fscanf(IN, "%d %d\n", &rows, &cols) == 2);
 
   // setup M
   if (M_Type == 0)
@@ -7524,7 +7524,7 @@ void setup_comp_in_d(comp_d A, FILE *FP)
 * NOTES: setup A from FP                                        *
 \***************************************************************/
 {
-  fscanf(FP, "%lf%lf", &A->r, &A->i);
+  assert(fscanf(FP, "%lf%lf", &A->r, &A->i) == 2);
   scanRestOfLine(FP);
 
   return;
@@ -7540,12 +7540,12 @@ void setup_vec_in_d(vec_d A, FILE *FP)
 {
   int i, size;
 
-  fscanf(FP, "%d\n", &size);
+  assert(fscanf(FP, "%d\n", &size) == 1);
   change_size_vec_d(A, size);
   A->size = size;
   for (i = 0; i < size; i++)
   {
-    fscanf(FP, "%lf%lf", &A->coord[i].r, &A->coord[i].i);
+    assert(fscanf(FP, "%lf%lf", &A->coord[i].r, &A->coord[i].i) == 2);
     scanRestOfLine(FP);
   }
 
@@ -7562,14 +7562,14 @@ void setup_mat_in_d(mat_d A, FILE *FP)
 {
   int i, j, rows, cols;
 
-  fscanf(FP, "%d%d\n", &rows, &cols);
+  assert(fscanf(FP, "%d%d\n", &rows, &cols) == 2);
   change_size_mat_d(A, rows, cols);
   A->rows = rows;
   A->cols = cols;
   for (i = 0; i < rows; i++)
     for (j = 0; j < cols; j++)
     {
-      fscanf(FP, "%lf%lf", &A->entry[i][j].r, &A->entry[i][j].i);
+      assert(fscanf(FP, "%lf%lf", &A->entry[i][j].r, &A->entry[i][j].i) == 2);
       scanRestOfLine(FP);
     }
 
@@ -7656,7 +7656,7 @@ void setup_vec_in_mp(vec_mp A, FILE *FP)
 {
   int i, size;
 
-  fscanf(FP, "%d\n", &size);
+  assert(fscanf(FP, "%d\n", &size) == 1);
   change_size_vec_mp(A, size);
   A->size = size;
   for (i = 0; i < size; i++)
@@ -7679,7 +7679,7 @@ void setup_mat_in_mp(mat_mp A, FILE *FP)
 {
   int i, j, rows, cols;
 
-  fscanf(FP, "%d%d\n", &rows, &cols);
+  assert(fscanf(FP, "%d%d\n", &rows, &cols) == 2);
   change_size_mat_mp(A, rows, cols);
   A->rows = rows;
   A->cols = cols;
@@ -7777,7 +7777,7 @@ void setup_vec_in_rat(mpq_t ***A, FILE *FP, int *size)
 {
   int i;
 
-  fscanf(FP, "%d\n", size);
+  assert(fscanf(FP, "%d\n", size) == 1);
   init_vec_rat(*A, *size);
   for (i = 0; i < *size; i++)
   {
@@ -7801,7 +7801,7 @@ void setup_mat_in_rat(mpq_t ****A, FILE *FP, int *rows, int *cols)
 {
   int i, j;
 
-  fscanf(FP, "%d%d\n", rows, cols);
+  assert(fscanf(FP, "%d%d\n", rows, cols) == 2);
   init_mat_rat(*A, *rows, *cols);
   for (i = 0; i < *rows; i++)
     for (j = 0; j < *cols; j++)

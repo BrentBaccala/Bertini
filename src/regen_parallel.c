@@ -101,7 +101,7 @@ void head_regen_track(int startLevel, regen_t *regen, tracker_config_t *T, int p
     }
 
     // read in the number of start points
-    fscanf(START, "%d\n", &num_crossings);
+    assert(fscanf(START, "%d\n", &num_crossings) == 1);
 
     // error checking
     if (num_crossings != regen->level[level].num_paths)
@@ -503,13 +503,13 @@ int head_regenMoveOrigPts(int minPacketSize, int maxPacketSize, int numOrigPts, 
   // loop over the points, printing the data to LINEARSTART and to TEMPSTARTPTS (if needed)
   for (i = 0; i < numOrigPts; i++)
   { // read in the point for file
-    fscanf(START, "%d\n%d\n", &j, &prec);
+    assert(fscanf(START, "%d\n%d\n", &j, &prec) == 2);
     if (prec < 64)
     { // _d
       increase_size_point_d(tempPoint_d, num_input_vars);
       tempPoint_d->size = num_input_vars;
       for (j = 0; j < num_input_vars; j++)
-        fscanf(START, "%lf %lf\n", &tempPoint_d->coord[j].r, &tempPoint_d->coord[j].i);
+        assert(fscanf(START, "%lf %lf\n", &tempPoint_d->coord[j].r, &tempPoint_d->coord[j].i) == 2);
 
       // convert to extrinsic coordinates
       if (input_IntrinsicSlice)
@@ -551,7 +551,7 @@ int head_regenMoveOrigPts(int minPacketSize, int maxPacketSize, int numOrigPts, 
     } 
     // move past linear information
     for (j = 0; j < linearSize; j++)
-      fscanf(START, "%d %d\n", &curr_linear, &curr_linear_degree);
+      assert(fscanf(START, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
 
     // print the points to either LINEARSTART or TEMPSTARTPTS
     for (j = 0; j < new_count; j++)
@@ -637,7 +637,7 @@ int head_regenMoveOrigPts(int minPacketSize, int maxPacketSize, int numOrigPts, 
   // loop over the points printing to NEXTSTARTPOINTS if needed
   for (i = 0; i < numNewPts; i++)
   { // read in the path number
-    fscanf(TEMPSTARTPTS, "%d\n", &j);
+    assert(fscanf(TEMPSTARTPTS, "%d\n", &j) == 1);
     // see if we should move it
     if (rV[j] == 0)
     { // move it to NEXTSTARTPTS
@@ -645,7 +645,7 @@ int head_regenMoveOrigPts(int minPacketSize, int maxPacketSize, int numOrigPts, 
       { // move double precision
         for (j = 0; j < num_output_vars; j++)
         { // read in jth coordinate
-          fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i);
+          assert(fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i) == 2);
           // print coordinate j
           print_d(NEXTSTARTPTS, 0, tempComp_d);
           fprintf(NEXTSTARTPTS, ";\n");
@@ -664,7 +664,7 @@ int head_regenMoveOrigPts(int minPacketSize, int maxPacketSize, int numOrigPts, 
       }
       for (j = 0; j < new_linearSize; j++)
       { // read in linear & degree for function j
-        fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+        assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
         // print linear & degree for function j
         fprintf(NEXTSTARTPTS, "%d %d\n", curr_linear, curr_linear_degree);
       } 
@@ -674,11 +674,11 @@ int head_regenMoveOrigPts(int minPacketSize, int maxPacketSize, int numOrigPts, 
     { // move past this
       for (j = 0; j < num_output_vars; j++)
       { // read in jth coordinate
-        fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i);
+        assert(fscanf(TEMPSTARTPTS, "%lf %lf;\n", &tempComp_d->r, &tempComp_d->i) == 2);
       }
       for (j = 0; j < new_linearSize; j++)
       { // read in linear & degree for function j
-        fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree);
+        assert(fscanf(TEMPSTARTPTS, "%d %d\n", &curr_linear, &curr_linear_degree) == 2);
       }  
     }
   }
@@ -2260,9 +2260,9 @@ int regen_create_send_packet_track(int startNum, int size, FILE *START, endgame_
       change_size_point_d(sendPts[i].PD_d.point, num_input_vars);
       sendPts[i].PD_d.point->size = num_input_vars;
       set_one_d(sendPts[i].PD_d.time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
-        fscanf(START, "%lf %lf;\n", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i);
+        assert(fscanf(START, "%lf %lf;\n", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i) == 2);
     }
     else
     { // setup sendPts[i].PD_mp
@@ -2271,18 +2271,18 @@ int regen_create_send_packet_track(int startNum, int size, FILE *START, endgame_
       change_size_point_mp(sendPts[i].PD_mp.point, num_input_vars);
       sendPts[i].PD_mp.point->size = num_input_vars;
       set_one_mp(sendPts[i].PD_mp.time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
       {
         mpf_inp_str(sendPts[i].PD_mp.point->coord[j].r, START, 10);
         mpf_inp_str(sendPts[i].PD_mp.point->coord[j].i, START, 10);
-        fscanf(START, ";\n");
+        assert(fscanf(START, ";\n") == 0);
       }
     }
 
     // read in curr_linear & curr_linear_degree
     for (j = 0; j < linearSize; j++, intCount += 2)
-      fscanf(START, "%d %d\n", &sendInts[intCount], &sendInts[intCount + 1]);
+      assert(fscanf(START, "%d %d\n", &sendInts[intCount], &sendInts[intCount + 1]) == 2);
   }
 
   // send sendPts to 'sendProc'
@@ -2430,7 +2430,7 @@ int regen_create_send_packet_move(int startNum, int size, FILE *START, endgame_d
       printf("%s path %d of %d\n", jobName, startNum + i, totalPaths);
 
     // read in the path number
-    fscanf(START, "%d\n", &sendPts[i].pathNum);
+    assert(fscanf(START, "%d\n", &sendPts[i].pathNum) == 1);
 
     // setup sendPts[i]
     if (MPType == 0 || MPType == 2)
@@ -2440,7 +2440,7 @@ int regen_create_send_packet_move(int startNum, int size, FILE *START, endgame_d
       sendPts[i].PD_d.point->size = num_input_vars;
       set_one_d(sendPts[i].PD_d.time);
       for (j = 0; j < num_input_vars; j++)
-        fscanf(START, "%lf %lf;\n", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i);
+        assert(fscanf(START, "%lf %lf;\n", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i) == 2);
     }
     else
     { // setup sendPts[i].PD_mp
@@ -2453,13 +2453,13 @@ int regen_create_send_packet_move(int startNum, int size, FILE *START, endgame_d
       {
         mpf_inp_str(sendPts[i].PD_mp.point->coord[j].r, START, 10);
         mpf_inp_str(sendPts[i].PD_mp.point->coord[j].i, START, 10);
-        fscanf(START, ";\n");
+        assert(fscanf(START, ";\n") == 0);
       }
     }
 
     // read in curr_linear & curr_linear_degree
     for (j = 0; j < linearSize; j++, intCount += 2)
-      fscanf(START, "%d %d\n", &sendInts[intCount], &sendInts[intCount + 1]);
+      assert(fscanf(START, "%d %d\n", &sendInts[intCount], &sendInts[intCount + 1]) == 2);
   }
 
   // send sendPts to 'sendProc'

@@ -133,7 +133,7 @@ void membershipTest(witness_t *W, tracker_config_t *T, int pathMod, char *testPo
   }
 
   // read in the number of points that are to be tested
-  fscanf(IN, "%d", &num_points);
+  assert(fscanf(IN, "%d", &num_points) == 1);
   scanRestOfLine(IN);
 
   // setup the precision to use

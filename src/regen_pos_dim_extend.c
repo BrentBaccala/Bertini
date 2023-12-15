@@ -1703,7 +1703,7 @@ int regenExtendSetup_points_finish(int numComponents, int *codim_index, witness_
 
   // read in number of points
   numPoints = 0;
-  fscanf(CODIM, "%d", &numPoints);
+  assert(fscanf(CODIM, "%d", &numPoints) == 1);
   fclose(CODIM);
 
   if (numPoints <= 0)
@@ -1761,7 +1761,7 @@ int regenExtendSetup_start(char *origFile, char *newFile, int curr_codim_index, 
   init_mat_mp(B_transpose_mp, 0, 0);
 
   // loop over the points -- print to OUT
-  fscanf(IN, "%d", &numPoints);
+  assert(fscanf(IN, "%d", &numPoints) == 1);
 
   if (T->MPType == 0 || T->MPType == 2)
   { // setup using _d
@@ -1777,7 +1777,7 @@ int regenExtendSetup_start(char *origFile, char *newFile, int curr_codim_index, 
       increase_size_point_d(pt_d, RPD->orig_variables);
       pt_d->size = RPD->orig_variables;
       for (j = 0; j < RPD->orig_variables; j++)
-        fscanf(IN, "%lf%lf", &pt_d->coord[j].r, &pt_d->coord[j].i);
+        assert(fscanf(IN, "%lf%lf", &pt_d->coord[j].r, &pt_d->coord[j].i) == 2);
 
       // convert to new variables, if needed
       if (RPD->new_variables != RPD->orig_variables)
@@ -1900,17 +1900,17 @@ void regenExtendSetup_witness(char *origFile, char *newFile, tracker_config_t *T
   set_zero_mp(final_mp);
 
   // loop over the points -- print to OUT
-  fscanf(IN, "%d", &numPoints);
+  assert(fscanf(IN, "%d", &numPoints) == 1);
   for (i = 0; i < numPoints; i++)
   { // read in the precision for the point
-    fscanf(IN, "%d", &pt_prec);
+    assert(fscanf(IN, "%d", &pt_prec) == 1);
 
     if (pt_prec < 64)
     { // setup _d
       increase_size_point_d(pt_d, RPD->orig_variables);
       pt_d->size = RPD->orig_variables;
       for (j = 0; j < RPD->orig_variables; j++)
-        fscanf(IN, "%lf%lf", &pt_d->coord[j].r, &pt_d->coord[j].i);
+        assert(fscanf(IN, "%lf%lf", &pt_d->coord[j].r, &pt_d->coord[j].i) == 2);
     }
     else 
     { // setup _mp
@@ -1926,14 +1926,14 @@ void regenExtendSetup_witness(char *origFile, char *newFile, tracker_config_t *T
     }
 
     // read in the precision for the last approximation
-    fscanf(IN, "%d", &last_prec);
+    assert(fscanf(IN, "%d", &last_prec) == 1);
 
     if (last_prec < 64)
     { // setup _d
       increase_size_point_d(last_d, RPD->orig_variables);
       last_d->size = RPD->orig_variables;
       for (j = 0; j < RPD->orig_variables; j++)
-        fscanf(IN, "%lf%lf", &last_d->coord[j].r, &last_d->coord[j].i);
+        assert(fscanf(IN, "%lf%lf", &last_d->coord[j].r, &last_d->coord[j].i) == 2);
     }
     else
     { // setup _mp
@@ -2707,7 +2707,7 @@ void setupDegrees_extend(int **orig_degrees, int **new_degrees, int **perm, int 
   // setup original degrees
   *orig_degrees = (int *)bmalloc(num_funcs * sizeof(int));
   for (i = 0; i < num_funcs; i++)
-    fscanf(tempFile, "%d", &(*orig_degrees)[i]);
+    assert(fscanf(tempFile, "%d", &(*orig_degrees)[i]) == 1);
   
   // close the file containing the degrees
   fclose(tempFile);
@@ -3552,13 +3552,13 @@ void regenExtend_reclassify_codim(tracker_config_t *T, regen_pos_dim_t *RPD, int
   // loop over the points
   for (i = 0; i < RPD->codim[codim_index].num_superset; i++)
   { // read in point
-    fscanf(CODIM, "%d%d", &pt_prec, &size);
+    assert(fscanf(CODIM, "%d%d", &pt_prec, &size) == 2);
     if (pt_prec < 64)
     {
       increase_size_point_d(pt_d, RPD->new_variables);
       pt_d->size = RPD->new_variables;
       for (j = 0; j < RPD->new_variables; j++)
-        fscanf(CODIM, "%lf%lf", &pt_d->coord[j].r, &pt_d->coord[j].i);
+        assert(fscanf(CODIM, "%lf%lf", &pt_d->coord[j].r, &pt_d->coord[j].i) == 2);
 
       // setup int_d
       if (RPD->codim[codim_index].useIntrinsicSlice)
@@ -3598,13 +3598,13 @@ void regenExtend_reclassify_codim(tracker_config_t *T, regen_pos_dim_t *RPD, int
     }
 
     // read in last approximation
-    fscanf(CODIM, "%d", &last_prec);
+    assert(fscanf(CODIM, "%d", &last_prec) == 1);
     if (last_prec < 64)
     {
       increase_size_point_d(last_d, RPD->new_variables);
       last_d->size = RPD->new_variables;
       for (j = 0; j < RPD->new_variables; j++)
-        fscanf(CODIM, "%lf%lf", &last_d->coord[j].r, &last_d->coord[j].i);
+        assert(fscanf(CODIM, "%lf%lf", &last_d->coord[j].r, &last_d->coord[j].i) == 2);
 
       // setup int_last_d
       if (RPD->codim[codim_index].useIntrinsicSlice)
@@ -3646,7 +3646,7 @@ void regenExtend_reclassify_codim(tracker_config_t *T, regen_pos_dim_t *RPD, int
     // read in other data 
     if (pt_prec < 64)
     { // read in final_d
-      fscanf(CODIM, "%lf%lf", &final_d->r, &final_d->i);
+      assert(fscanf(CODIM, "%lf%lf", &final_d->r, &final_d->i) == 2);
     }
     else
     { // read in final_mp
@@ -3656,7 +3656,7 @@ void regenExtend_reclassify_codim(tracker_config_t *T, regen_pos_dim_t *RPD, int
     }
 
     // other data
-    fscanf(CODIM, "%lf%d%lf%lf%d\n", &CN, &corank, &smallest_nonzero_SV, &largest_zero_SV, &rV);
+    assert(fscanf(CODIM, "%lf%d%lf%lf%d\n", &CN, &corank, &smallest_nonzero_SV, &largest_zero_SV, &rV) == 5);
 
     // compute the data
     if (T->MPType == 0)
@@ -3863,7 +3863,7 @@ void head_regenExtend_run(double midpoint_tol, int maxCodim, int pathMod, regen_
       RAWOUT = fopen(str, "w");
 
       // read in the number of paths from START
-      fscanf(START, "%d", &num_crossings);
+      assert(fscanf(START, "%d", &num_crossings) == 1);
       // make sure that we have agreement
       if (num_paths != num_crossings)
       {

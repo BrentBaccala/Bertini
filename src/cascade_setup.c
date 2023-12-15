@@ -439,7 +439,7 @@ void setupCascadeFirstCodim(cascade_t *CD, int MPType)
   }
 
   // read in the number of paths
-  fscanf(tempFile, "%d\n\n", &num_paths);
+  assert(fscanf(tempFile, "%d\n\n", &num_paths) == 1);
 
   // allocate the appropriate memory
   allocateCascadeCodim(CD, 0, 1, num_paths, MPType);
@@ -457,9 +457,9 @@ void setupCascadeFirstCodim(cascade_t *CD, int MPType)
       set_one_d(&tempVec->coord[0]);
       for (j = 1; j < tempVec->size; j++)
       { // read in the jth coordinate
-        fscanf(tempFile, "%lf %lf;\n", &tempVec->coord[j].r, &tempVec->coord[j].i);
+        assert(fscanf(tempFile, "%lf %lf;\n", &tempVec->coord[j].r, &tempVec->coord[j].i) == 2);
       }
-      fscanf(tempFile, "\n");
+      assert(fscanf(tempFile, "\n") == 0);
 
       // find the patch normalizer
       set_zero_d(tempComp);
@@ -510,9 +510,9 @@ void setupCascadeFirstCodim(cascade_t *CD, int MPType)
       { // read in the jth coordinate
         mpf_inp_str(tempVec->coord[j].r, tempFile, 10);
         mpf_inp_str(tempVec->coord[j].i, tempFile, 10);
-        fscanf(tempFile, ";\n");
+        assert(fscanf(tempFile, ";\n") == 0);
       }
-      fscanf(tempFile, "\n");
+      assert(fscanf(tempFile, "\n") == 0);
 
       // find the patch normalizer
       set_zero_mp(tempComp);

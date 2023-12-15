@@ -1251,13 +1251,13 @@ int copyInstructions(FILE *OUT, FILE *IN, char endCh)
     if (isUnary(op))
     { // read in and print unary operation
       numOps += 3;
-      fscanf(IN, "%d %d;\n", &loc, &in[0]);
+      assert(fscanf(IN, "%d %d;\n", &loc, &in[0]) == 2);
       fprintf(OUT, "%d %d %d ", op, loc, in[0]);
     }
     else if (op == '+' || op == '-' || op == '*' || op == '/' || op == '^')
     { // read in the binary operation
       numOps += 4;
-      fscanf(IN, "%d %d %d;\n", &loc, &in[0], &in[1]);
+      assert(fscanf(IN, "%d %d %d;\n", &loc, &in[0], &in[1]) == 3);
       fprintf(OUT, "%d %d %d %d ", op, loc, in[0], in[1]);
     }
     else if (op != 'X')
@@ -1292,19 +1292,19 @@ void setupSystemStructure(systemStruct *sys, char *fileName, int putIntoOrder)
   int tempInt1, tempInt2;
 
   // read in the important information
-  fscanf(FUNC, "RoomBeforeTemps %d;\n", &numNames);
-  fscanf(FUNC, "TotalRoomNeeded %d;\n", &roomNeeded);
+  assert(fscanf(FUNC, "RoomBeforeTemps %d;\n", &numNames) == 1);
+  assert(fscanf(FUNC, "TotalRoomNeeded %d;\n", &roomNeeded) == 1);
 
   // store roomNeeded
   sys->firstFreeMemLoc = roomNeeded + 1;
 
-  fscanf(FUNC, "NVAR %d %d;\n", &numVars, &varAddr);
-  fscanf(FUNC, "NPATHVAR %d %d;\n", &numPathvars, &pathvarAddr);
-  fscanf(FUNC, "NPAR %d %d %d;\n", &numParams, &paramAddr, &paramDerivAddr);
-  fscanf(FUNC, "NFCN %d %d %d %d;\n", &numFuncs, &funcAddr, &funcDerivWRTVarsAddr, &funcDerivWRTParamsAddr);
-  fscanf(FUNC, "NCON %d %d;\n", &numConsts, &constAddr);
-  fscanf(FUNC, "NNUM %d %d;\n", &numNums, &numAddr);
-  fscanf(FUNC, "SUBFCN %d %d %d %d;\n", &numSubfuncs, &subfuncAddr, &subfuncDerivWRTVarsAddr, &subfuncDerivWRTParamsAddr);
+  assert(fscanf(FUNC, "NVAR %d %d;\n", &numVars, &varAddr) == 2);
+  assert(fscanf(FUNC, "NPATHVAR %d %d;\n", &numPathvars, &pathvarAddr) == 2);
+  assert(fscanf(FUNC, "NPAR %d %d %d;\n", &numParams, &paramAddr, &paramDerivAddr) == 3);
+  assert(fscanf(FUNC, "NFCN %d %d %d %d;\n", &numFuncs, &funcAddr, &funcDerivWRTVarsAddr, &funcDerivWRTParamsAddr) == 4);
+  assert(fscanf(FUNC, "NCON %d %d;\n", &numConsts, &constAddr) == 2);
+  assert(fscanf(FUNC, "NNUM %d %d;\n", &numNums, &numAddr) == 2);
+  assert(fscanf(FUNC, "SUBFCN %d %d %d %d;\n", &numSubfuncs, &subfuncAddr, &subfuncDerivWRTVarsAddr, &subfuncDerivWRTParamsAddr) == 4);
 
   // setup variables
   sys->numVars = numVars;
@@ -1344,22 +1344,22 @@ void setupSystemStructure(systemStruct *sys, char *fileName, int putIntoOrder)
     sys->funcs[i].ops = (func_ops *)bmalloc(sys->funcs[i].num_ops * sizeof(func_ops));
   }
 
-  fscanf(FUNC, "CMPLX %d %d %d;\n", &IAddr, &tempInt1, &tempInt2);
-  fscanf(FUNC, "ZERO %d;\n", &zeroAddr);
-  fscanf(FUNC, "ONE %d;\n", &oneAddr);
-  fscanf(FUNC, "VARGPS %d;\n", &num_var_gps);
+  assert(fscanf(FUNC, "CMPLX %d %d %d;\n", &IAddr, &tempInt1, &tempInt2) == 3);
+  assert(fscanf(FUNC, "ZERO %d;\n", &zeroAddr) == 1);
+  assert(fscanf(FUNC, "ONE %d;\n", &oneAddr) == 1);
+  assert(fscanf(FUNC, "VARGPS %d;\n", &num_var_gps) == 1);
 
   // setup varaible groups in var_gp_sizes
   sys->numVarGps = num_var_gps;
   sys->varGpSizes = (int *)bmalloc(num_var_gps * sizeof(int));
   for (i = 0; i < num_var_gps; i++)
   {
-    fscanf(FUNC, " %d", &tempInt1);
+    assert(fscanf(FUNC, " %d", &tempInt1) == 1);
     sys->varGpSizes[i] = tempInt1;
   }
 
-  fscanf(FUNC, ";\n");
-  fscanf(FUNC, "RANDINDEX %d;\n", &rand_index);
+  assert(fscanf(FUNC, ";\n") == 0);
+  assert(fscanf(FUNC, "RANDINDEX %d;\n", &rand_index) == 1);
   sys->randIndex = rand_index;
 
   // allocte update
@@ -1394,18 +1394,18 @@ void readInOps(systemStruct *sys, FILE *FUNC, int putIntoOrder)
   func_ops *funcOps = (func_ops *)bmalloc(numFuncOps * sizeof(func_ops));
 
   // start with the update steps
-  fscanf(FUNC, "BEGIN UPDATE;\n");
+  assert(fscanf(FUNC, "BEGIN UPDATE;\n") == 0);
   setupOps(&sys->updateOps, &sys->numUpdate, FUNC, 'B'); // read until B in BEGIN PARAM
 
   // read in parameter steps
-  fscanf(FUNC, "EGIN PARAM;\n");
+  assert(fscanf(FUNC, "EGIN PARAM;\n") == 0);
   setupOps(&paramOps, &numParamOps, FUNC, 'B'); // read until B in BEGIN FUNCTION
 
   // setup the parameters from paramOps
   setupParams(sys, paramOps, numParamOps);
 
   // read in function steps
-  fscanf(FUNC, "EGIN FUNCTION;\n");
+  assert(fscanf(FUNC, "EGIN FUNCTION;\n") == 0);
   setupOps(&funcOps, &numFuncOps, FUNC, 'E'); // read until E in END
 
   // setup the subfunctions & functions from funcOps
@@ -1597,7 +1597,7 @@ void setupOps(func_ops **ops, int *numOps, FILE *FUNC, char stopCh)
     { // read in the operation
       if (isUnary(ch))
       { // unary operation
-        fscanf(FUNC, "%d %d;\n", &tempInt1, &tempInt2);
+        assert(fscanf(FUNC, "%d %d;\n", &tempInt1, &tempInt2) == 2);
 
         (*ops)[count].memLoc = tempInt1;
         (*ops)[count].op = ch;
@@ -1608,7 +1608,7 @@ void setupOps(func_ops **ops, int *numOps, FILE *FUNC, char stopCh)
       }
       else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^')
       { // binary operation
-        fscanf(FUNC, "%d %d %d;\n", &tempInt1, &tempInt2, &tempInt3);
+        assert(fscanf(FUNC, "%d %d %d;\n", &tempInt1, &tempInt2, &tempInt3) == 3);
 
         (*ops)[count].memLoc = tempInt1;
         (*ops)[count].op = ch;

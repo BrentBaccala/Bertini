@@ -651,7 +651,7 @@ void scanFuncOp(FILE *FUNC, expOps *op)
 * NOTES: scan op data                                           *
 \***************************************************************/
 {
-  fscanf(FUNC, "%d %c %d %d\n", &op->memLoc, &op->op, &op->in[0], &op->in[1]);
+  assert(fscanf(FUNC, "%d %c %d %d\n", &op->memLoc, &op->op, &op->in[0], &op->in[1]) == 4);
 
   return;
 }
@@ -723,7 +723,7 @@ void readFuncOps_depend(char *funcOps, char *funcDepend, expArrayOps *func, expA
 
   // read in func ops
   FUNC = fopen(funcOps, "r");
-  fscanf(FUNC, "%d %d\n", &tempFuncs, &tempSubfuncs);
+  assert(fscanf(FUNC, "%d %d\n", &tempFuncs, &tempSubfuncs) == 2);
   // verify data
   if (numFuncs != tempFuncs || numSubfuncs != tempSubfuncs)
   {
@@ -731,9 +731,9 @@ void readFuncOps_depend(char *funcOps, char *funcDepend, expArrayOps *func, expA
     bexit(ERROR_INPUT_SYNTAX);
   }
   for (i = 0; i < numFuncs; i++)
-    fscanf(FUNC, "%d\n", &func[i].numOps);
+    assert(fscanf(FUNC, "%d\n", &func[i].numOps) == 1);
   for (i = 0; i < numSubfuncs; i++)
-    fscanf(FUNC, "%d\n", &subFunc[i].numOps);
+    assert(fscanf(FUNC, "%d\n", &subFunc[i].numOps) == 1);
   for (i = 0; i < numFuncs; i++)
   {
     numOps = func[i].numOps;
@@ -752,7 +752,7 @@ void readFuncOps_depend(char *funcOps, char *funcDepend, expArrayOps *func, expA
 
   // read in func depend
   FUNC = fopen(funcDepend, "r");
-  fscanf(FUNC, "%d %d %d\n", &tempFuncs, &tempSubfuncs, &tempVarsParams);
+  assert(fscanf(FUNC, "%d %d %d\n", &tempFuncs, &tempSubfuncs, &tempVarsParams) == 3);
   // verify data
   if (numFuncs != tempFuncs || numSubfuncs != tempSubfuncs)
   {
@@ -768,14 +768,14 @@ void readFuncOps_depend(char *funcOps, char *funcDepend, expArrayOps *func, expA
   for (i = 0; i < numFuncs; i++)
   {
     for (j = 0; j < numVarsParams; j++)
-      fscanf(FUNC, "%d ", &fDepend[i][j]);
-    fscanf(FUNC, "\n");
+      assert(fscanf(FUNC, "%d ", &fDepend[i][j]) == 1);
+    assert(fscanf(FUNC, "\n") == 0);
   }
   for (i = 0; i < numSubfuncs; i++)
   {
     for (j = 0; j < numVarsParams; j++)
-      fscanf(FUNC, "%d ", &sfDepend[i][j]);
-    fscanf(FUNC, "\n");
+      assert(fscanf(FUNC, "%d ", &sfDepend[i][j]) == 1);
+    assert(fscanf(FUNC, "\n") == 0);
   }
   fclose(FUNC);
 

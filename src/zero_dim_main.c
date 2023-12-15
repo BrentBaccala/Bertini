@@ -1084,7 +1084,7 @@ void setupStart_d(tracker_config_t *T, point_data_d *PD, FILE *StartPts)
 
   for (i = 0; i < T->numVars; i++)
   {
-    fscanf(StartPts, "%lf%lf", &a, &b);
+    assert(fscanf(StartPts, "%lf%lf", &a, &b) == 2);
     scanRestOfLine(StartPts);
     set_double_d(&PD->point->coord[i], a, b);
   }

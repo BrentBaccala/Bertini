@@ -377,79 +377,79 @@ void setupParseConfiguration(int num, FILE *IN, int *trackType, int *MPType, int
   // rules on how to setup configuration
   if (num == 0)
   { // TrackType
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (-4 <= t && t <= 7)
       *trackType = t;
   }
   else if (num == 1)
   { // MPType
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2)  // error checking on value
       *MPType = t;
   }
   else if (num == 2)
   { // Precision
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (64 <= t) // error checking on value
       *precision = t;
   }
   else if (num == 3)
   { // WitnessGenType
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2)  // error checking on value
       *genType = t;
   }
   else if (num == 4)
   { // UserHomotopy
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2)  // error checking on value
       *userHom = t;
   }
   else if (num == 5)
   { // RandomSeed
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if ((unsigned int) d >= 0)
       *randomSeed = (unsigned int) d;
   }
   else if (num == 6)
   { // SharpenOnly
-   fscanf(IN, "%d", &t);
+   assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1) // error checking on value
       *sharpenOnly = t;
   }
   else if (num == 7)
   { // NeedToDiff
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2)
       *needToDiff = t;
   }
   else if (num == 8)
   { // DeleteTempFiles
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1) // error checking on value
       *remove_temp = t;
   }
   else if (num == 9)
   { // ParameterHomotopy
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2) // error checking on value
       *paramHom = t;
   }
   else if (num == 10)
   { // AMPMaxPrec
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 64) // error checking on value
       *AMPMaxPrec = t;
   }
   else if (num == 11)
   { // UseRegeneration
-   fscanf(IN, "%d", &t);
+   assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1)  // error checking on value
       *useRegen = t;
   }
   else if (num == 12)
   { // RegenStartLevel
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0) // error checking on value
       *regenStartLevel = t;
   }
@@ -471,7 +471,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   // rules on how to setup configuration
   if (num == 0)
   { // TrackType
-    fscanf(IN, "%d", &t); 
+    assert(fscanf(IN, "%d", &t) == 1);
     if (-4 <= t && t <= 7)
       *trackType = t;
     else
@@ -479,7 +479,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 1)
   { // MPType
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2)  // error checking on value
       T->MPType = t;
     else
@@ -487,7 +487,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 2)
   { // Precision
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (64 <= t) // error checking on value
       T->Precision = t;
     else
@@ -495,7 +495,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 3)
   { // COeffBound
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->AMP_bound_on_abs_vals_of_coeffs = d;
     else
@@ -503,7 +503,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 4)
   { // DegreeBound
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->AMP_bound_on_degree = d;
     else
@@ -511,7 +511,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 5)
   { // AMPMaxPrec
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 64) // error checking on value
       T->AMP_max_prec = t;
     else
@@ -519,17 +519,17 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 6)
   { // AMPSafetyDigits1
-    fscanf(IN, "%d", &t); // no error checking needed
+    assert(fscanf(IN, "%d", &t) == 1); // no error checking needed
     T->AMP_safety_digits_1 = t;
   }
   else if (num == 7)
   { // AMPSafetyDigits2
-    fscanf(IN, "%d", &t); // no error checking needed
+    assert(fscanf(IN, "%d", &t) == 1); // no error checking needed
     T->AMP_safety_digits_2 = t;
   }
   else if (num == 8)
   { // TrackTolBeforeEG
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->basicNewtonTol = d;
     else
@@ -537,7 +537,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 9)
   { // TrackTolDuringEG
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->endgameNewtonTol = d;
     else
@@ -545,7 +545,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 10)
   { // ODEPredictor
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (-1 <= t && t <= 8) // error check on value
       T->odePredictor = t;
     else
@@ -553,7 +553,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 11)
   { // MaxNewtonIts
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0)  // error checking on value
       T->maxNewtonIts = t;
     else
@@ -561,7 +561,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 12)
   { // MaxStepSize
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (0 < d && d < 1)  // error checking on value
       T->maxStepSize = d;
     else
@@ -569,7 +569,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 13)
   { // MinStepSizeBeforeEG
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->minStepSizeBeforeEndGame = d;
     else
@@ -577,7 +577,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 14)
   { // MinStepSizeDuringEG
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->minStepSizeDuringEndGame = d;
     else
@@ -585,7 +585,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 15)
   { // MaxNumberSteps
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t > 0)  // error checking on value
       T->maxNumSteps = t;
     else
@@ -593,7 +593,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 16)
   { // StepsForIncrease
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 1) // error checking on value
       T->cSecInc = t;
     else
@@ -601,7 +601,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 17)
   { // StepFailFactor
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (0 < d && d < 1) // error checking on value
       T->step_fail_factor = d;
     else
@@ -609,7 +609,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 18)
   { // Step SuccessFactor
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d >= 1) // error checking on value
       T->step_success_factor = d;
     else
@@ -617,7 +617,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 19)
   { // PathTruncationThreshold
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error check on value
       T->goingToInfinity = d;
     else
@@ -625,7 +625,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 20)
   { // FinalTol
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->final_tolerance = d;
     else
@@ -633,7 +633,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   } 
   else if (num == 21)
   { // EndgameNum
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2 || t == 3)  // error checking on value
       T->endgameNumber = t;
     else
@@ -641,7 +641,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 22)
   { // SampleFactor
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if ((0 < d) && (d < 1)) // error checking on value
       T->power_series_sample_factor = d;
     else
@@ -649,7 +649,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 23)
   { // NumSamplePoints
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 2) // error checking on value
       T->num_PSEG_sample_points = t;
     else
@@ -657,7 +657,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 24)
   { // EndgameBdry
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if ((0 < d) && (d < 1))  // error checking on value
       T->endgameBoundary = d;
     else
@@ -665,7 +665,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 25)
   { // MinCycleTrackBack
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t > 0)  // error checking on value
       T->minCycleTrackBack = t;
     else
@@ -673,7 +673,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 26)
   { // NbhdRadius
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (0 < d && d < 1)  // error checking on value
       T->minTrackT = d;
     else
@@ -681,7 +681,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 27)
   { // MaxCycleNum
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t > 0)  // error checking on value
       T->cycle_num_max = t;
     else
@@ -689,7 +689,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 28)
   { // SecurityLevel
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1) // error checking on value
       T->securityLevel = t;
     else
@@ -697,7 +697,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 29)
   { // SecurityMaxNorm
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0) // error checking on value
       T->securityMaxNorm = d;
     else
@@ -705,7 +705,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 30)
   { // TargetTolMultiplier
-   fscanf(IN, "%lf", &d);
+   assert(fscanf(IN, "%lf", &d) == 1);
     if (d >= 1)  // error checking on value
       T->final_tol_multiplier = d;
     else
@@ -713,7 +713,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 31)
   { // ImagThreshold
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0) // error checking on value
       T->real_threshold = d;
     else
@@ -721,7 +721,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 32)
   { // CondNumThreshold
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->cond_num_threshold = d;
     else
@@ -729,7 +729,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 33)
   { // EndpointFiniteThreshold
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error check on value
       T->finiteThreshold = d;
     else
@@ -737,7 +737,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 34)
   { // SharpenDigits
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t > 0) // error checking on value
       T->sharpenDigits = t;
     else
@@ -745,7 +745,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 35)
   { // SharpenOnly
-   fscanf(IN, "%d", &t);
+   assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1) // error checking on value
       T->sharpenOnly = t;
     else
@@ -753,7 +753,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 36)
   { // UserHomotopy
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2)  // error checking on value
       *userHom = t;
     else
@@ -761,7 +761,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 37)
   { // ParameterHomotopy
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2) // error checking on value
       *paramHom = t;
     else
@@ -769,7 +769,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 38)
   { // WitnessGenType
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2)  // error checking on value
       *genType = t;
     else
@@ -777,7 +777,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 39)
   { // MaxCodimension
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0) // error checking on value
       *maxCodim = t;
     else
@@ -785,7 +785,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 40)
   { // JunkRemovalTest
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1) // error checking on value
       T->junkRemovalTest = t;
     else
@@ -793,7 +793,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 41)
   { // MaxLDTDepth
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t > 0) // error checking on value
       T->maxDepthLDT = t;
     else
@@ -801,7 +801,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 42)
   { // WitnessSupersetOnly
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1)  // error checking on value
       *supersetOnly = t;
     else
@@ -809,7 +809,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 43)
   { // MultOneOnly
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1) // error checking on value
       *reducedOnly = t;
     else
@@ -817,7 +817,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 44)
   { // MaxNumPtsForTrace
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t > 0)  // error checking on value
       T->max_num_pts_for_trace = t;
     else
@@ -825,7 +825,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 45)
   { // MaxNumMonoLoops
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0)  // error checking on value
       T->max_num_mon_linears = t;
     else
@@ -833,7 +833,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 46)
   { // MaxNumBadMonoLoops
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0)  // error checking on value
       T->max_num_bad_loops_in_mon = t;
     else
@@ -841,7 +841,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 47)
   { // UseRegeneration
-   fscanf(IN, "%d", &t);
+   assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1)  // error checking on value
       *useRegen = t;
     else
@@ -849,7 +849,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 48)
   { // SliceTolBeforeEG
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->sliceBasicNewtonTol = d;
     else
@@ -857,7 +857,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 49)
   { // SliceTolDuringEG
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->sliceEndgameNewtonTol = d;
     else
@@ -865,7 +865,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 50)
   { // SliceFinalTol
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->sliceFinalTol = d;
     else
@@ -873,7 +873,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 51)
   { // RegenStartLevel
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0) // error checking on value
       *regenStartLevel = t;
     else
@@ -881,7 +881,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 52)
   { // RegenRemoveInf
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1) // error checking on value
       T->regen_remove_inf = t;
     else
@@ -889,7 +889,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 53)
   { // UseDiagonal
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1)  // error checking on value
     {
       if (t == 1)
@@ -900,7 +900,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 54)
   { // OutputLevel
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (-1 <= t && t <= 3)  // error checking on value
       T->outputLevel = t;
     else
@@ -908,7 +908,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 55)
   { // PrintPathProgress
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0)  // error checking on value
       *printMod = t;
     else
@@ -916,7 +916,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 56)
   { // ScreenOut
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1)
       T->screenOut = t;
     else
@@ -924,13 +924,13 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 57)
   { // RandomSeed
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if ((unsigned int) d >= 0)
       *randomSeed = (unsigned int) d;
   }
   else if (num == 58)
   { // IntrinsicMultiplier
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (0 <= d &&  d <= 1) // error checking on value
       *intrinsicCutoffMultiplier = d;
     else
@@ -938,7 +938,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 59)
   { // SingValZeroTol
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0) // error checking on value
       T->sing_val_zero_tol = d;
     else
@@ -946,7 +946,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 60)
   { // DeleteTempFiles
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1) // error checking on value
       *remove_temp = t;
     else
@@ -954,7 +954,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 61)
   { // NeedToDiff
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1 || t == 2)
       *needToDiff = t;
     else
@@ -962,7 +962,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 62)
   { // CycleTimeCutoff
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (0 < d && d < 1)  // error checking on value
       T->cutoffCycleTime = d;
     else
@@ -970,7 +970,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 63)
   { // RatioTimeCutoff
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (0 < d && d < 1)  // error checking on value
       T->cutoffRatioTime = d;
     else
@@ -978,7 +978,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 64)
   { // RegenHigherDimTest 
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1)  // error checking on value
       T->regen_higher_dim_check = t;
     else
@@ -986,7 +986,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 65)
   { // FunctionTolerance
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (0 < d && d < 1)  // error checking on value
       T->funcResTol = d;
     else
@@ -994,7 +994,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 66)
   { // RatioTolerance
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (0 < d && d < 1)  // error checking on value
       T->ratioTol = d;
     else
@@ -1002,7 +1002,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 67)
   { // MaxStepsBefo8eNewton
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0)  // error checking on value
       T->maxStepsBeforeNewton = t;
     else
@@ -1010,7 +1010,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 68)
   { // SpecificCodimension 
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0)  // error checking on value
       *specificCodim = t;
     else
@@ -1018,7 +1018,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   }
   else if (num == 69)
   { // ConstructWitnessSet
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1)  // error checking on value
       *constructWitnessSet = t;
     else
@@ -1027,7 +1027,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   else if (num == 70)
   { // MaxNorm
     printf("WARNING: MaxNorm is deprecated.  Please use PathTruncationThreshold and EndpointFiniteThreshold.\n");
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (d > 0)  // error checking on value
       T->goingToInfinity = T->finiteThreshold = d;
     else
@@ -1036,7 +1036,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   else if (num == 71)
   { // MaxNumMonLinears
     printf("WARNING: MaxNumMonLinears is deprecated.  Please use MaxNumMonoLoops.\n");
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0)  // error checking on value
       T->max_num_mon_linears = t;
     else
@@ -1045,7 +1045,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   else if (num == 72)
   { // MaxNumBadLoopsInMon 
     printf("WARNING: MaxNumBadLoopsInMon is deprecated.  Please use MaxNumBadMonoLoops.\n");
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0)  // error checking on value
       T->max_num_bad_loops_in_mon = t;
     else
@@ -1054,7 +1054,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   else if (num == 73)
   { // PrintPathModulus
     printf("WARNING: PrintPathModulus is deprecated.  Please use PrintPathProgress.\n");
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t >= 0)  // error checking on value
       *printMod = t;
     else
@@ -1063,7 +1063,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   else if (num == 74)
   { // ReducedOnly
     printf("WARNING: ReducedOnly is deprecated.  Please use MultOneOnly.\n");
-    fscanf(IN, "%d", &t);
+    assert(fscanf(IN, "%d", &t) == 1);
     if (t == 0 || t == 1) // error checking on value
       *reducedOnly = t;
     else
@@ -1072,7 +1072,7 @@ void setupConfiguration(int num, FILE *IN, tracker_config_t *T, int *trackType, 
   else if (num == 75)
   { // TargetTime
     printf("WARNING: TargetTime is deprecated.\n");
-    fscanf(IN, "%lf", &d);
+    assert(fscanf(IN, "%lf", &d) == 1);
     if (0 <= d && d < 1)  // error checking on value
       T->targetT = d;
     else
@@ -2051,7 +2051,7 @@ int setupRandomValues(FILE *OUT, FILE *IN, int createNewValues, int maxPrec)
             }
 
             // read in the total number of random values
-            fscanf(RAND, "%d", &numRand);
+            assert(fscanf(RAND, "%d", &numRand) == 1);
             rV = numRand;
 
             isFileOpen = 1;

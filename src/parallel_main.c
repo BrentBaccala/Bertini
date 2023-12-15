@@ -55,7 +55,7 @@ void head_zero_dim_track_d(trackingStats *trackCount, FILE *OUT, FILE *RAWOUT, F
   // top of RAWOUT - number of variables and that we are doing zero dimensional
   fprintf(RAWOUT, "%d\n%d\n", T->numVars, 0);
   // Find the number of start points
-  fscanf(START, "%d\n", &trackCount->numPoints);
+  assert(fscanf(START, "%d\n", &trackCount->numPoints) == 1);
 
   if (trackCount->numPoints > num_processes * maxPacketSize)
   { // since there is a large number of points, read them in one by one
@@ -340,7 +340,7 @@ void head_zero_dim_track_mp(trackingStats *trackCount, FILE *OUT, FILE *RAWOUT, 
   // top of RAWOUT - number of variables and that we are doing zero dimensional
   fprintf(RAWOUT, "%d\n%d\n", T->numVars, 0);
   // Find the number of start points
-  fscanf(START, "%d\n", &trackCount->numPoints);
+  assert(fscanf(START, "%d\n", &trackCount->numPoints) == 1);
 
   if (trackCount->numPoints > num_processes * maxPacketSize)
   { // since there is a large number of points, read them in one by one

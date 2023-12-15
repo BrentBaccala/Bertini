@@ -912,20 +912,20 @@ void deflator(prog_t *new_prog, prog_t *old_prog, mpq_t ***K, int K_rows, int K_
     ch = fgetc(arrIN);
   } while (ch != 'd');
   // read in the size
-  fscanf(arrIN, "ed %d", &new_prog->memSize);
+  assert(fscanf(arrIN, "ed %d", &new_prog->memSize) == 1);
 
   // read in the number of instructions - move through arr.out until we find the 'I' in NUMINST
   do
   {
     ch = fgetc(arrIN);
   } while (ch != 'I');
-  fscanf(arrIN, "NST %ld", &new_prog->size);
+  assert(fscanf(arrIN, "NST %ld", &new_prog->size) == 1);
 
   // grab all of the instructions.
   rewind(arrIN);
   new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
   for (i = 0; i < new_prog->size; i++)
-    fscanf(arrIN, "%d ", &new_prog->prog[i]);
+    assert(fscanf(arrIN, "%d ", &new_prog->prog[i]) == 1);
 
   // close arr.out
   fclose(arrIN);
@@ -1480,20 +1480,20 @@ void add_vec_patch_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t **patch, int pa
     ch = fgetc(FOUT);
   } while (ch != 'd');
   // read in the size
-  fscanf(FOUT, "ed %d", &new_prog->memSize);
+  assert(fscanf(FOUT, "ed %d", &new_prog->memSize) == 1);
 
   // read in the number of instructions - move through arr.out until we find the 'I' in NUMINST
   do
   {
     ch = fgetc(FOUT);
   } while (ch != 'I');
-  fscanf(FOUT, "NST %ld", &new_prog->size);
+  assert(fscanf(FOUT, "NST %ld", &new_prog->size) == 1);
 
   // grab all of the instructions.
   rewind(FOUT);
   new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
   for (i = 0; i < new_prog->size; i++)
-    fscanf(FOUT, "%d ", &new_prog->prog[i]);
+    assert(fscanf(FOUT, "%d ", &new_prog->prog[i]) == 1);
 
   // close arr.out
   fclose(FOUT);
@@ -2377,20 +2377,20 @@ void randomize_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t ***A, int A_rows, i
     ch = fgetc(FOUT);
   } while (ch != 'd');
   // read in the size
-  fscanf(FOUT, "ed %d", &new_prog->memSize);
+  assert(fscanf(FOUT, "ed %d", &new_prog->memSize) == 1);
 
   // read in the number of instructions - move through arr.out until we find the 'I' in NUMINST
   do
   {
     ch = fgetc(FOUT);
   } while (ch != 'I');
-  fscanf(FOUT, "NST %ld", &new_prog->size);
+  assert(fscanf(FOUT, "NST %ld", &new_prog->size) == 1);
 
   // grab all of the instructions.
   rewind(FOUT);
   new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
   for (i = 0; i < new_prog->size; i++)
-    fscanf(FOUT, "%d ", &new_prog->prog[i]);
+    assert(fscanf(FOUT, "%d ", &new_prog->prog[i]) == 1);
 
   // close arr.out
   fclose(FOUT);

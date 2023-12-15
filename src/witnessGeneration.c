@@ -222,7 +222,7 @@ void setupPoints(int *numPoints, point_d **p_d, point_mp **p_mp, int prec, int n
 
   // read in the number of points
   *numPoints = 0;
-  fscanf(IN, "%d", numPoints);
+  assert(fscanf(IN, "%d", numPoints) == 1);
   if (*numPoints < 1)
   { // error
     printf("\n\nERROR: The number of points in '%s' must be positive!!\n\n", fileName);

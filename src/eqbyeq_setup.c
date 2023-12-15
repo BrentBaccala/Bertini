@@ -108,8 +108,8 @@ void setupEqbyEqRandom_d(eqData_t *EqD, tracker_config_t *T, char *degreeFile, p
     else
     { // need to read in all of the m-hom degrees from degIN
       for (j = 0; j < num_var_gps; j++)
-        fscanf(degIN, "%d\n", &EqD->degrees[i][j]);
-      fscanf(degIN, "\n"); // extra "new line" character
+        assert(fscanf(degIN, "%d\n", &EqD->degrees[i][j]) == 1);
+      assert(fscanf(degIN, "\n") == 0); // extra "new line" character
     }
 
     // allocate based on the total number of variables & initialize to zero
@@ -217,7 +217,7 @@ void setupEqbyEqStages_d(eqData_t *EqD, tracker_config_t *T, char *depthFile, in
   else
   { // read in the depths
     EqD->num_subsystems = 1;
-    fscanf(DEPTH, "%d\n", &EqD->num_subsystems); // read in the number of subsystems that will be needed
+    assert(fscanf(DEPTH, "%d\n", &EqD->num_subsystems) == 1); // read in the number of subsystems that will be needed
 
     // error checking
     if (EqD->num_subsystems <= 0)
@@ -232,7 +232,7 @@ void setupEqbyEqStages_d(eqData_t *EqD, tracker_config_t *T, char *depthFile, in
     for (i = 0; i < EqD->num_subsystems; i++)
     {
       depths[i] = 1;
-      fscanf(DEPTH, "%d\n", &depths[i]);
+      assert(fscanf(DEPTH, "%d\n", &depths[i]) == 1);
       if (depths[i] <= 0)
       {
         printf("ERROR: The depths must be > 0!\n");
@@ -2138,8 +2138,8 @@ void setupEqbyEqRandom_mp(eqData_t *EqD, tracker_config_t *T, char *degreeFile, 
     else
     { // need to read in all of the m-hom degrees from degIN
       for (j = 0; j < num_var_gps; j++)
-        fscanf(degIN, "%d\n", &EqD->degrees[i][j]);
-      fscanf(degIN, "\n"); // extra "new line" character
+        assert(fscanf(degIN, "%d\n", &EqD->degrees[i][j]) == 1);
+      assert(fscanf(degIN, "\n") == 0); // extra "new line" character
     }
 
     // allocate based on the total number of variables
@@ -2210,7 +2210,7 @@ void setupEqbyEqStages_mp(eqData_t *EqD, tracker_config_t *T, char *depthFile, i
   else
   { // read in the depths
     EqD->num_subsystems = 1;
-    fscanf(DEPTH, "%d\n", &EqD->num_subsystems); // read in the number of subsystems that will be needed
+    assert(fscanf(DEPTH, "%d\n", &EqD->num_subsystems) == 1); // read in the number of subsystems that will be needed
 
     // error checking
     if (EqD->num_subsystems <= 0)
@@ -2225,7 +2225,7 @@ void setupEqbyEqStages_mp(eqData_t *EqD, tracker_config_t *T, char *depthFile, i
     for (i = 0; i < EqD->num_subsystems; i++)
     {
       depths[i] = 1;
-      fscanf(DEPTH, "%d\n", &depths[i]);
+      assert(fscanf(DEPTH, "%d\n", &depths[i]) == 1);
       if (depths[i] <= 0)
       {
         printf("ERROR: The depths must be > 0!\n");

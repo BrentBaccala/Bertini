@@ -2432,7 +2432,7 @@ void setupCodimWitnessStructuresFromFile(FILE *IN, int inputType, witnessCodim_t
   {
     WC->W[i] = (int *)bmalloc(cols * sizeof(int));
     for (j = 0; j < cols; j++)
-      fscanf(IN, "%d\n", &WC->W[i][j]);
+      assert(fscanf(IN, "%d\n", &WC->W[i][j]) == 1);
   }
 
   // setup H
@@ -2468,7 +2468,7 @@ void setupCodimWitnessSetFromFile(FILE *IN, witnessCodim_t *WC, int MPType, int 
   tempPt_d->size = tempPt_mp->size = tempApprox_d->size = tempApprox_mp->size = size;
 
   // read in the codimension and the number of points for this witness set
-  fscanf(IN, "%d\n%d\n", &WC->codim, &WC->num_set);
+  assert(fscanf(IN, "%d\n%d\n", &WC->codim, &WC->num_set) == 2);
 
   // allocate the witness set structures
   WC->witnessPt_types = (int *)bmalloc(WC->num_set * sizeof(int));
@@ -2485,14 +2485,14 @@ void setupCodimWitnessSetFromFile(FILE *IN, witnessCodim_t *WC, int MPType, int 
   // loop through to setup the witness points
   for (i = 0; i < WC->num_set; i++)
   { // read in the precision for the end point
-    fscanf(IN, "%d\n", &pt_prec);
+    assert(fscanf(IN, "%d\n", &pt_prec) == 1);
 
     // read in the end point
     if (pt_prec < 64)
     { // read in the point in double precision
       for (j = 0; j < size; j++)
       { // read in the jth coordinate
-        fscanf(IN, "%lf %lf\n", &tempPt_d->coord[j].r, &tempPt_d->coord[j].i);
+        assert(fscanf(IN, "%lf %lf\n", &tempPt_d->coord[j].r, &tempPt_d->coord[j].i) == 2);
       }
     }
     else
@@ -2505,19 +2505,19 @@ void setupCodimWitnessSetFromFile(FILE *IN, witnessCodim_t *WC, int MPType, int 
         mpf_inp_str(tempPt_mp->coord[j].r, IN, base);
         mpf_inp_str(tempPt_mp->coord[j].i, IN, base);
         // scan rest of line
-        fscanf(IN, "\n");
+        assert(fscanf(IN, "\n") == 0);
       }
     }
 
     // read in the precision for the approximation
-    fscanf(IN, "%d\n", &approx_prec);
+    assert(fscanf(IN, "%d\n", &approx_prec) == 1);
 
     // read in the approximation
     if (approx_prec < 64)
     { // read in the point in double precision
       for (j = 0; j < size; j++)
       { // read in the jth coordinate
-        fscanf(IN, "%lf %lf\n", &tempApprox_d->coord[j].r, &tempApprox_d->coord[j].i);
+        assert(fscanf(IN, "%lf %lf\n", &tempApprox_d->coord[j].r, &tempApprox_d->coord[j].i) == 2);
       }
     }
     else
@@ -2530,7 +2530,7 @@ void setupCodimWitnessSetFromFile(FILE *IN, witnessCodim_t *WC, int MPType, int 
         mpf_inp_str(tempApprox_mp->coord[j].r, IN, base);
         mpf_inp_str(tempApprox_mp->coord[j].i, IN, base);
         // scan rest of line
-        fscanf(IN, "\n");
+        assert(fscanf(IN, "\n") == 0);
       }
     }
 
@@ -2558,7 +2558,7 @@ void setupCodimWitnessSetFromFile(FILE *IN, witnessCodim_t *WC, int MPType, int 
         point_mp_to_d(WC->witnessPts_d[i].last_approx, tempApprox_mp);
       }
       // read in the condition number, corank, smallest_nonzero_SV, largest_zero_SV
-      fscanf(IN, "%lf\n%d\n%lf\n%lf\n", &WC->witnessPts_d[i].cond_num, &WC->witnessPts_d[i].corank, &WC->witnessPts_d[i].smallest_nonzero_SV, &WC->witnessPts_d[i].largest_zero_SV);
+      assert(fscanf(IN, "%lf\n%d\n%lf\n%lf\n", &WC->witnessPts_d[i].cond_num, &WC->witnessPts_d[i].corank, &WC->witnessPts_d[i].smallest_nonzero_SV, &WC->witnessPts_d[i].largest_zero_SV) == 4);
       // setup other values
       set_zero_d(WC->witnessPts_d[i].finalT);
       WC->witnessPts_d[i].retVal = 0;
@@ -2586,7 +2586,7 @@ void setupCodimWitnessSetFromFile(FILE *IN, witnessCodim_t *WC, int MPType, int 
         point_cp_mp(WC->witnessPts_mp[i].last_approx, tempApprox_mp);
       }
       // read in the condition number, corank, smallest_nonzero_SV, largest_zero_SV
-      fscanf(IN, "%lf\n%d\n%lf\n%lf\n", &WC->witnessPts_mp[i].cond_num, &WC->witnessPts_mp[i].corank, &WC->witnessPts_mp[i].smallest_nonzero_SV, &WC->witnessPts_mp[i].largest_zero_SV);
+      assert(fscanf(IN, "%lf\n%d\n%lf\n%lf\n", &WC->witnessPts_mp[i].cond_num, &WC->witnessPts_mp[i].corank, &WC->witnessPts_mp[i].smallest_nonzero_SV, &WC->witnessPts_mp[i].largest_zero_SV) == 4);
       // setup other values
       set_zero_mp(WC->witnessPts_mp[i].finalT);
       WC->witnessPts_mp[i].retVal = 0;
@@ -2613,7 +2613,7 @@ void setupCodimWitnessSetFromFile(FILE *IN, witnessCodim_t *WC, int MPType, int 
         point_cp_mp(WC->witnessPts_amp[i].last_approx_mp, tempApprox_mp);
       }
       // read in the condition number, corank, smallest_nonzero_SV, largest_zero_SV
-      fscanf(IN, "%lf\n%d\n%lf\n%lf\n", &WC->witnessPts_amp[i].cond_num, &WC->witnessPts_amp[i].corank, &WC->witnessPts_amp[i].smallest_nonzero_SV, &WC->witnessPts_amp[i].largest_zero_SV);
+      assert(fscanf(IN, "%lf\n%d\n%lf\n%lf\n", &WC->witnessPts_amp[i].cond_num, &WC->witnessPts_amp[i].corank, &WC->witnessPts_amp[i].smallest_nonzero_SV, &WC->witnessPts_amp[i].largest_zero_SV) == 4);
       // setup other values
       if (pt_prec < 64)
       {
@@ -2627,7 +2627,7 @@ void setupCodimWitnessSetFromFile(FILE *IN, witnessCodim_t *WC, int MPType, int 
     }
 
     // read in other data - type, multiplicity, component number, deflations needed
-    fscanf(IN, "%d\n%d\n%d\n%d\n", &WC->witnessPt_types[i], &WC->multiplicities[i], &WC->component_nums[i], &WC->deflations_needed[i]);
+    assert(fscanf(IN, "%d\n%d\n%d\n%d\n", &WC->witnessPt_types[i], &WC->multiplicities[i], &WC->component_nums[i], &WC->deflations_needed[i]) == 4);
   }
 
   // setup the counts
@@ -2734,7 +2734,7 @@ void setupWitnessDataFromFile(char *witnessName, char *newWitnessName, char *pre
   IN = fopen(newWitnessName, "r");
 
   // read in the number of variables
-  fscanf(IN, "%d\n", &count);
+  assert(fscanf(IN, "%d\n", &count) == 1);
 
   // make sure that the number of variables is correct
   if (count != W->orig_variables)
@@ -2746,7 +2746,7 @@ void setupWitnessDataFromFile(char *witnessName, char *newWitnessName, char *pre
   }
 
   // find the number of codimensions
-  fscanf(IN, "%d\n", &W->num_codim);
+  assert(fscanf(IN, "%d\n", &W->num_codim) == 1);
 
   // allocate the codim
   W->codim = (witnessCodim_t *)bmalloc(W->num_codim * sizeof(witnessCodim_t));
@@ -2758,7 +2758,7 @@ void setupWitnessDataFromFile(char *witnessName, char *newWitnessName, char *pre
   }
 
   // read in '-1' at the end of the witness set and the MPType for the codim structures
-  fscanf(IN, "%d\n\n%d\n", &count, &inputType);
+  assert(fscanf(IN, "%d\n\n%d\n", &count, &inputType) == 2);
 
   // loop through to setup the structures for each of the codimensions
   for (codim_index = 0; codim_index < W->num_codim; codim_index++)
@@ -2816,7 +2816,7 @@ void setupDegrees_orig_new_perm(int **orig_degrees, int **new_degrees, int **per
   // setup original degrees
   *orig_degrees = (int *)bmalloc(num_funcs * sizeof(int));
   for (i = 0; i < num_funcs; i++)
-    fscanf(tempFile, "%d\n\n", &(*orig_degrees)[i]);
+    assert(fscanf(tempFile, "%d\n\n", &(*orig_degrees)[i]) == 1);
 
   // close the file containing the degrees
   fclose(tempFile);

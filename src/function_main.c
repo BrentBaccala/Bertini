@@ -100,12 +100,12 @@ int function_eval_main(int printJacobian, int MPType, unsigned int currentSeed, 
 
     if (timeIn)
     { // read in the number of t-values
-      fscanf(TimeIn, "%d", &j);
+      assert(fscanf(TimeIn, "%d", &j) == 1);
     }
   }
 
   // read in the number of start points
-  fscanf(StartPts, "%d", &trackCount.numPoints);
+  assert(fscanf(StartPts, "%d", &trackCount.numPoints) == 1);
 
   // verify positive number
   if (trackCount.numPoints <= 0)
@@ -210,14 +210,14 @@ int function_eval_main(int printJacobian, int MPType, unsigned int currentSeed, 
         }
         else
         { // read in from file
-          fscanf(StartPts, "%lf%lf", &startPt_d.point->coord[j].r, &startPt_d.point->coord[j].i);
+          assert(fscanf(StartPts, "%lf%lf", &startPt_d.point->coord[j].r, &startPt_d.point->coord[j].i) == 2);
           scanRestOfLine(StartPts);
         }
 
       // setup time
       if (useParameters && timeIn)
       { // read in time
-        fscanf(TimeIn, "%lf%lf", &startPt_d.time->r, &startPt_d.time->i);
+        assert(fscanf(TimeIn, "%lf%lf", &startPt_d.time->r, &startPt_d.time->i) == 2);
         scanRestOfLine(TimeIn);
       }
       else

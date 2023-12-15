@@ -73,7 +73,7 @@ int newton_eval_main(int computeCN, int MPType, unsigned int currentSeed, char *
   { // allocate
     degrees[i] = (int *)bmalloc(rV * sizeof(int));
     for (j = 0; j < rV; j++)
-      fscanf(TimeIn, "%d\n", &degrees[i][j]);
+      assert(fscanf(TimeIn, "%d\n", &degrees[i][j]) == 1);
   }
   fclose(TimeIn);
   TimeIn = NULL;
@@ -137,12 +137,12 @@ int newton_eval_main(int computeCN, int MPType, unsigned int currentSeed, char *
 
     if (timeIn)
     { // read in the number of t-values
-      fscanf(TimeIn, "%d", &j);
+      assert(fscanf(TimeIn, "%d", &j) == 1);
     }
   }
 
   // read in the number of start points
-  fscanf(StartPts, "%d", &trackCount.numPoints);
+  assert(fscanf(StartPts, "%d", &trackCount.numPoints) == 1);
 
   // verify positive number
   if (trackCount.numPoints <= 0)
@@ -308,7 +308,7 @@ int newton_eval_main(int computeCN, int MPType, unsigned int currentSeed, char *
         }
         else
         { // read in from file
-          fscanf(StartPts, "%lf%lf", &startPt_d.point->coord[j].r, &startPt_d.point->coord[j].i);
+          assert(fscanf(StartPts, "%lf%lf", &startPt_d.point->coord[j].r, &startPt_d.point->coord[j].i) == 2);
           set_d(&orig_d->coord[j - num_var_gps], &startPt_d.point->coord[j]);
           scanRestOfLine(StartPts);
         }
@@ -316,7 +316,7 @@ int newton_eval_main(int computeCN, int MPType, unsigned int currentSeed, char *
       // setup time
       if (useParameters && timeIn)
       { // read in time
-        fscanf(TimeIn, "%lf%lf", &startPt_d.time->r, &startPt_d.time->i);
+        assert(fscanf(TimeIn, "%lf%lf", &startPt_d.time->r, &startPt_d.time->i) == 2);
         scanRestOfLine(TimeIn);
       }
       else

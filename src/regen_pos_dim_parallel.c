@@ -79,7 +79,7 @@ void regen_pos_dim_par_track(int startCodimIndex, int maxCodim, trackingStats *t
     RAWOUT = fopen(str, "w");
 
     // read in the number of paths from START
-    fscanf(START, "%d", &num_crossings);
+    assert(fscanf(START, "%d", &num_crossings) == 1);
     // make sure that we have agreement
     if (num_paths != num_crossings)
     {
@@ -741,10 +741,10 @@ int regen_pos_dim_create_send_packet_track(int startNum, int size, FILE *START, 
       change_size_point_d(sendPts[i].PD_d.point, num_input_vars);
       sendPts[i].PD_d.point->size = num_input_vars;
       set_one_d(sendPts[i].PD_d.time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
       {
-        fscanf(START, "%lf%lf", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i);
+        assert(fscanf(START, "%lf%lf", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i) == 2);
         scanRestOfLine(START);
       }
       sendPts[i].last_approx_prec = 52;
@@ -757,7 +757,7 @@ int regen_pos_dim_create_send_packet_track(int startNum, int size, FILE *START, 
       change_size_point_mp(sendPts[i].PD_mp.point, num_input_vars);
       sendPts[i].PD_mp.point->size = num_input_vars;
       set_one_mp(sendPts[i].PD_mp.time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
       {
         mpf_inp_str(sendPts[i].PD_mp.point->coord[j].r, START, 10);
@@ -931,7 +931,7 @@ int regen_pos_dim_create_send_packet_sort(int startNum, int size, FILE *START, e
       printf("%s path %d of %d\n", jobName, startNum + i, totalPaths);
 
     // read in the path number & precision
-    fscanf(START, "%d\n%d\n", &sendPts[i].pathNum, &sendPts[i].prec);
+    assert(fscanf(START, "%d\n%d\n", &sendPts[i].pathNum, &sendPts[i].prec) == 2);
 
     if (sendPts[i].prec < 64)
     { // setup sendPts[i].PD_d
@@ -939,11 +939,11 @@ int regen_pos_dim_create_send_packet_sort(int startNum, int size, FILE *START, e
       sendPts[i].PD_d.point->size = num_input_vars;
       for (j = 0; j < num_input_vars; j++)
       {
-        fscanf(START, "%lf%lf", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i);
+        assert(fscanf(START, "%lf%lf", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i) == 2);
         scanRestOfLine(START);
       }
       // time
-      fscanf(START, "%lf%lf", &sendPts[i].PD_d.time->r, &sendPts[i].PD_d.time->i);
+      assert(fscanf(START, "%lf%lf", &sendPts[i].PD_d.time->r, &sendPts[i].PD_d.time->i) == 2);
     }
     else
     { // setup sendPts[i].PD_mp
@@ -962,14 +962,14 @@ int regen_pos_dim_create_send_packet_sort(int startNum, int size, FILE *START, e
     }
 
     // last_approx
-    fscanf(START, "%d\n", &sendPts[i].last_approx_prec);
+    assert(fscanf(START, "%d\n", &sendPts[i].last_approx_prec) == 1);
     if (sendPts[i].last_approx_prec < 64)
     { // use _d
       change_size_point_d(sendPts[i].last_approx_d, num_input_vars);
       sendPts[i].last_approx_d->size = num_input_vars;
       for (j = 0; j < num_input_vars; j++)
       {
-        fscanf(START, "%lf%lf", &sendPts[i].last_approx_d->coord[j].r, &sendPts[i].last_approx_d->coord[j].i);
+        assert(fscanf(START, "%lf%lf", &sendPts[i].last_approx_d->coord[j].r, &sendPts[i].last_approx_d->coord[j].i) == 2);
         scanRestOfLine(START);
       }
     }
@@ -987,9 +987,9 @@ int regen_pos_dim_create_send_packet_sort(int startNum, int size, FILE *START, e
     }
 
     // other info
-    fscanf(START, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n", &tempD, &sendPts[i].condition_number, &tempD, &tempD, &tempD, &tempD, &j);
+    assert(fscanf(START, "%lf\n%lf\n%lf\n%lf\n%lf\n%lf\n%d\n", &tempD, &sendPts[i].condition_number, &tempD, &tempD, &tempD, &tempD, &j) == 7);
     // read in corank, retVal, smallest non-zero & largest zero SV
-    fscanf(START, "%d\n%d\n%lf\n%lf\n", &corank[i], &sendPts[i].retVal, &sm[i], &lg[i]);
+    assert(fscanf(START, "%d\n%d\n%lf\n%lf\n", &corank[i], &sendPts[i].retVal, &sm[i], &lg[i]) == 4);
   }
 
   // send sendPts to 'sendProc'
@@ -1445,10 +1445,10 @@ int regen_pos_dim_create_send_packet_prepare(int startNum, int size, FILE *START
       change_size_point_d(sendPts[i].PD_d.point, num_input_vars);
       sendPts[i].PD_d.point->size = num_input_vars;
       set_one_d(sendPts[i].PD_d.time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
       {
-        fscanf(START, "%lf%lf", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i);
+        assert(fscanf(START, "%lf%lf", &sendPts[i].PD_d.point->coord[j].r, &sendPts[i].PD_d.point->coord[j].i) == 2);
         scanRestOfLine(START);
       }
 
@@ -1462,7 +1462,7 @@ int regen_pos_dim_create_send_packet_prepare(int startNum, int size, FILE *START
       change_size_point_mp(sendPts[i].PD_mp.point, num_input_vars);
       sendPts[i].PD_mp.point->size = num_input_vars;
       set_one_mp(sendPts[i].PD_mp.time);
-      fscanf(START, "\n");
+      assert(fscanf(START, "\n") == 0);
       for (j = 0; j < num_input_vars; j++)
       {
         mpf_inp_str(sendPts[i].PD_mp.point->coord[j].r, START, 10);
@@ -1474,7 +1474,7 @@ int regen_pos_dim_create_send_packet_prepare(int startNum, int size, FILE *START
       sendPts[i].last_approx_mp->size = 0;
     }
     // scan in the next degree (store in codim)
-    fscanf(START, "%d", &sendPts[i].codim);
+    assert(fscanf(START, "%d", &sendPts[i].codim) == 1);
   }
 
   // send sendPts to 'sendProc'

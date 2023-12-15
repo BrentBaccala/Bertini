@@ -15,7 +15,7 @@ void find_minimum_separation(int *numPoints, double *minDist_d, double **startPo
   double minDist_sqr_d;
 
   // find the number of points
-  fscanf(START, "%d", numPoints);
+  assert(fscanf(START, "%d", numPoints) == 1);
   scanRestOfLine(START);
 
   if (T->MPType == 0 || T->MPType == 2)
@@ -39,7 +39,7 @@ void find_minimum_separation(int *numPoints, double *minDist_d, double **startPo
       sortPts[i].norm = 0;
       for (j = 0; j < numVars; j++)
       {
-        fscanf(START, "%lf%lf", &(*startPts_d)[i]->coord[j].r, &(*startPts_d)[i]->coord[j].i);
+        assert(fscanf(START, "%lf%lf", &(*startPts_d)[i]->coord[j].r, &(*startPts_d)[i]->coord[j].i) == 2);
         scanRestOfLine(START);
 
         currDist = norm_sqr_d(&(*startPts_d)[i]->coord[j]);

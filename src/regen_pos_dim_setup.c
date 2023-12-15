@@ -1517,9 +1517,9 @@ void setupRPDRestart(regen_pos_dim_t *RPD, int MPType, int max_prec, int codim_i
   while (ch != 'X');
 
   // read in MPType, num_codim, num_funcs, orig_variables, new_variables, system_rank
-  fscanf(FP, "%d%d%d%d%d%d\n", &file_MPType, &num_codim, &num_funcs, &orig_variables, &new_variables, &system_rank);
+  assert(fscanf(FP, "%d%d%d%d%d%d\n", &file_MPType, &num_codim, &num_funcs, &orig_variables, &new_variables, &system_rank) == 6);
   // read in the current codimension index
-  fscanf(FP, "%d\n", &file_codim_index);
+  assert(fscanf(FP, "%d\n", &file_codim_index) == 1);
 
   // make sure we have agreement on num_funcs, orig_variables, new_variables & system_rank
   if (num_codim != RPD->num_codim)
@@ -1561,15 +1561,15 @@ void setupRPDRestart(regen_pos_dim_t *RPD, int MPType, int max_prec, int codim_i
   for (i = 0; i < num_codim; i++)
     if (i < codim_index)
     { // read in info about this codim
-      fscanf(FP, "%d%d%d%d%d%d%d%d\n", &RPD->codim[i].codim, &RPD->codim[i].num_paths, &RPD->codim[i].num_superset, &RPD->codim[i].num_nonsing, &RPD->codim[i].num_sing, &RPD->codim[i].num_nonsolns, &RPD->codim[i].num_inf, &RPD->codim[i].num_bad);
+      assert(fscanf(FP, "%d%d%d%d%d%d%d%d\n", &RPD->codim[i].codim, &RPD->codim[i].num_paths, &RPD->codim[i].num_superset, &RPD->codim[i].num_nonsing, &RPD->codim[i].num_sing, &RPD->codim[i].num_nonsolns, &RPD->codim[i].num_inf, &RPD->codim[i].num_bad) == 8);
     }
     else if (i == codim_index)
     { // read in info about the current codim
-      fscanf(FP, "%d%d%d\n", &RPD->codim[i].codim, &RPD->codim[i].num_paths, &RPD->codim[i].useIntrinsicSlice);
+      assert(fscanf(FP, "%d%d%d\n", &RPD->codim[i].codim, &RPD->codim[i].num_paths, &RPD->codim[i].useIntrinsicSlice) == 3);
     }
     else
     { // read in info about future codims
-      fscanf(FP, "%d%d\n", &RPD->codim[i].codim, &RPD->codim[i].useIntrinsicSlice);
+      assert(fscanf(FP, "%d%d\n", &RPD->codim[i].codim, &RPD->codim[i].useIntrinsicSlice) == 2);
     }
 
   // read in C, H, homVarConst, patchCoeff
@@ -1657,7 +1657,7 @@ void setupRPDRestart(regen_pos_dim_t *RPD, int MPType, int max_prec, int codim_i
   }
 
   // read in A
-  fscanf(FP, "%d\n", &sameA);
+  assert(fscanf(FP, "%d\n", &sameA) == 1);
   if (file_MPType == 0)
   { // read in A_d
     A_d = (mat_d *)bmalloc(system_rank * sizeof(mat_d));

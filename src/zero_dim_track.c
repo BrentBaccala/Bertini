@@ -24,7 +24,7 @@ void zero_dim_track_d(trackingStats *trackCount, FILE *OUT, FILE *RAWOUT, FILE *
   // top of RAWOUT - number of variables and that we are doing zero dimensional
   fprintf(RAWOUT, "%d\n%d\n", T->numVars, 0);
   // Find the number of start points
-  fscanf(START, "%d", &trackCount->numPoints);
+  assert(fscanf(START, "%d", &trackCount->numPoints) == 1);
   scanRestOfLine(START);
 
   // setup NONSOLN 
@@ -992,7 +992,7 @@ void zero_dim_track_mp(trackingStats *trackCount, FILE *OUT, FILE *RAWOUT, FILE 
   // top of RAWOUT - number of varialbes and that we are doing zero dimensional
   fprintf(RAWOUT, "%d\n%d\n", T->numVars, 0);
   // Find the number of start points
-  fscanf(START, "%d", &trackCount->numPoints);
+  assert(fscanf(START, "%d", &trackCount->numPoints) == 1);
   scanRestOfLine(START);
 
   if (!ED->squareSystem.noChanges)
