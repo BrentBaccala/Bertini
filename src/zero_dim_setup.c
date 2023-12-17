@@ -174,7 +174,7 @@ int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long *
   } while (fd < 0 && errno == EEXIST);
   assert(fd >= 0);
   assert(ftruncate(fd, numInst * sizeof(int)) == 0);
-  fprintf(stderr, "setupArr mapping %ld instructions to %s\n", numInst, P->shm_name);
+  fprintf(stderr, "PID %d setupArr mapping %ld instructions to %s\n", getpid(), numInst, P->shm_name);
   P->prog = mmap(NULL, numInst * sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
   assert(P->prog != MAP_FAILED);
   close(fd);

@@ -1796,7 +1796,7 @@ void bcast_witness_t(witness_t *W, int MPType, int my_id, int headnode)
     cp_witness_t_int(W, &W_int, NULL, &gpSizes, &progStr, &PPDtype, &PPDsize, &origDegs, &newDegs, &P, &witComp, &witStr, 1, MPType, 1);
 
     // set the SLP program instructions pointer to the shared memory window
-    fprintf(stderr, "receiving %ld instructions from %s\n", W->Prog->size, W_int.Prog_int.shm_name);
+    fprintf(stderr, "PID %d bcast_witness_t receiving %ld instructions from %s\n", getpid(), W->Prog->size, W_int.Prog_int.shm_name);
     fd = shm_open(W_int.Prog_int.shm_name, O_RDONLY, 0);
     if (fd == -1) perror("shm_open");
     assert(fd >= 0);
@@ -2295,7 +2295,7 @@ void bcast_regen_pos_dim_t(regen_pos_dim_t *RPD, int MPType, int my_id, int head
   if (my_id == headnode)
   { // setup RPD_int & the other structures and then broadcast it
     cp_regen_pos_dim_int(&RPD_int, RPD, MPType, &rpdStr, &progStr, 0, &coeff_d, &degrees, &ppd_type, &ppd_size, NULL, &prog_gp_sizes, 0);
-    fprintf(stderr, "broadcasting %s\n", RPD_int.Prog_int.shm_name);
+    fprintf(stderr, "PID %d bcast_regen_pos_dim_t broadcasting %s\n", getpid(), RPD_int.Prog_int.shm_name);
     // send RPD_int
     MPI_Bcast(&RPD_int, 1, mpi_RPD_int, headnode, MPI_COMM_WORLD);
     // send rpdStr
@@ -2373,7 +2373,7 @@ void bcast_regen_pos_dim_t(regen_pos_dim_t *RPD, int MPType, int my_id, int head
     // RPD->Prog->prog = (int *) win_baseptr;
     // assert(win_size == (MPI_Aint)(RPD->Prog->size) * sizeof(int));
     // assert(win_disp_unit == 1);
-    fprintf(stderr, "receiving %ld instructions from %s\n", RPD->Prog->size, RPD_int.Prog_int.shm_name);
+    fprintf(stderr, "PID %d bcast_regen_pos_dim_t receiving %ld instructions from %s\n", getpid(), RPD->Prog->size, RPD_int.Prog_int.shm_name);
     fd = shm_open(RPD_int.Prog_int.shm_name, O_RDONLY, 0);
     if (fd == -1) perror("shm_open");
     assert(fd >= 0);

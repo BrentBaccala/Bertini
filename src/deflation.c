@@ -2444,7 +2444,7 @@ void randomize_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t ***A, int A_rows, i
   } while (fd < 0 && errno == EEXIST);
   assert(fd >= 0);
   assert(ftruncate(fd, new_prog->size * sizeof(int)) == 0);
-  fprintf(stderr, "deflation mapping %ld instructions to %s\n", new_prog->size, new_prog->shm_name);
+  fprintf(stderr, "PID %d randomize_SLP mapping %ld instructions to %s\n", getpid(), new_prog->size, new_prog->shm_name);
   new_prog->prog = mmap(NULL, new_prog->size * sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
   assert(new_prog->prog != MAP_FAILED);
   close(fd);

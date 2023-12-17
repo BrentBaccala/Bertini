@@ -1045,7 +1045,7 @@ void clearProg(prog_t *P, int MPType, int clearEvalProg)
   clearNums(&P->nums, P->numNums); 
 
 #ifdef _HAVE_MPI
-  fprintf(stderr, "PID %d unmapping prog_t %p %ld\n", getpid(), P->prog, P->size);
+  fprintf(stderr, "PID %d clearProg unmapping prog_t %p %ld\n", getpid(), P->prog, P->size);
   assert(munmap(P->prog, P->size * sizeof(int)) == 0);
 #else
   free(P->prog);

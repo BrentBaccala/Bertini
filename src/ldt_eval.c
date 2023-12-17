@@ -599,10 +599,10 @@ void setup_deriv_from_SLP(prog_deriv_t *deriv, prog_t *SLP)
   deriv->prog = mmap(NULL, deriv->size * sizeof(int), PROT_READ, MAP_SHARED, fd, 0);
   assert(deriv->prog != MAP_FAILED);
   close(fd);
-  fprintf(stderr, "PID %d deriv_prog mapped %ld instructions from %s\n", getpid(), SLP->size, SLP->shm_name);
+  fprintf(stderr, "PID %d setup_deriv_from_SLP mapped %ld instructions from %s\n", getpid(), SLP->size, SLP->shm_name);
 #else
   deriv->prog = (int *)bmalloc(deriv->size * sizeof(int));
-  fprintf(stderr, "PID %d deriv_prog bmalloc %ld instructions\n", getpid(), SLP->size);
+  fprintf(stderr, "PID %d setup_deriv_from_SLP bmalloc %ld instructions\n", getpid(), SLP->size);
   for (i = 0; i < deriv->size; i++)
     deriv->prog[i] = SLP->prog[i];
 #endif
