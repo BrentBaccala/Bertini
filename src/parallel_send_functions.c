@@ -1203,8 +1203,9 @@ void bcast_prog_t(prog_t *Prog, int MPType, int my_id, int headnode)
 \***************************************************************/
 {
   prog_t_int Prog_int;
-  int *inst = NULL, *gp_sizes = NULL;
+  int *gp_sizes = NULL;
   char *progStr = NULL;
+  int fd;
 
   MPI_Datatype mpi_prog;
 
@@ -1212,18 +1213,18 @@ void bcast_prog_t(prog_t *Prog, int MPType, int my_id, int headnode)
 
   if (my_id == headnode)
   { // setup data structs
-    cp_prog_t_int(&Prog_int, Prog, &inst, &gp_sizes, &progStr, 0, 0);
+    cp_prog_t_int(&Prog_int, Prog, NULL, &gp_sizes, &progStr, 0, 0);
     // send Prog_int
     MPI_Bcast(&Prog_int, 1, mpi_prog, headnode, MPI_COMM_WORLD);
     // send inst
-    MPI_Bcast(inst, Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
+    //MPI_Bcast(inst, Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
     // send gp_sizes
     MPI_Bcast(gp_sizes, Prog_int.num_var_gps, MPI_INT, headnode, MPI_COMM_WORLD);
     // send progStr
     MPI_Bcast(progStr, Prog_int.totalLength, MPI_CHAR, headnode, MPI_COMM_WORLD);
 
     // clear memory
-    free(inst);
+    //free(inst);
     free(gp_sizes);
     free(progStr);
   }
@@ -1231,8 +1232,8 @@ void bcast_prog_t(prog_t *Prog, int MPType, int my_id, int headnode)
   { // recv data structs
     MPI_Bcast(&Prog_int, 1, mpi_prog, headnode, MPI_COMM_WORLD);
     // recv inst
-    inst = (int *)bmalloc(Prog_int.size * sizeof(int));
-    MPI_Bcast(inst, Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
+    //inst = (int *)bmalloc(Prog_int.size * sizeof(int));
+    //MPI_Bcast(inst, Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
     // recv gp_sizes
     gp_sizes = (int *)bmalloc(Prog_int.num_var_gps * sizeof(int));
     MPI_Bcast(gp_sizes, Prog_int.num_var_gps, MPI_INT, headnode, MPI_COMM_WORLD);
@@ -1241,7 +1242,17 @@ void bcast_prog_t(prog_t *Prog, int MPType, int my_id, int headnode)
     MPI_Bcast(progStr, Prog_int.totalLength, MPI_CHAR, headnode, MPI_COMM_WORLD);
 
     // setup Prog
-    cp_prog_t_int(Prog, &Prog_int, &inst, &gp_sizes, &progStr, 1, 1);
+    cp_prog_t_int(Prog, &Prog_int, NULL, &gp_sizes, &progStr, 1, 1);
+
+    // set the SLP program instructions pointer to the shared memory window
+    fprintf(stderr, "PID %d: bcast_prog_t receiving %ld instructions from %s\n", getpid(), Prog->size, Prog->shm_name);
+    fd = shm_open(Prog->shm_name, O_RDONLY, 0);
+    if (fd == -1) perror("shm_open");
+    assert(fd >= 0);
+    Prog->prog = mmap(NULL, Prog->size * sizeof(int), PROT_READ, MAP_SHARED, fd, 0);
+    assert(Prog->prog != MAP_FAILED);
+    close(fd);
+
   }
 
   MPI_Type_free(&mpi_prog);
