@@ -2934,14 +2934,14 @@ void cp_eqData_int(void *EqD_out, void *EqD_in, int MPType, char **eqdStr, int f
     EqD_left->numSubFuncs = EqD_right->numSubFuncs;
     if (EqD_left->noChanges)
     { // allocate
-      EqD_left->startSub = (int *)bmalloc(EqD_right->numSubFuncs * sizeof(int));
-      EqD_left->endSub = (int *)bmalloc(EqD_right->numSubFuncs * sizeof(int));
-      EqD_left->startFunc = (int *)bmalloc(EqD_right->num_funcs * sizeof(int));
-      EqD_left->endFunc = (int *)bmalloc(EqD_right->num_funcs * sizeof(int));
-      EqD_left->startJvsub = (int *)bmalloc(EqD_right->numSubFuncs * sizeof(int));
-      EqD_left->endJvsub = (int *)bmalloc(EqD_right->numSubFuncs * sizeof(int));
-      EqD_left->startJv = (int *)bmalloc(EqD_right->num_funcs * sizeof(int));
-      EqD_left->endJv = (int *)bmalloc(EqD_right->num_funcs * sizeof(int));
+      EqD_left->startSub = (long *)bmalloc(EqD_right->numSubFuncs * sizeof(long));
+      EqD_left->endSub = (long *)bmalloc(EqD_right->numSubFuncs * sizeof(long));
+      EqD_left->startFunc = (long *)bmalloc(EqD_right->num_funcs * sizeof(long));
+      EqD_left->endFunc = (long *)bmalloc(EqD_right->num_funcs * sizeof(long));
+      EqD_left->startJvsub = (long *)bmalloc(EqD_right->numSubFuncs * sizeof(long));
+      EqD_left->endJvsub = (long *)bmalloc(EqD_right->numSubFuncs * sizeof(long));
+      EqD_left->startJv = (long *)bmalloc(EqD_right->num_funcs * sizeof(long));
+      EqD_left->endJv = (long *)bmalloc(EqD_right->num_funcs * sizeof(long));
 
       // setup
       for (i = 0; i < EqD_right->numSubFuncs; i++)

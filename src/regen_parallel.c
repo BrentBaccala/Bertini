@@ -1478,14 +1478,14 @@ void cp_regen_int(void *regen_out, void *regen_in, int MPType, int **Degrees, in
     regen_left->numSubFuncs = regen_right->numSubFuncs;
     if (regen_left->noChanges)
     { // allocate
-      regen_left->startSub = (int *)bmalloc(regen_right->numSubFuncs * sizeof(int));
-      regen_left->endSub = (int *)bmalloc(regen_right->numSubFuncs * sizeof(int));
-      regen_left->startFunc = (int *)bmalloc(regen_right->num_funcs * sizeof(int));
-      regen_left->endFunc = (int *)bmalloc(regen_right->num_funcs * sizeof(int));
-      regen_left->startJvsub = (int *)bmalloc(regen_right->numSubFuncs * sizeof(int));
-      regen_left->endJvsub = (int *)bmalloc(regen_right->numSubFuncs * sizeof(int));
-      regen_left->startJv = (int *)bmalloc(regen_right->num_funcs * sizeof(int));
-      regen_left->endJv = (int *)bmalloc(regen_right->num_funcs * sizeof(int));
+      regen_left->startSub = (long *)bmalloc(regen_right->numSubFuncs * sizeof(long));
+      regen_left->endSub = (long *)bmalloc(regen_right->numSubFuncs * sizeof(long));
+      regen_left->startFunc = (long *)bmalloc(regen_right->num_funcs * sizeof(long));
+      regen_left->endFunc = (long *)bmalloc(regen_right->num_funcs * sizeof(long));
+      regen_left->startJvsub = (long *)bmalloc(regen_right->numSubFuncs * sizeof(long));
+      regen_left->endJvsub = (long *)bmalloc(regen_right->numSubFuncs * sizeof(long));
+      regen_left->startJv = (long *)bmalloc(regen_right->num_funcs * sizeof(long));
+      regen_left->endJv = (long *)bmalloc(regen_right->num_funcs * sizeof(long));
 
       // setup
       for (i = 0; i < regen_right->numSubFuncs; i++)
