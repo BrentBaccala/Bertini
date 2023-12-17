@@ -689,6 +689,7 @@ void create_prog_t_int(MPI_Datatype *mpi_prog_t_int)
 
   // calculate displacements
   prog_t_int_displacements[0] = 0;
+  prog_t_int_datatypes[0] = MPI_LONG;
   MPI_Get_address(&tempProg.size, &startaddress);
   MPI_Get_address(&tempProg.memSize, &address);
   prog_t_int_displacements[1] = address - startaddress;
@@ -700,14 +701,19 @@ void create_prog_t_int(MPI_Datatype *mpi_prog_t_int)
   prog_t_int_displacements[4] = address - startaddress;
   MPI_Get_address(&tempProg.numInstAtEndUpdate, &address);
   prog_t_int_displacements[5] = address - startaddress;
+  prog_t_int_datatypes[5] = MPI_LONG;
   MPI_Get_address(&tempProg.numInstAtEndParams, &address);
   prog_t_int_displacements[6] = address - startaddress;
+  prog_t_int_datatypes[6] = MPI_LONG;
   MPI_Get_address(&tempProg.numInstAtEndPDeriv, &address);
   prog_t_int_displacements[7] = address - startaddress;
+  prog_t_int_datatypes[7] = MPI_LONG;
   MPI_Get_address(&tempProg.numInstAtEndFnEval, &address);
   prog_t_int_displacements[8] = address - startaddress;
+  prog_t_int_datatypes[8] = MPI_LONG;
   MPI_Get_address(&tempProg.numInstAtEndJvEval, &address);
   prog_t_int_displacements[9] = address - startaddress;
+  prog_t_int_datatypes[9] = MPI_LONG;
   MPI_Get_address(&tempProg.numVars, &address);
   prog_t_int_displacements[10] = address - startaddress;
   MPI_Get_address(&tempProg.numPathVars, &address);

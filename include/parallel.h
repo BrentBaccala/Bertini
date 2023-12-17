@@ -248,18 +248,18 @@ typedef struct {
 
 typedef struct 
 {
-  int size; 
+  long size;
   int memSize;
   int precision;
 
   int num_var_gps; 
   int index_of_first_number_for_proj_trans; 
 
-  int numInstAtEndUpdate; 
-  int numInstAtEndParams;
-  int numInstAtEndPDeriv;
-  int numInstAtEndFnEval; 
-  int numInstAtEndJvEval; 
+  long numInstAtEndUpdate;
+  long numInstAtEndParams;
+  long numInstAtEndPDeriv;
+  long numInstAtEndFnEval;
+  long numInstAtEndJvEval;
 
   int numVars;
   int numPathVars;
