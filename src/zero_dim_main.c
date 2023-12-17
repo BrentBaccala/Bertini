@@ -4,6 +4,8 @@
 #include "cascade.h"
 #include "parallel.h"
 
+#include <sys/mman.h>
+
 void getDehomPoint_d(point_d dehomPoint, point_d inPoint, int num_vars, preproc_data *PPD)
 /***************************************************************\
 * USAGE:                                                        *
@@ -1041,7 +1043,12 @@ void clearProg(prog_t *P, int MPType, int clearEvalProg)
   // clear nums
   clearNums(&P->nums, P->numNums); 
 
+#ifdef _HAVE_MPI
+  fprintf(stderr, "unmapping %p %ld\n", P->prog, P->size);
+  assert(munmap(P->prog, P->size * sizeof(int)) == 0);
+#else
   free(P->prog);
+#endif
   free(P->var_gp_sizes);
   
   return;

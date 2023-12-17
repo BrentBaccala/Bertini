@@ -9,6 +9,11 @@
 #include "pos_dim.h"
 #include "regen_pos_dim.h"
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+
 // This file contains functions that are used to send data structures over MPI
 
 #ifdef _HAVE_MPI
@@ -2264,9 +2269,14 @@ void bcast_regen_pos_dim_t(regen_pos_dim_t *RPD, int MPType, int my_id, int head
 {
   MPI_Datatype mpi_RPD_int, mpi_comp_d;
   regen_pos_dim_t_int RPD_int;
-  int size, *degrees = NULL, *ppd_type = NULL, *ppd_size = NULL, *prog_inst = NULL, *prog_gp_sizes = NULL;
+  int size, *degrees = NULL, *ppd_type = NULL, *ppd_size = NULL, *prog_gp_sizes = NULL;
   char *rpdStr = NULL, *progStr = NULL;
   comp_d *coeff_d = NULL;
+  // MPI_Win win;  /* XXX need to keep this around and call MPI_Win_free(&win) when we're done */
+  // MPI_Aint win_size;
+  // int win_disp_unit;
+  // void *win_baseptr;
+  int fd;
 
   // create the datatypes mpi_RPD_int & mpi_comp_d
   create_regen_pos_dim_t_int(&mpi_RPD_int);
@@ -2274,13 +2284,20 @@ void bcast_regen_pos_dim_t(regen_pos_dim_t *RPD, int MPType, int my_id, int head
 
   if (my_id == headnode)
   { // setup RPD_int & the other structures and then broadcast it
-    cp_regen_pos_dim_int(&RPD_int, RPD, MPType, &rpdStr, &progStr, 0, &coeff_d, &degrees, &ppd_type, &ppd_size, &prog_inst, &prog_gp_sizes, 0);
+    cp_regen_pos_dim_int(&RPD_int, RPD, MPType, &rpdStr, &progStr, 0, &coeff_d, &degrees, &ppd_type, &ppd_size, NULL, &prog_gp_sizes, 0);
+    fprintf(stderr, "broadcasting %s\n", RPD_int.Prog_int.shm_name);
     // send RPD_int
     MPI_Bcast(&RPD_int, 1, mpi_RPD_int, headnode, MPI_COMM_WORLD);
     // send rpdStr
     MPI_Bcast(rpdStr, RPD_int.totalLength, MPI_CHAR, headnode, MPI_COMM_WORLD);
     // send progStr
     MPI_Bcast(progStr, RPD_int.Prog_int.totalLength, MPI_CHAR, headnode, MPI_COMM_WORLD);
+    // create a shared memory window containing the SLP
+    //MPI_Win_create((void *)(RPD->Prog->prog), (MPI_Aint)(RPD->Prog->size) * sizeof(int), 1, MPI_INFO_NULL, MPI_COMM_WORLD, &win);
+    // this doesn't work, either (you can't get the address of the attached memory)
+    //MPI_Win_create_dynamic(MPI_INFO_NULL, MPI_COMM_WORLD, &win);
+    //MPI_Win_attach(&win, (void *)(RPD->Prog->prog), (MPI_Aint)(RPD->Prog->size) * sizeof(int));
+    // we already have a shared memory window with its name in Prog->shm_name
     // send coeff_d
     MPI_Bcast(coeff_d, RPD_int.num_comp_d, mpi_comp_d, headnode, MPI_COMM_WORLD);
     // send degrees
@@ -2290,7 +2307,7 @@ void bcast_regen_pos_dim_t(regen_pos_dim_t *RPD, int MPType, int my_id, int head
     MPI_Bcast(ppd_type, size, MPI_INT, headnode, MPI_COMM_WORLD);
     MPI_Bcast(ppd_size, size, MPI_INT, headnode, MPI_COMM_WORLD);
     // send prog_inst
-    MPI_Bcast(prog_inst, RPD_int.Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
+    // MPI_Bcast(prog_inst, RPD_int.Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
     // send prog_gp_sizes
     MPI_Bcast(prog_gp_sizes, RPD_int.Prog_int.num_var_gps, MPI_INT, headnode, MPI_COMM_WORLD);
 
@@ -2298,7 +2315,7 @@ void bcast_regen_pos_dim_t(regen_pos_dim_t *RPD, int MPType, int my_id, int head
     free(degrees);
     free(ppd_type);
     free(ppd_size);
-    free(prog_inst);
+    // free(prog_inst);
     free(prog_gp_sizes);
     free(rpdStr);
     free(progStr);
@@ -2315,6 +2332,12 @@ void bcast_regen_pos_dim_t(regen_pos_dim_t *RPD, int MPType, int my_id, int head
     // recv progStr
     progStr = (char *)bmalloc(RPD_int.Prog_int.totalLength * sizeof(char));
     MPI_Bcast(progStr, RPD_int.Prog_int.totalLength, MPI_CHAR, headnode, MPI_COMM_WORLD);
+    // map shared memory containing the SLP
+    //MPI_Win_create(NULL, 0, 1, MPI_INFO_NULL, MPI_COMM_WORLD, &win);
+    //MPI_Win_allocate_shared(0, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &win_baseptr, &win);
+    //MPI_Win_shared_query(win, headnode, &win_size, &win_disp_unit, &win_baseptr);
+    // this doesn't work, either (you can't get the address of the attached memory)
+    //MPI_Win_create_dynamic(MPI_INFO_NULL, MPI_COMM_WORLD, &win);
     // recv coeff_d
     coeff_d = (comp_d *)bmalloc(RPD_int.num_comp_d * sizeof(comp_d));
     MPI_Bcast(coeff_d, RPD_int.num_comp_d, mpi_comp_d, headnode, MPI_COMM_WORLD);
@@ -2328,14 +2351,25 @@ void bcast_regen_pos_dim_t(regen_pos_dim_t *RPD, int MPType, int my_id, int head
     MPI_Bcast(ppd_type, size, MPI_INT, headnode, MPI_COMM_WORLD);
     MPI_Bcast(ppd_size, size, MPI_INT, headnode, MPI_COMM_WORLD);
     // recv prog_inst
-    prog_inst = (int *)bmalloc(RPD_int.Prog_int.size * sizeof(int));
-    MPI_Bcast(prog_inst, RPD_int.Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
+    // prog_inst = (int *)bmalloc(RPD_int.Prog_int.size * sizeof(int));
+    // MPI_Bcast(prog_inst, RPD_int.Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
     // recv prog_gp_sizes
     prog_gp_sizes = (int *)bmalloc(RPD_int.Prog_int.num_var_gps * sizeof(int));
     MPI_Bcast(prog_gp_sizes, RPD_int.Prog_int.num_var_gps, MPI_INT, headnode, MPI_COMM_WORLD);
 
     // setup RPD - all data is freed in this function call!
-    cp_regen_pos_dim_int(RPD, &RPD_int, MPType, &rpdStr, &progStr, 1, &coeff_d, &degrees, &ppd_type, &ppd_size, &prog_inst, &prog_gp_sizes, 1);
+    cp_regen_pos_dim_int(RPD, &RPD_int, MPType, &rpdStr, &progStr, 1, &coeff_d, &degrees, &ppd_type, &ppd_size, NULL, &prog_gp_sizes, 1);
+    // now that we've created the RPD and its Prog, set its SLP pointer to the shared memory window
+    // RPD->Prog->prog = (int *) win_baseptr;
+    // assert(win_size == (MPI_Aint)(RPD->Prog->size) * sizeof(int));
+    // assert(win_disp_unit == 1);
+    fprintf(stderr, "receiving %ld instructions from %s\n", RPD->Prog->size, RPD_int.Prog_int.shm_name);
+    fd = shm_open(RPD_int.Prog_int.shm_name, O_RDONLY, 0);
+    if (fd == -1) perror("shm_open");
+    assert(fd >= 0);
+    RPD->Prog->prog = mmap(NULL, RPD->Prog->size * sizeof(int), PROT_READ, MAP_SHARED, fd, 0);
+    assert(RPD->Prog->prog != MAP_FAILED);
+    close(fd);
   }
 
   // free mpi_RPD_int & mpi_comp_d

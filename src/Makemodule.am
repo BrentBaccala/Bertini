@@ -43,6 +43,9 @@ bin_PROGRAMS += bertini-parallel
 #also build the parallel version of the library
 lib_LTLIBRARIES += libbertini-parallel.la
 
+# needed for System V shared memory
+LIBS += -lrt
+
 #add some files to the list of clean files
 CLEANFILES += $(PARALLEL_COPIED_FILES) src/bertini-parallel.c
 

@@ -249,6 +249,7 @@ typedef struct {
 typedef struct 
 {
   long size;
+  char shm_name[64];
   int memSize;
   int precision;
 

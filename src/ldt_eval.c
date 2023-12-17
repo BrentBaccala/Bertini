@@ -586,6 +586,7 @@ void setup_deriv_from_SLP(prog_deriv_t *deriv, prog_t *SLP)
   // setup prog
   deriv->size = SLP->size;
   deriv->prog = (int *)bmalloc(deriv->size * sizeof(int));
+  fprintf(stderr, "bmalloc deriv_prog %ld instructions at %p\n", deriv->size, deriv->prog);
   for (i = 0; i < deriv->size; i++)
     deriv->prog[i] = SLP->prog[i];
  
@@ -595,7 +596,7 @@ void setup_deriv_from_SLP(prog_deriv_t *deriv, prog_t *SLP)
   deriv->mem_d = NULL;
   deriv->mem_mp = NULL;
 
-  // seutp nums
+  // setup nums
   deriv->numNums = SLP->numNums;
   deriv->precision = SLP->precision;
   deriv->nums = (num_t *)bmalloc(deriv->numNums * sizeof(num_t));
@@ -1346,6 +1347,7 @@ void setupProg_order_derivs(prog_deriv_t *deriv)
 
   // copy prog to deriv->prog
   free(deriv->prog);
+  fprintf(stderr, "free deriv->prog at %p\n", deriv->prog);
   deriv->prog = prog;
   deriv->size = count;
   deriv->memSizeNeeded = deriv->sys.firstFreeMemLoc;

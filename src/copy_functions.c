@@ -8,6 +8,11 @@
 #include "dimbydim.h"
 #include "pos_dim.h"
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+
 ///////////////////// COPY FUNCTIONS /////////////////////////////////
 
 void cp_tracker_config_t(tracker_config_t *T, const tracker_config_t *T_input)
@@ -293,6 +298,7 @@ void cp_prog_t(prog_t *P, prog_t *P_input)
 
   P->size = P_input->size;
   P->prog = (int *)bmalloc(P->size * sizeof(int));
+  fprintf(stderr, "cp_prog_t malloced %ld instructions at %p\n", P->size, P->prog);
   for (i = 0; i < P->size; i++)
   {
     P->prog[i] = P_input->prog[i];
@@ -837,9 +843,11 @@ void cp_prog_t_int(void *Prog_out, void *Prog_in, int **instructions, int **gp_s
     Prog_left->evalJSubsP = Prog_right->evalJSubsP;
 
     // setup instructions
-    *instructions = (int *)bmalloc(Prog_right->size * sizeof(int));
-    for (i = Prog_right->size - 1; i >= 0; i--)
-      (*instructions)[i] = Prog_right->prog[i];
+    if (instructions) {
+      *instructions = (int *)bmalloc(Prog_right->size * sizeof(int));
+      for (i = Prog_right->size - 1; i >= 0; i--)
+        (*instructions)[i] = Prog_right->prog[i];
+    }
 
     // setup gp_sizes
     *gp_sizes = (int *)bmalloc(Prog_right->num_var_gps * sizeof(int));
@@ -848,6 +856,9 @@ void cp_prog_t_int(void *Prog_out, void *Prog_in, int **instructions, int **gp_s
 
     // setup progStr
     cp_prog_str(progStr, &Prog_right->nums, &Prog_left->totalLength, Prog_right->numNums, Prog_right->precision, freeStr, inType);
+
+    // copy name of shm segment that holds the program instructions
+    bcopy(Prog_right->shm_name, Prog_left->shm_name, sizeof(Prog_left->shm_name));
   }
   else
   { // _t_int to _t so that it can be used by the workers
@@ -892,11 +903,31 @@ void cp_prog_t_int(void *Prog_out, void *Prog_in, int **instructions, int **gp_s
     Prog_left->evalJSubsP = Prog_right->evalJSubsP;
 
     // setup prog
-    Prog_left->prog = (int *)bmalloc(Prog_right->size * sizeof(int));
-    for (i = Prog_right->size - 1; i >= 0; i--)
-      Prog_left->prog[i] = (*instructions)[i];
-    // clear instructions
-    free(*instructions);
+    if (instructions) {
+#ifdef _HAVE_MPI
+      // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
+      // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
+      int fd;
+      Prog_left->shm_name[0] = '/';
+      for (i=1; i < sizeof(Prog_left->shm_name) - 1; i++) Prog_left->shm_name[i] = 65 + (rand() % 26);
+      Prog_left->shm_name[sizeof(Prog_left->shm_name) - 1] = '\0';
+      fd = shm_open(Prog_left->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+      assert(fd >= 0);
+      assert(ftruncate(fd, Prog_right->size * sizeof(int)) == 0);
+      fprintf(stderr, "cp_prog_t_int mapping %ld instructions to %s\n", Prog_right->size, Prog_left->shm_name);
+      Prog_left->prog = mmap(NULL, Prog_right->size * sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+      assert(Prog_left->prog != MAP_FAILED);
+      close(fd);
+#else
+      Prog_left->prog = (int *)bcalloc(Prog_right->size, sizeof(int));
+#endif
+      //Prog_left->prog = (int *)bmalloc(Prog_right->size * sizeof(int));
+      //fprintf(stderr, "bmalloc instructions at %p\n", Prog_left->prog);
+      for (i = Prog_right->size - 1; i >= 0; i--)
+        Prog_left->prog[i] = (*instructions)[i];
+      // clear instructions
+      free(*instructions);
+    }
 
     // setup var_gp_sizes
     Prog_left->var_gp_sizes = (int *)bmalloc(Prog_right->num_var_gps * sizeof(int));
@@ -907,6 +938,9 @@ void cp_prog_t_int(void *Prog_out, void *Prog_in, int **instructions, int **gp_s
 
     // setup progStr
     cp_prog_str(&Prog_left->nums, progStr, &Prog_right->totalLength, Prog_right->numNums, Prog_right->precision, freeStr, inType);
+
+    // copy name of shm segment that holds the program instructions
+    bcopy(Prog_right->shm_name, Prog_left->shm_name, sizeof(Prog_left->shm_name));
   }
 
   return;

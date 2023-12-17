@@ -182,6 +182,11 @@ typedef struct {
   num_t *nums;   /* The array of real numbers. */
   int precision; /* The precision at which evaluation should occur */
   
+#ifdef _HAVE_MPI
+  // I can't really figure how to do this well with MPI (see my other comments in this commit), so use SysV shm
+  char shm_name[64]; /* Name of a shared memory window to hold the program instructions */
+#endif
+
   /* INFO NEEDED FOR M-HOM: */
   int num_var_gps;  /* The total number of variable groups (i.e., m from m-hom).*/
   int *var_gp_sizes;  /* The size of each of the groups. */

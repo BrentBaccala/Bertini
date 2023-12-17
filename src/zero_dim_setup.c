@@ -3,6 +3,11 @@
 #include "bertini.h"
 #include "cascade.h"
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+
 int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long **endFunc, long **startJvsub, long **endJvsub, long **startJv, long **endJv, int ***subFuncsBelow);
 
 int setupProg(prog_t *P, int precision, int MPType)
@@ -79,6 +84,7 @@ int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long *
   int numconsts, constAddr, numNums, numAddr, numsubfuncs, subfuncAddr;
   int subfuncDerivWRTVarsStart, subfuncDerivWRTParamsStart, rand_index, IAddr;
   long i, numInst;
+  int fd;
   char ch;
 
   // open arr.out
@@ -156,9 +162,26 @@ int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long *
     *subFuncsBelow = NULL;
   }
 
+#ifdef _HAVE_MPI
+  // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
+  // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
+  P->shm_name[0] = '/';
+  for (i=1; i < sizeof(P->shm_name) - 1; i++) P->shm_name[i] = 65 + (rand() % 26);
+  P->shm_name[sizeof(P->shm_name) - 1] = '\0';
+  fd = shm_open(P->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  assert(fd >= 0);
+  assert(ftruncate(fd, numInst * sizeof(int)) == 0);
+  fprintf(stderr, "setupArr mapping %ld instructions to %s\n", numInst, P->shm_name);
+  P->prog = mmap(NULL, numInst * sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+  assert(P->prog != MAP_FAILED);
+  close(fd);
+#else
+  P->prog = (int *)bcalloc(numInst, sizeof(int));
+#endif
+
   // Now we read in the instructions from arr.out:
   rewind(arrIN);
-  P->prog = (int *)bcalloc(numInst, sizeof(int));
+  //P->prog = (int *)bcalloc(numInst, sizeof(int));
   for (i = 0; i < numInst; i++)
     assert(fscanf(arrIN, "%d", &P->prog[i]) == 1);
 

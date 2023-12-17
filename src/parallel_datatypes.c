@@ -677,11 +677,11 @@ void create_prog_t_int(MPI_Datatype *mpi_prog_t_int)
   int counter;
 
   // arrays for length, displacement and datatypes in mpi_prog_t_int
-  int prog_t_int_length[31];
-  MPI_Datatype prog_t_int_datatypes[31];
-  MPI_Aint prog_t_int_displacements[31];
+  int prog_t_int_length[32];
+  MPI_Datatype prog_t_int_datatypes[32];
+  MPI_Aint prog_t_int_displacements[32];
 
-  for (counter = 0; counter < 31; counter++)
+  for (counter = 0; counter < 32; counter++)
   {
     prog_t_int_length[counter] = 1;
     prog_t_int_datatypes[counter] = MPI_INT;
@@ -757,8 +757,13 @@ void create_prog_t_int(MPI_Datatype *mpi_prog_t_int)
   MPI_Get_address(&tempProg.totalLength, &address);
   prog_t_int_displacements[30] = address - startaddress;
 
+  MPI_Get_address(&tempProg.shm_name, &address);
+  prog_t_int_displacements[31] = address - startaddress;
+  prog_t_int_length[31] = sizeof(tempProg.shm_name);
+  prog_t_int_datatypes[31] = MPI_CHAR;
+
   // build the mpi datatype mpi_prog_t_int
-  MPI_Type_create_struct(31, prog_t_int_length, prog_t_int_displacements, prog_t_int_datatypes, mpi_prog_t_int);
+  MPI_Type_create_struct(32, prog_t_int_length, prog_t_int_displacements, prog_t_int_datatypes, mpi_prog_t_int);
   MPI_Type_commit(mpi_prog_t_int);
 
   return;

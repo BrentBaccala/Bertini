@@ -5,6 +5,11 @@
 #include "diff.h"
 #include "ppParse.h"
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+
 #define MAX_DEFLATION_ITS 250
 
 typedef struct
@@ -303,6 +308,7 @@ void deflator(prog_t *new_prog, prog_t *old_prog, mpq_t ***K, int K_rows, int K_
   int ctr, Psi_dim, tmp_func_addr, tmp_V_addr, ind, room_before_temps;
   FILE *FOUT = NULL, *arrIN = NULL;  
   char ch;
+  int fd;
 
   // setup Psi_dim
   Psi_dim = K_cols;
@@ -921,9 +927,26 @@ void deflator(prog_t *new_prog, prog_t *old_prog, mpq_t ***K, int K_rows, int K_
   } while (ch != 'I');
   assert(fscanf(arrIN, "NST %ld", &new_prog->size) == 1);
 
+#ifdef _HAVE_MPI
+  // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
+  // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
+  new_prog->shm_name[0] = '/';
+  for (i=1; i < sizeof(new_prog->shm_name) - 1; i++) new_prog->shm_name[i] = 65 + (rand() % 26);
+  new_prog->shm_name[sizeof(new_prog->shm_name) - 1] = '\0';
+  fd = shm_open(new_prog->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  assert(fd >= 0);
+  assert(ftruncate(fd, new_prog->size * sizeof(int)) == 0);
+  fprintf(stderr, "deflation mapping %ld instructions to %s\n", new_prog->size, new_prog->shm_name);
+  new_prog->prog = mmap(NULL, new_prog->size * sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+  assert(new_prog->prog != MAP_FAILED);
+  close(fd);
+#else
+  new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
+#endif
+
   // grab all of the instructions.
   rewind(arrIN);
-  new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
+  //new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
   for (i = 0; i < new_prog->size; i++)
     assert(fscanf(arrIN, "%d ", &new_prog->prog[i]) == 1);
 
@@ -1082,6 +1105,7 @@ void add_vec_patch_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t **patch, int pa
 * NOTES: This is for 1 variable group - i.e. 1 patch                     *
 \************************************************************************/
 { // error checking - make sure that patch_size == numVars
+  int fd;
   if (patch_size != old_prog->numVars)
   {
     printf("ERROR: The size of the patch must be the same as the number of variables!\n");
@@ -1489,9 +1513,26 @@ void add_vec_patch_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t **patch, int pa
   } while (ch != 'I');
   assert(fscanf(FOUT, "NST %ld", &new_prog->size) == 1);
 
+#ifdef _HAVE_MPI
+  // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
+  // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
+  new_prog->shm_name[0] = '/';
+  for (i=1; i < sizeof(new_prog->shm_name) - 1; i++) new_prog->shm_name[i] = 65 + (rand() % 26);
+  new_prog->shm_name[sizeof(new_prog->shm_name) - 1] = '\0';
+  fd = shm_open(new_prog->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  assert(fd >= 0);
+  assert(ftruncate(fd, new_prog->size * sizeof(int)) == 0);
+  fprintf(stderr, "deflation mapping %ld instructions to %s\n", new_prog->size, new_prog->shm_name);
+  new_prog->prog = mmap(NULL, new_prog->size * sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+  assert(new_prog->prog != MAP_FAILED);
+  close(fd);
+#else
+  new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
+#endif
+
   // grab all of the instructions.
   rewind(FOUT);
-  new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
+  //new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
   for (i = 0; i < new_prog->size; i++)
     assert(fscanf(FOUT, "%d ", &new_prog->prog[i]) == 1);
 
@@ -2001,6 +2042,7 @@ void randomize_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t ***A, int A_rows, i
 * NOTES:                                                                 *
 \************************************************************************/
 {// error checking - make sure that A_rows + A_cols == numFuncs
+  int fd;
   if (A_rows + A_cols != old_prog->numFuncs)
   {
     printf("ERROR: The size of the matrix [I A] must be the same as the number of functions!\n");
@@ -2386,9 +2428,26 @@ void randomize_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t ***A, int A_rows, i
   } while (ch != 'I');
   assert(fscanf(FOUT, "NST %ld", &new_prog->size) == 1);
 
+#ifdef _HAVE_MPI
+  // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
+  // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
+  new_prog->shm_name[0] = '/';
+  for (i=1; i < sizeof(new_prog->shm_name) - 1; i++) new_prog->shm_name[i] = 65 + (rand() % 26);
+  new_prog->shm_name[sizeof(new_prog->shm_name) - 1] = '\0';
+  fd = shm_open(new_prog->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  assert(fd >= 0);
+  assert(ftruncate(fd, new_prog->size * sizeof(int)) == 0);
+  fprintf(stderr, "deflation mapping %ld instructions to %s\n", new_prog->size, new_prog->shm_name);
+  new_prog->prog = mmap(NULL, new_prog->size * sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+  assert(new_prog->prog != MAP_FAILED);
+  close(fd);
+#else
+  new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
+#endif
+
   // grab all of the instructions.
   rewind(FOUT);
-  new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
+  //new_prog->prog = (int *)bcalloc(new_prog->size, sizeof(int));
   for (i = 0; i < new_prog->size; i++)
     assert(fscanf(FOUT, "%d ", &new_prog->prog[i]) == 1);
 
