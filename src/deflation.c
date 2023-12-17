@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <fcntl.h>
+#include <errno.h>
 
 #define MAX_DEFLATION_ITS 250
 
@@ -930,10 +931,12 @@ void deflator(prog_t *new_prog, prog_t *old_prog, mpq_t ***K, int K_rows, int K_
 #ifdef _HAVE_MPI
   // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
   // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
-  new_prog->shm_name[0] = '/';
-  for (i=1; i < sizeof(new_prog->shm_name) - 1; i++) new_prog->shm_name[i] = 65 + (rand() % 26);
-  new_prog->shm_name[sizeof(new_prog->shm_name) - 1] = '\0';
-  fd = shm_open(new_prog->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  do {
+    new_prog->shm_name[0] = '/';
+    for (i=1; i < sizeof(new_prog->shm_name) - 1; i++) new_prog->shm_name[i] = 65 + (rand() % 26);
+    new_prog->shm_name[sizeof(new_prog->shm_name) - 1] = '\0';
+    fd = shm_open(new_prog->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  } while (fd < 0 && errno == EEXIST);
   assert(fd >= 0);
   assert(ftruncate(fd, new_prog->size * sizeof(int)) == 0);
   fprintf(stderr, "deflation mapping %ld instructions to %s\n", new_prog->size, new_prog->shm_name);
@@ -1516,10 +1519,12 @@ void add_vec_patch_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t **patch, int pa
 #ifdef _HAVE_MPI
   // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
   // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
-  new_prog->shm_name[0] = '/';
-  for (i=1; i < sizeof(new_prog->shm_name) - 1; i++) new_prog->shm_name[i] = 65 + (rand() % 26);
-  new_prog->shm_name[sizeof(new_prog->shm_name) - 1] = '\0';
-  fd = shm_open(new_prog->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  do {
+    new_prog->shm_name[0] = '/';
+    for (i=1; i < sizeof(new_prog->shm_name) - 1; i++) new_prog->shm_name[i] = 65 + (rand() % 26);
+    new_prog->shm_name[sizeof(new_prog->shm_name) - 1] = '\0';
+    fd = shm_open(new_prog->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  } while (fd < 0 && errno == EEXIST);
   assert(fd >= 0);
   assert(ftruncate(fd, new_prog->size * sizeof(int)) == 0);
   fprintf(stderr, "deflation mapping %ld instructions to %s\n", new_prog->size, new_prog->shm_name);
@@ -2431,10 +2436,12 @@ void randomize_SLP(prog_t *new_prog, prog_t *old_prog, mpq_t ***A, int A_rows, i
 #ifdef _HAVE_MPI
   // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
   // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
-  new_prog->shm_name[0] = '/';
-  for (i=1; i < sizeof(new_prog->shm_name) - 1; i++) new_prog->shm_name[i] = 65 + (rand() % 26);
-  new_prog->shm_name[sizeof(new_prog->shm_name) - 1] = '\0';
-  fd = shm_open(new_prog->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  do {
+    new_prog->shm_name[0] = '/';
+    for (i=1; i < sizeof(new_prog->shm_name) - 1; i++) new_prog->shm_name[i] = 65 + (rand() % 26);
+    new_prog->shm_name[sizeof(new_prog->shm_name) - 1] = '\0';
+    fd = shm_open(new_prog->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  } while (fd < 0 && errno == EEXIST);
   assert(fd >= 0);
   assert(ftruncate(fd, new_prog->size * sizeof(int)) == 0);
   fprintf(stderr, "deflation mapping %ld instructions to %s\n", new_prog->size, new_prog->shm_name);

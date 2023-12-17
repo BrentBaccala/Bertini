@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <fcntl.h>
+#include <errno.h>
 
 int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long **endFunc, long **startJvsub, long **endJvsub, long **startJv, long **endJv, int ***subFuncsBelow);
 
@@ -165,10 +166,12 @@ int setupArr(prog_t *P, long **startSub, long **endSub, long **startFunc, long *
 #ifdef _HAVE_MPI
   // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
   // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
-  P->shm_name[0] = '/';
-  for (i=1; i < sizeof(P->shm_name) - 1; i++) P->shm_name[i] = 65 + (rand() % 26);
-  P->shm_name[sizeof(P->shm_name) - 1] = '\0';
-  fd = shm_open(P->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  do {
+    P->shm_name[0] = '/';
+    for (i=1; i < sizeof(P->shm_name) - 1; i++) P->shm_name[i] = 65 + (rand() % 26);
+    P->shm_name[sizeof(P->shm_name) - 1] = '\0';
+    fd = shm_open(P->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+  } while (fd < 0 && errno == EEXIST);
   assert(fd >= 0);
   assert(ftruncate(fd, numInst * sizeof(int)) == 0);
   fprintf(stderr, "setupArr mapping %ld instructions to %s\n", numInst, P->shm_name);

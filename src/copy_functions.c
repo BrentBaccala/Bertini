@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <fcntl.h>
+#include <errno.h>
 
 ///////////////////// COPY FUNCTIONS /////////////////////////////////
 
@@ -908,10 +909,12 @@ void cp_prog_t_int(void *Prog_out, void *Prog_in, int **instructions, int **gp_s
       // The problem with this idea is that MPI_Win_allocate_shared is a collective call (needs to be run on all ranks)
       // MPI_Win_allocate_shared((MPI_Aint) numInst, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &P->prog, &P->window);
       int fd;
-      Prog_left->shm_name[0] = '/';
-      for (i=1; i < sizeof(Prog_left->shm_name) - 1; i++) Prog_left->shm_name[i] = 65 + (rand() % 26);
-      Prog_left->shm_name[sizeof(Prog_left->shm_name) - 1] = '\0';
-      fd = shm_open(Prog_left->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+      do {
+        Prog_left->shm_name[0] = '/';
+	for (i=1; i < sizeof(Prog_left->shm_name) - 1; i++) Prog_left->shm_name[i] = 65 + (rand() % 26);
+	Prog_left->shm_name[sizeof(Prog_left->shm_name) - 1] = '\0';
+	fd = shm_open(Prog_left->shm_name, O_RDWR|O_CREAT|O_EXCL, 0400);
+      } while (fd < 0 && errno == EEXIST);
       assert(fd >= 0);
       assert(ftruncate(fd, Prog_right->size * sizeof(int)) == 0);
       fprintf(stderr, "cp_prog_t_int mapping %ld instructions to %s\n", Prog_right->size, Prog_left->shm_name);
