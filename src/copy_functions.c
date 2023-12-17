@@ -289,7 +289,7 @@ void cp_prog_t(prog_t *P, prog_t *P_input)
 * NOTES: stores a copy of P_input to P                          *
 \***************************************************************/
 {
-  int i;
+  long i;
 
   P->size = P_input->size;
   P->prog = (int *)bmalloc(P->size * sizeof(int));
