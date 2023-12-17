@@ -2,6 +2,11 @@
 
 #include "localdim.h"
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+
 void setupSysStruct_from_deriv(systemStruct *sys, prog_deriv_t *SLP);
 void setupDerivs_from_sys(funcStruct *derivs, funcStruct *subDerivs, int *totalOpCount, int **memLoc, int ***derivAddr, systemStruct *sys);
 void setupProg_order_derivs(prog_deriv_t *deriv);
@@ -582,13 +587,25 @@ void setup_deriv_from_SLP(prog_deriv_t *deriv, prog_t *SLP)
 \***************************************************************/
 {
   int i, currPrec = SLP->precision;
+  int fd;
 
   // setup prog
   deriv->size = SLP->size;
+#ifdef _HAVE_MPI_DONT_DO_THIS
+  // don't do this because we're still calling free and bmalloc in setupProg_order_derivs
+  fd = shm_open(SLP->shm_name, O_RDONLY, 0);
+  if (fd == -1) perror("shm_open");
+  assert(fd >= 0);
+  deriv->prog = mmap(NULL, deriv->size * sizeof(int), PROT_READ, MAP_SHARED, fd, 0);
+  assert(deriv->prog != MAP_FAILED);
+  close(fd);
+  fprintf(stderr, "PID %d deriv_prog mapped %ld instructions from %s\n", getpid(), SLP->size, SLP->shm_name);
+#else
   deriv->prog = (int *)bmalloc(deriv->size * sizeof(int));
-  fprintf(stderr, "bmalloc deriv_prog %ld instructions at %p\n", deriv->size, deriv->prog);
+  fprintf(stderr, "PID %d deriv_prog bmalloc %ld instructions\n", getpid(), SLP->size);
   for (i = 0; i < deriv->size; i++)
     deriv->prog[i] = SLP->prog[i];
+#endif
  
   // setup mem
   deriv->memSizeNeeded = SLP->memSize;
@@ -712,7 +729,14 @@ void clear_deriv(prog_deriv_t *deriv)
   clearSystemStructure(&deriv->sys);
 
   // clear other structures
+#ifdef _HAVE_MPI_DONT_DO_THIS
+  // don't do this because we're still calling free and bmalloc in setupProg_order_derivs
+  fprintf(stderr, "PID %d unmapping deriv->prog %d\n", getpid(), deriv->size);
+  assert(munmap(deriv->prog, deriv->size * sizeof(int)) == 0);
+#else
+  fprintf(stderr, "PID %d free deriv->prog at %p\n", getpid(), deriv->prog);
   free(deriv->prog);
+#endif
   free(deriv->evalJFuncs);
   free(deriv->evalJSubs);
 
@@ -1261,6 +1285,7 @@ void setupProg_order_derivs(prog_deriv_t *deriv)
 
   // allocate prog
   prog = (int *)bmalloc(count * sizeof(int));
+  fprintf(stderr, "PID %d setupProg_order_derivs bmalloc %d instructions\n", getpid(), count);
 
   // setup prog
   count = 0;
@@ -1347,7 +1372,7 @@ void setupProg_order_derivs(prog_deriv_t *deriv)
 
   // copy prog to deriv->prog
   free(deriv->prog);
-  fprintf(stderr, "free deriv->prog at %p\n", deriv->prog);
+  fprintf(stderr, "PID %d free deriv->prog at %p\n", getpid(), deriv->prog);
   deriv->prog = prog;
   deriv->size = count;
   deriv->memSizeNeeded = deriv->sys.firstFreeMemLoc;

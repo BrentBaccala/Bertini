@@ -5,6 +5,7 @@
 #include "parallel.h"
 
 #include <sys/mman.h>
+#include <unistd.h>
 
 void getDehomPoint_d(point_d dehomPoint, point_d inPoint, int num_vars, preproc_data *PPD)
 /***************************************************************\
@@ -1044,7 +1045,7 @@ void clearProg(prog_t *P, int MPType, int clearEvalProg)
   clearNums(&P->nums, P->numNums); 
 
 #ifdef _HAVE_MPI
-  fprintf(stderr, "unmapping %p %ld\n", P->prog, P->size);
+  fprintf(stderr, "PID %d unmapping prog_t %p %ld\n", getpid(), P->prog, P->size);
   assert(munmap(P->prog, P->size * sizeof(int)) == 0);
 #else
   free(P->prog);
