@@ -1702,6 +1702,7 @@ void bcast_witness_t(witness_t *W, int MPType, int my_id, int headnode)
 \***************************************************************/
 {
   int i;
+  int fd;
   MPI_Datatype mpi_witness_int, mpi_comp_d;
   witness_t_int W_int;
 
@@ -1715,11 +1716,11 @@ void bcast_witness_t(witness_t *W, int MPType, int my_id, int headnode)
 
   if (my_id == headnode)
   { // setup W_int
-    cp_witness_t_int(&W_int, W, &progInst, &gpSizes, &progStr, &PPDtype, &PPDsize, &origDegs, &newDegs, &P, &witComp, &witStr, 0, MPType, 0);
+    cp_witness_t_int(&W_int, W, NULL, &gpSizes, &progStr, &PPDtype, &PPDsize, &origDegs, &newDegs, &P, &witComp, &witStr, 0, MPType, 0);
     // send W_int
     MPI_Bcast(&W_int, 1, mpi_witness_int, headnode, MPI_COMM_WORLD);
     // send progInst
-    MPI_Bcast(progInst, W_int.Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
+    //MPI_Bcast(progInst, W_int.Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
     // send gpSizes
     MPI_Bcast(gpSizes, W_int.Prog_int.num_var_gps, MPI_INT, headnode, MPI_COMM_WORLD);
     // send progStr
@@ -1746,7 +1747,7 @@ void bcast_witness_t(witness_t *W, int MPType, int my_id, int headnode)
     }
 
     // free data
-    free(progInst);
+    //free(progInst);
     free(gpSizes);
     free(PPDtype);
     free(PPDsize);
@@ -1761,8 +1762,8 @@ void bcast_witness_t(witness_t *W, int MPType, int my_id, int headnode)
   { // recv W_int
     MPI_Bcast(&W_int, 1, mpi_witness_int, headnode, MPI_COMM_WORLD);
     // recv progInst
-    progInst = (int *)bmalloc(W_int.Prog_int.size * sizeof(int));
-    MPI_Bcast(progInst, W_int.Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
+    //progInst = (int *)bmalloc(W_int.Prog_int.size * sizeof(int));
+    //MPI_Bcast(progInst, W_int.Prog_int.size, MPI_INT, headnode, MPI_COMM_WORLD);
     // recv gpSizes
     gpSizes = (int *)bmalloc(W_int.Prog_int.num_var_gps * sizeof(int));
     MPI_Bcast(gpSizes, W_int.Prog_int.num_var_gps, MPI_INT, headnode, MPI_COMM_WORLD);
@@ -1792,7 +1793,16 @@ void bcast_witness_t(witness_t *W, int MPType, int my_id, int headnode)
     MPI_Bcast(witStr, W_int.totalLength, MPI_CHAR, headnode, MPI_COMM_WORLD);
 
     // setup W
-    cp_witness_t_int(W, &W_int, &progInst, &gpSizes, &progStr, &PPDtype, &PPDsize, &origDegs, &newDegs, &P, &witComp, &witStr, 1, MPType, 1);
+    cp_witness_t_int(W, &W_int, NULL, &gpSizes, &progStr, &PPDtype, &PPDsize, &origDegs, &newDegs, &P, &witComp, &witStr, 1, MPType, 1);
+
+    // set the SLP program instructions pointer to the shared memory window
+    fprintf(stderr, "receiving %ld instructions from %s\n", W->Prog->size, W_int.Prog_int.shm_name);
+    fd = shm_open(W_int.Prog_int.shm_name, O_RDONLY, 0);
+    if (fd == -1) perror("shm_open");
+    assert(fd >= 0);
+    W->Prog->prog = mmap(NULL, W->Prog->size * sizeof(int), PROT_READ, MAP_SHARED, fd, 0);
+    assert(W->Prog->prog != MAP_FAILED);
+    close(fd);
 
     // setup the codimensions
     W->codim = (witnessCodim_t *)bmalloc(W_int.num_codim * sizeof(witnessCodim_t));
